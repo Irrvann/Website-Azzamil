@@ -46,6 +46,21 @@ License: For each use you must have a valid license purchased only from above li
     <script>
         // Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }
     </script>
+    <style>
+        .colored-toast.swal2-icon-success {
+            background-color: #328b5a !important;
+        }
+
+        .colored-toast.swal2-title {
+            color: white !important;
+            font-size: 14px;
+        }
+
+        .colored-toast {
+            padding: 10px 16px !important;
+            border-radius: 6px !important;
+        }
+    </style>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -140,6 +155,45 @@ License: For each use you must have a valid license purchased only from above li
     <script src="{{ asset('template_admin/demo1/assets/js/custom/utilities/modals/users-search.js') }}"></script>
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
+
+
+
+
+
+    {{-- sweetalert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: "{{ session('success') }}",
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'colored-toast'
+                }
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: "{{ session('error') }}",
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+            });
+        </script>
+    @endif
+
 </body>
 <!--end::Body-->
 

@@ -21,6 +21,8 @@ Route::middleware(['auth', 'role:super_admin'])
 
         Route::resource('data-daerah', DaerahController::class)
             ->names('daerah');
+        Route::resource('data-admin', AdminController::class)
+            ->names('admin');
     });
 
 
