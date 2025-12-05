@@ -182,28 +182,5 @@
             }
         });
 
-
-        // loader saat submit form
-        const loader = document.getElementById('page-loader');
-        const daerahForms = document.querySelectorAll('form.form-daerah');
-
-        daerahForms.forEach(form => {
-            form.addEventListener('submit', function() {
-                // Tampilkan overlay loader
-                if (loader) {
-                    loader.style.display = 'flex';
-                }
-
-                // Optional: disable tombol submit + kasih spinner
-                const submitBtn = form.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = `
-                    <span class="spinner-border spinner-border-sm align-middle me-2"></span>
-                    Memproses...
-                `;
-                }
-            });
-        });
     </script>
 @endsection
