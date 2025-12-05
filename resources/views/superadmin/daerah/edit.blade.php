@@ -22,7 +22,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
-                <form id="modal_edit_daerah_form" class="form" action="{{ route('superadmin.daerah.update', $daerah->id) }}"
+                <form id="modal_edit_daerah_form" class="form form-loading" action="{{ route('superadmin.daerah.update', $daerah->id) }}"
                     method="POST">
                     @csrf
                     @method('PUT')

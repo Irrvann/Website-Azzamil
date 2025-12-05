@@ -60,6 +60,19 @@ License: For each use you must have a valid license purchased only from above li
             padding: 10px 16px !important;
             border-radius: 6px !important;
         }
+
+        .page-loader-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            /* default hidden */
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -69,6 +82,7 @@ License: For each use you must have a valid license purchased only from above li
     data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true"
     data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true"
     data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+
     <!--begin::Theme mode setup on page load-->
     <script>
         var defaultThemeMode = "light";
@@ -100,6 +114,15 @@ License: For each use you must have a valid license purchased only from above li
                 @include('layouts.sidebar')
                 <!--begin::Main-->
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                    <!--begin::Page Loader-->
+                    <div id="page-loader" class="page-loader-overlay bg-body bg-opacity-75">
+                        <div class="indicator-progress d-flex flex-column align-items-center">
+                            <span class="spinner-border text-primary mb-3" role="status"></span>
+                            <span class="text-primary fs-6 fw-semibold">Memproses...</span>
+                        </div>
+                    </div>
+                    <!--end::Page Loader-->
+
                     <!--begin::Content wrapper-->
                     @yield('content')
                     <!--end::Content wrapper-->
@@ -193,6 +216,40 @@ License: For each use you must have a valid license purchased only from above li
             });
         </script>
     @endif
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loader = document.getElementById('page-loader');
+            if (!loader) return;
+
+            // Pastikan loader mati saat halaman selesai load
+            loader.style.display = 'none';
+
+            // Semua form yang mau pakai loading
+            const loadingForms = document.querySelectorAll('form.form-loading');
+
+            loadingForms.forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    // Tampilkan overlay loader
+                    loader.style.display = 'flex';
+
+                    // Optional: disable tombol submit + ganti teks jadi spinner
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                        Memproses...
+                    `;
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
 
 </body>
 <!--end::Body-->

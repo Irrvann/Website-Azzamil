@@ -13,7 +13,7 @@ class DaerahController extends Controller
     public function index()
     {
         //
-        $dataDaerah = Daerah::all();
+        $dataDaerah = Daerah::paginate(10);
         return view('superadmin.daerah.index', compact('dataDaerah'));
     }
 

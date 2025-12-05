@@ -23,7 +23,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
-                <form id="modal_add_daerah_form" class="form" action="{{ route('superadmin.daerah.store') }}"
+                <form id="modal_add_daerah_form" class="form form-loading" action="{{ route('superadmin.daerah.store') }}"
                     method="POST">
                     @csrf
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="modal_add_daerah_scroll"
@@ -75,5 +75,7 @@
             var myModal = new bootstrap.Modal(document.getElementById('modal_add_daerah'));
             myModal.show();
         });
+
+        
     </script>
 @endif

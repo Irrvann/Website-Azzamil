@@ -35,7 +35,7 @@
                     </button>
 
                     <form action="{{ route('superadmin.daerah.destroy', $daerah->id) }}" method="POST"
-                        class="d-inline">
+                        class="d-inline form-loading">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">
