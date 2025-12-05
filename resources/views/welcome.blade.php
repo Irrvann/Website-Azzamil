@@ -37,6 +37,7 @@
                         >
                             Log in
                         </a>
+                        <a href="/login">Login</a>
 
                         @if (Route::has('register'))
                             <a

@@ -28,7 +28,22 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        if ($user->hasRole('super_admin')) {
+            return redirect('/superadmin/dashboard')->with('welcome', 'Selamat datang Super Admin ' . $user->name . '!');
+        } elseif ($user->hasRole('admin')) {
+            return redirect('/admin/dashboard')->with('welcome', 'Selamat datang Admin ' . $user->name . '!');
+        }
+        // elseif ($user->hasRole('admin')) {
+        //     return redirect('/sekolah/dashboard')->with('welcome', 'Selamat datang Kepala Sekolah ' . $user->name . '!');
+        // } elseif ($user->hasRole('guru')) {
+        //     return redirect('/guru/dashboard')->with('welcome', 'Selamat datang Guru ' . $user->name . '!');
+        // } elseif ($user->hasAnyRole(['operator', 'guru_dan_operator'])) {
+        //     return redirect('/operator/dashboard')->with('welcome', 'Selamat datang Operator ' . $user->name . '!');
+        // }
+
+        return redirect('/')->with('error', 'Role tidak dikenali!');
     }
 
     /**
