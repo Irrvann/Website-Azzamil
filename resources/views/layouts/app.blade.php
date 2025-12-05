@@ -47,6 +47,7 @@ License: For each use you must have a valid license purchased only from above li
         // Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }
     </script>
     <style>
+        /* notifikais */
         .colored-toast.swal2-icon-success {
             background-color: #328b5a !important;
         }
@@ -61,6 +62,7 @@ License: For each use you must have a valid license purchased only from above li
             border-radius: 6px !important;
         }
 
+        /* loaader */
         .page-loader-overlay {
             position: fixed;
             inset: 0;
@@ -73,6 +75,46 @@ License: For each use you must have a valid license purchased only from above li
             justify-content: center;
             align-items: center;
         }
+
+
+        /* bg judul tabel */
+        /* Warna default untuk field (dipakai di kedua mode) */
+        .table-field-colored tbody tr td {
+            background-color: var(--kt-field-bg);
+            transition: background-color 0.2s ease;
+            padding: 0.85rem 1.25rem !important;
+        }
+
+        .table-field-colored thead th {
+            /* background-color: var(--kt-field-bg);
+            transition: background-color 0.2s ease; */
+            padding: 0.85rem 1.25rem !important;
+        }
+
+        /* Light mode */
+        [data-bs-theme="light"] {
+            --kt-field-bg: #111827;
+            /* abu-abu kebiruan lembut, mirip Metronic gray-100 */
+        }
+
+        /* Dark mode */
+        [data-bs-theme="dark"] {
+            --kt-field-bg: #111827;
+            /* abu-abu sangat gelap, kayak panel di dark mode */
+        }
+
+        /* Optional: header juga dikasih background */
+        [data-bs-theme="light"] .table-field-colored thead tr {
+            background-color: #020617;
+            /* ungu kebiruan sangat soft */
+        }
+
+        [data-bs-theme="dark"] .table-field-colored thead tr {
+            background-color: #020617;
+            /* hampir hitam, tapi masih beda dari body */
+        }
+
+        
     </style>
 </head>
 <!--end::Head-->

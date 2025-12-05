@@ -70,7 +70,8 @@
                     <div class="card-body py-4">
                         <!--begin::Table-->
                         <div class="table-responsive">
-                            <table class="table align-middle table-row-dashed fs-6 gy-5" id="tabel_daerah">
+                            
+                            <table class="table align-middle table-row-dashed table-field-colored fs-6 gy-5" id="tabel_daerah">
                                 <thead>
                                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                         {{-- <th class="w-10px pe-2">
