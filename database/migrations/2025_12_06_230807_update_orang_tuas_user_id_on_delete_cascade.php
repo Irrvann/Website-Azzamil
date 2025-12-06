@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('orang_tuas', function (Blueprint $table) {
+            //
+             // 1. Drop foreign key lama dulu
+                $table->dropForeign(['users_id']);
+
+                // 2. Tambah foreign key baru dengan onDelete cascade
+                $table->foreign('users_id')
+                    ->references('id')
+                    ->on('users')
+                    ->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('orang_tuas', function (Blueprint $table) {
+            //
+            $table->dropForeign(['users_id']);
+
+            $table->foreign('users_id')
+                ->references('id')
+                ->on('users');
+        });
+    }
+};

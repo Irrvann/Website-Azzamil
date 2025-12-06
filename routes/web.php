@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DaerahController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\OrangTuaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SuperadminController;
@@ -46,6 +47,9 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::resource('data-guru', GuruController::class)
             ->names('guru');
+        
+        Route::resource('data-orang-tua', OrangTuaController::class)
+            ->names('orang_tua');
     });
 
 

@@ -337,7 +337,7 @@
                                 <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
                         </div>
-                        
+
 
                         {{-- SEKOLAH --}}
                         <div class="fv-row mb-7">
@@ -364,6 +364,24 @@
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             @endif
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="fw-semibold fs-6 mb-2">Status <span class="text-danger">*</span></label>
+                            <select name="status" class="form-select form-select-solid" data-control="select2"
+                                data-hide-search="true" data-placeholder="Pilih status...">
+                                <option value="">Pilih status...</option>
+                                <option value="aktif"
+                                    {{ old('status', $guru->user->status ?? '') == 'aktif' ? 'selected' : '' }}>
+                                    Aktif
+                                </option>
+                                <option value="non_aktif"
+                                    {{ old('status', $guru->user->status ?? '') == 'non_aktif' ? 'selected' : '' }}>
+                                    Tidak Aktif</option>
+                            </select>
+                            @error('status')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         {{-- USERNAME --}}

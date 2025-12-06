@@ -188,6 +188,10 @@ class GuruController extends Controller
                 'tanggal_masuk' => 'required|date',
 
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'status' => [
+                    'required',
+                    'in:aktif,non_aktif',
+                ],
             ],
             [
                 'username.required' => 'Username wajib diisi.',
@@ -209,6 +213,8 @@ class GuruController extends Controller
                 'foto.image' => 'Foto harus berupa gambar.',
                 'foto.mimes' => 'Foto harus berformat jpeg, png, atau jpg.',
                 'foto.max' => 'Ukuran foto maksimal 2MB.',
+                'status.required' => 'Status wajib diisi.',
+                'status.in' => 'Status harus berupa Aktif atau Non Aktif.',
             ]
         );
 
@@ -216,7 +222,7 @@ class GuruController extends Controller
         $userData = [
             'username' => $request->username,
             // kalau kamu nanti punya field status di form edit guru, bisa tambahkan di sini
-            // 'status'   => $request->status,
+            'status'   => $request->status,
         ];
 
         // Kalau password diisi, update password

@@ -18,7 +18,6 @@ class OrangTua extends Model
         'no_hp_ayah',
         'no_hp_ibu',
         'alamat',
-        'email',
     ];
 
     public function user()
