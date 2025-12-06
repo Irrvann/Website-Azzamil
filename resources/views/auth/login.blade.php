@@ -169,20 +169,30 @@ License: For each use you must have a valid license purchased only from above li
                             </div>
 
                             <!--end::Separator-->
-                            <!--begin::Input group=-->
                             <div class="fv-row mb-8">
-                                <!--begin::Username-->
-                                <input type="text" id="username" :value="old('username')" placeholder="Username"
-                                    name="username" autocomplete="off" class="form-control bg-transparent" />
-                                <!--end::Username-->
+                                <input type="text" id="username" name="username" value="{{ old('username') }}"
+                                    placeholder="Username" autocomplete="off"
+                                    class="form-control bg-transparent @error('username') is-invalid @enderror" />
+
+                                @error('username')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            <!--end::Input group=-->
+
                             <div class="fv-row mb-3">
-                                <!--begin::Password-->
-                                <input type="password" id="password" placeholder="Password" name="password"
-                                    autocomplete="off" class="form-control bg-transparent" />
-                                <!--end::Password-->
+                                <input type="password" id="password" name="password" placeholder="Password"
+                                    autocomplete="off"
+                                    class="form-control bg-transparent @error('password') is-invalid @enderror" />
+
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
+
 
                             <!--end::Wrapper-->
                             <!--begin::Submit button-->

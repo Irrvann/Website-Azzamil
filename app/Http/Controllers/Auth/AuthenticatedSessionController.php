@@ -27,12 +27,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        
+
 
         $user = Auth::user();
 
         if ($user->hasRole('super_admin')) {
             return redirect('/superadmin/dashboard')->with('welcome', 'Selamat datang Super Admin ' . $user->name . '!');
-        } elseif ($user->hasRole('admin')) {
+        } elseif ($user->hasRole(roles: 'admin')) {
             return redirect('/admin/dashboard')->with('welcome', 'Selamat datang Admin ' . $user->name . '!');
         }
         // elseif ($user->hasRole('admin')) {

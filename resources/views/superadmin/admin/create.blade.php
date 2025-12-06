@@ -224,6 +224,18 @@
                             @endif
                         </div>
 
+                        <div class="fv-row mb-7">
+                            <label class="fw-semibold fs-6 mb-2">Password <span class="text-danger">*</span></label>
+                            <input type="password" name="password"
+                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Password admin" />
+
+                            @if (old('form_source') == 'add_admin')
+                                @error('password')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            @endif
+                        </div>
+
 
 
                     </div>

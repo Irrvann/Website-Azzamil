@@ -28,6 +28,12 @@ class AdminController extends Controller
         return view('superadmin.admin.index', compact('dataAdmin', 'dataDaerah'));
     }
 
+    public function dashboardAdmin()
+    {
+        //
+        return view('admin.dashboard.index');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -56,6 +62,7 @@ class AdminController extends Controller
                 'no_hp' => 'nullable|string|max:20',
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
                 'username' => 'required|string|max:50|unique:users,username',
+                'password' => 'required|string|min:8',
             ],
             [
                 'nik.unique' => 'NIK sudah terdaftar.',
@@ -71,19 +78,12 @@ class AdminController extends Controller
             ]
         );
 
-        // mengambil nama depan untuk username
-        $namaDepan = strtolower(explode(' ', trim($request->nama))[0]);
-
-        // format tanggal lahir ddmmyyyy
-        $tanggal = Carbon::parse($request->tanggal_lahir)->format('dmY');
-
-        // menggabungkan jadi password
-        $passwordGab = strtolower($namaDepan) . $tanggal;
 
         // membuat user
         $user = User::create([
             'username' => $request->username,
-            'password' => Hash::make($passwordGab),
+            'password' => Hash::make($request->password),
+            'status' => 'aktif',
         ]);
 
         // Assign role
