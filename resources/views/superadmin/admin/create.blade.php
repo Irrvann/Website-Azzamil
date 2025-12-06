@@ -78,7 +78,7 @@
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">NIK</label>
                             <input type="text" name="nik" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="NIK admin" />
+                                placeholder="NIK admin" value="{{ old('nik') }}" />
                             @if (old('form_source') == 'add_admin')
                                 @error('nik')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -88,7 +88,7 @@
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">NIPA</label>
                             <input type="text" name="nipa" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="NIPA admin" />
+                                placeholder="NIPA admin" value="{{ old('nipa') }}" />
                             @if (old('form_source') == 'add_admin')
                                 @error('nipa')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -99,7 +99,7 @@
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Nama<span class="text-danger ms-1">*</span></label>
                             <input type="text" name="nama" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="Nama admin" />
+                                placeholder="Nama admin" value="{{ old('nama') }}" />
                             @if (old('form_source') == 'add_admin')
                                 @error('nama')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -111,7 +111,7 @@
                             <label class="fw-semibold fs-6 mb-2">Tempat Lahir<span
                                     class="text-danger ms-1">*</span></label>
                             <input type="text" name="tempat_lahir"
-                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tempat Lahir admin" />
+                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tempat Lahir admin" value="{{ old('tempat_lahir') }}" />
                             @if (old('form_source') == 'add_admin')
                                 @error('tempat_lahir')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -136,7 +136,7 @@
                                 <!--end::Icon-->
                                 <!--begin::Datepicker-->
                                 <input class="form-control form-control-solid ps-12" placeholder="Tanggal Lahir Admin"
-                                    type="date" name="tanggal_lahir" />
+                                    type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" />
                                 <!--end::Datepicker-->
                             </div>
                             <!--end::Input-->
@@ -155,8 +155,8 @@
                                 data-hide-search="true" data-placeholder="Pilih Jenis Kelamin..."
                                 name="jenis_kelamin">
                                 <option value="">Pilih Jenis Kelamin...</option>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
+                                <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
                             </select>
                             @if (old('form_source') == 'add_admin')
                                 @error('jenis_kelamin')
@@ -167,12 +167,12 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Alamat</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="alamat" placeholder="Type Alamat"></textarea>
+                            <textarea class="form-control form-control-solid" rows="3" name="alamat" placeholder="Type Alamat">{{ old('alamat') }}</textarea>
                         </div>
 
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Email</label>
-                            <input type="email" name="email" class="form-control form-control-solid mb-3 mb-lg-0"
+                            <input type="email" name="email" class="form-control form-control-solid mb-3 mb-lg-0" value="{{ old('email') }}"
                                 placeholder="Email admin" />
                             @if (old('form_source') == 'add_admin')
                                 @error('email')
@@ -184,7 +184,7 @@
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">No HP</label>
                             <input type="text" name="no_hp" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="No HP admin" />
+                                placeholder="No HP admin" value="{{ old('no_hp') }}" />
                             @if (old('form_source') == 'add_admin')
                                 @error('no_hp')
                                     <div class="text-danger mt-2">{{ $message }}</div>

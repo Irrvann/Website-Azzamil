@@ -193,7 +193,7 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Alamat</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="alamat" placeholder="Type Alamat" value="{{ old('alamat') }}"></textarea></textarea>
+                            <textarea class="form-control form-control-solid" rows="3" name="alamat" placeholder="Type Alamat">{{ old('alamat') }}</textarea>
                         </div>
 
                         <div class="fv-row mb-7">

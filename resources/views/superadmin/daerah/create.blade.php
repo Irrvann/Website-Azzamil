@@ -37,7 +37,7 @@
                             <!--end::Label-->
                             <!--begin::Input-->
                             <input type="text" name="nama_daerah"
-                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nama Daerah" />
+                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nama Daerah" value="{{ old('nama_daerah') }}" />
                             <!--end::Input-->
                             @if (old('form_source') == 'add_daerah')
                                 @error('nama_daerah')

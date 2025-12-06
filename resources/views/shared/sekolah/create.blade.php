@@ -38,7 +38,7 @@
                             <label class="fw-semibold fs-6 mb-2">Nama Sekolah<span
                                     class="text-danger ms-1">*</span></label>
                             <input type="text" name="nama_sekolah"
-                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nama Sekolah" />
+                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nama Sekolah" value="{{ old('nama_sekolah') }}" />
                             @if (old('form_source') == 'add_sekolah')
                                 @error('nama_sekolah')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -52,12 +52,12 @@
                             <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
                                 data-placeholder="Pilih Jenis Sekolah..." name="jenis_sekolah">
                                 <option value="">Pilih Jenis Sekolah...</option>
-                                <option value="baby">Baby</option>
-                                <option value="toddler">Toddler</option>
-                                <option value="pra_kb">Pra KB</option>
-                                <option value="kb_kecil">KB Kecil</option>
-                                <option value="kb_besar">KB Besar</option>
-                                <option value="tk">TK</option>
+                                <option value="baby" {{ old('jenis_sekolah') == 'baby' ? 'selected' : '' }}>Baby</option>
+                                <option value="toddler" {{ old('jenis_sekolah') == 'toddler' ? 'selected' : '' }}>Toddler</option>
+                                <option value="pra_kb" {{ old('jenis_sekolah') == 'pra_kb' ? 'selected' : '' }}>Pra KB</option>
+                                <option value="kb_kecil" {{ old('jenis_sekolah') == 'kb_kecil' ? 'selected' : '' }}>KB Kecil</option>
+                                <option value="kb_besar" {{ old('jenis_sekolah') == 'kb_besar' ? 'selected' : '' }}>KB Besar</option>
+                                <option value="tk" {{ old('jenis_sekolah') == 'tk' ? 'selected' : '' }}>TK</option>
                             </select>
                             @if (old('form_source') == 'add_sekolah')
                                 @error('jenis_sekolah')
@@ -70,7 +70,7 @@
                             <label class="fw-semibold fs-6 mb-2">Kelas<span
                                     class="text-danger ms-1">*</span></label>
                             <input type="text" name="kelas"
-                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kelas" />
+                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kelas" value="{{ old('kelas') }}" />
                             @if (old('form_source') == 'add_sekolah')
                                 @error('kelas')
                                     <div class="text-danger mt-2">{{ $message }}</div>
