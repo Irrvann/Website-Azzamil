@@ -18,7 +18,7 @@ class Sekolah extends Model
 
     public function daerah()
     {
-        return $this->belongsTo(Daerah::class);
+        return $this->belongsTo(Daerah::class, 'daerahs_id');
     }
 
     public function gurus()

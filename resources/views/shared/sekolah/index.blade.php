@@ -43,8 +43,8 @@
                                     <span class="path1"></span>
                                     <span class="path2"></span>
                                 </i>
-                                <input type="text" data-admin-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13" placeholder="Cari Admin" />
+                                <input type="text" data-sekolah-table-filter="search"
+                                    class="form-control form-control-solid w-250px ps-13" placeholder="Cari Sekolah" />
                             </div>
                             <!--end::Search-->
                         </div>
@@ -54,7 +54,7 @@
                             <!--begin::Toolbar-->
                             <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modal_add_admin">
+                                    data-bs-target="#modal_add_sekolah">
                                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Sekolah</button>
                                 <!--end::Add user-->
                             </div>
@@ -102,7 +102,7 @@
                                             <td>{{ $sekolah->nama_sekolah ?? '-' }}</td>
                                             <td>{{ $sekolah->jenis_sekolah ?? '-' }}</td>
                                             <td>{{ $sekolah->kelas ?? '-' }}</td>
-                                            <td>{{ $admin->daerah->nama_daerah ?? '-' }}</td>
+                                            <td>{{ $sekolah->daerah->nama_daerah ?? '-' }}</td>
                                             
 
                                             <td class="text-end">
