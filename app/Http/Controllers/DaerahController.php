@@ -68,7 +68,7 @@ class DaerahController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Daerah $daerah, $id)
+    public function update(Request $request, $id)
     {
         //
         $request->validate(
@@ -94,7 +94,7 @@ class DaerahController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Daerah $daerah, $id)
+    public function destroy( $id)
     {
         // ambil data, kalau tidak ada -> 404
         $daerah = Daerah::findOrFail($id);

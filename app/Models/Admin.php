@@ -21,6 +21,7 @@ class Admin extends Model
         'alamat',
         'email',
         'no_hp',
+        'foto',
     ];
 
     protected $casts = [
