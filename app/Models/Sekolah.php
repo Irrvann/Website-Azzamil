@@ -23,7 +23,7 @@ class Sekolah extends Model
 
     public function gurus()
     {
-        return $this->hasMany(Guru::class);
+        return $this->hasMany(Guru::class, 'sekolahs_id');
     }
 
     public function anaks()

@@ -24,7 +24,8 @@ class Guru extends Model
         'no_hp',
         'pend_terakhir',
         'jurusan',
-        'tanggal_masuk'
+        'tanggal_masuk',
+        'foto',
     ];
 
     protected $casts = [
@@ -39,7 +40,7 @@ class Guru extends Model
 
     public function sekolah()
     {
-        return $this->belongsTo(Sekolah::class);
+        return $this->belongsTo(Sekolah::class, 'sekolahs_id');
     }
 
     public function ddstTests()

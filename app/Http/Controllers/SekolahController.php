@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Daerah;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SekolahController extends Controller
 {
@@ -14,12 +15,12 @@ class SekolahController extends Controller
     public function index()
     {
         //
-        
+
 
         $dataSekolah = Sekolah::with(['daerah'])->paginate(10);
         $dataDaerah = Daerah::orderBy('nama_daerah', 'asc')->get();
 
-    
+
         return view('shared.sekolah.index', compact('dataSekolah', 'dataDaerah'));
     }
 
@@ -128,14 +129,39 @@ class SekolahController extends Controller
      */
     public function destroy($id)
     {
-        // ambil data, kalau tidak ada -> 404
-        $sekolah = Sekolah::findOrFail($id);
+        DB::beginTransaction();
 
-        // hapus data
-        $sekolah->delete();
-        
-        // redirect dengan pesan sukses
-        return redirect()->route('admin.sekolah.index')
-            ->with('success', 'Data sekolah berhasil dihapus.');
+        try {
+            // Ambil sekolah + semua guru + user-nya
+            $sekolah = Sekolah::with(['gurus.user'])->findOrFail($id);
+
+            // Loop semua guru di sekolah ini
+            foreach ($sekolah->gurus as $guru) {
+                // Kalau guru punya user
+                if ($guru->user) {
+                    // Hapus user (Spatie otomatis hapus model_has_roles untuk user ini)
+                    $guru->user->delete();
+                }
+
+                // Hapus data guru
+                $guru->delete();
+            }
+
+            // Terakhir hapus sekolah
+            $sekolah->delete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.sekolah.index')
+                ->with('success', 'Sekolah beserta semua guru & user terkait berhasil dihapus.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('admin.sekolah.index')
+                ->with('error', 'Gagal menghapus sekolah: ' . $th->getMessage());
+        }
     }
+
 }
