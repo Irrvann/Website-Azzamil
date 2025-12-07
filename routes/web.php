@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnakController;
 use App\Http\Controllers\DaerahController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\OrangTuaController;
@@ -50,6 +51,9 @@ Route::middleware(['auth', 'role:admin'])
         
         Route::resource('data-orang-tua', OrangTuaController::class)
             ->names('orang_tua');
+
+        Route::resource('data-anak', AnakController::class)
+            ->names('anak');
     });
 
 
