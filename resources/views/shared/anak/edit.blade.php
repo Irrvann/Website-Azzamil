@@ -37,7 +37,7 @@
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
                 <form enctype="multipart/form-data" id="modal_edit_anak_form_{{ $anak->id }}"
-                    class="form form-loading" action="{{ route('admin.anak.update', $anak->id) }}" method="POST">
+                    class="form form-loading" action="{{ route($routeNameUpdate, $anak->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 

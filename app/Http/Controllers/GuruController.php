@@ -26,6 +26,12 @@ class GuruController extends Controller
         return view('shared.guru.index', compact('dataGuru', 'dataSekolah'));
     }
 
+    public function dashboardGuru()
+    {
+        //
+        return view('guru.dashboard.index');
+    }
+
     /**
      * Show the form for creating a new resource.
      */

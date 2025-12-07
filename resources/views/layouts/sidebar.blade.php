@@ -318,6 +318,160 @@
                             <!--end:Menu link-->
 
                         </div>
+
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/admin/data-tumbuh-kembang">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Tumbuh Kembang</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
+                    @endrole
+
+                    @hasrole('guru')
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/guru/dashboard">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Dashboards</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
+                        <!--end:Menu item-->
+                        <!--begin:Menu item-->
+                        <div class="menu-item pt-5">
+                            <!--begin:Menu content-->
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
+                            </div>
+                            <!--end:Menu content-->
+                        </div>
+                        <!--end:Menu item-->
+                        <!--begin:Menu item-->
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/admin/data-sekolah">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Sekolah</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
+                        <!--end:Menu item-->
+
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/admin/data-guru">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Guru</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
+
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/admin/data-orang-tua">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Orang Tua</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
+
+
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/guru/data-anak">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Anak</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
+
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+
+                            <a class="menu-link" href="/admin/data-tumbuh-kembang">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-element-11 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                        <span class="path4"></span>
+                                        <span class="path5"></span>
+                                        <span class="path6"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Tumbuh Kembang</span>
+                            </a>
+                            <!--end:Menu link-->
+
+                        </div>
                     @endrole
                 </div>
                 <!--end::Menu-->

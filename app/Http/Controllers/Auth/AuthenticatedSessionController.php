@@ -36,7 +36,12 @@ class AuthenticatedSessionController extends Controller
             return redirect('/superadmin/dashboard')->with('welcome', 'Selamat datang Super Admin ' . $user->name . '!');
         } elseif ($user->hasRole(roles: 'admin')) {
             return redirect('/admin/dashboard')->with('welcome', 'Selamat datang Admin ' . $user->name . '!');
+        } elseif ($user->hasRole('guru')) {
+            return redirect('/guru/dashboard')->with('welcome', 'Selamat datang Guru ' . $user->name . '!');
+        } elseif ($user->hasRole('orang_tua')) {
+            return redirect('/orang_tua/dashboard')->with('welcome', 'Selamat datang Kepala Sekolah ' . $user->name . '!');
         }
+
         // elseif ($user->hasRole('admin')) {
         //     return redirect('/sekolah/dashboard')->with('welcome', 'Selamat datang Kepala Sekolah ' . $user->name . '!');
         // } elseif ($user->hasRole('guru')) {

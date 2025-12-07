@@ -6,6 +6,7 @@ use App\Models\Anak;
 use App\Models\OrangTua;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class AnakController extends Controller
@@ -13,14 +14,43 @@ class AnakController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    private function getAnakIndexRouteName(): string
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return 'admin.anak.index';
+        }
+
+        if ($user->hasRole('guru')) {
+            return 'guru.anak.index';
+        }
+
+        abort(403, 'Role tidak dikenali');
+    }
+
     public function index()
     {
         //
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            $routeNameStore = 'admin.anak.store';
+            $routeNameUpdate = 'admin.anak.update';
+            $routeNameDelete = 'admin.anak.destroy';
+        } elseif ($user->hasRole('guru')) {
+            $routeNameStore = 'guru.anak.store';
+            $routeNameUpdate = 'guru.anak.update';
+            $routeNameDelete = 'guru.anak.destroy';
+        } else {
+            abort(403, 'Role tidak dikenali');
+        }
         $dataAnak = Anak::with(['orangTua', 'sekolah'])->paginate(10);
         $dataOrangTua = OrangTua::orderBy('nama_ayah', 'asc')->orderBy('nama_ibu', 'asc')->get();
         $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();
 
-        return view('shared.anak.index', compact('dataAnak', 'dataOrangTua', 'dataSekolah'));
+        return view('shared.anak.index', compact('dataAnak', 'dataOrangTua', 'dataSekolah', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
 
     /**
@@ -124,7 +154,7 @@ class AnakController extends Controller
             'foto' => $fotoPath,
         ]);
 
-        return redirect()->route('admin.anak.index')->with('success', 'Anak berhasil ditambahkan.');
+        return redirect()->route($this->getAnakIndexRouteName())->with('success', 'Anak berhasil ditambahkan.');
     }
 
     /**
@@ -243,10 +273,10 @@ class AnakController extends Controller
             'tanggal_masuk' => $request->tanggal_masuk,
             'foto' => $fotoPath,
         ]);
-            
+
 
         return redirect()
-            ->route('admin.anak.index')
+            ->route($this->getAnakIndexRouteName())
             ->with('success', 'Data admin berhasil diperbarui.');
     }
 
@@ -263,7 +293,7 @@ class AnakController extends Controller
         $anak->delete();
 
         return redirect()
-            ->route('admin.anak.index')
+            ->route($this->getAnakIndexRouteName())
             ->with('success', 'Data anak berhasil dihapus.');
     }
 }
