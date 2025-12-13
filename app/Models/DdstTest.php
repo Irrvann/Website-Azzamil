@@ -17,6 +17,14 @@ class DdstTest extends Model
         'tanggal_test',
         'usia_bulan',
         'hasil_akhir',
+        'antropometris_id',
+        'semester',
+        'tahun_ajaran',
+        'interpretasi_ddst',
+        'tugas_belum_tercapai',
+        'tugas_perlu_ditingkatkan',
+        'saran_rujukan',
+        'hasil_akhir',
     ];
 
     protected $casts = [
@@ -38,4 +46,10 @@ class DdstTest extends Model
     {
         return $this->hasMany(DdstTestItem::class, 'ddst_tests_id');
     }
+
+    public function antropometri()
+    {
+        return $this->belongsTo(Antropometri::class, 'antropometris_id');
+    }
+
 }

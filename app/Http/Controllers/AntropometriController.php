@@ -2,17 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anak;
 use App\Models\Antropometri;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AntropometriController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    private function getTumbuhKembangIndexRouteName(): string
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return 'admin.data-tumbuh-kembang.index';
+        }
+
+        if ($user->hasRole('guru')) {
+            return 'guru.data-tumbuh-kembang.index';
+        }
+
+        if ($user->hasRole('super_admin')) {
+            return 'superadmin.data-tumbuh-kembang.index';
+        }
+
+        abort(403, 'Role tidak dikenali');
+    }
     public function index()
     {
         //
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $routeNameStore = 'admin.data-tumbuh-kembang.store';
+            $routeDdstCreate = 'admin.ddst.create_from_antropometri';
+            $routeDdstCetak = 'admin.ddst.cetak_laporan';
+        } elseif ($user->hasRole('guru')) {
+            $routeNameStore = 'guru.data-tumbuh-kembang.store';
+            $routeDdstCreate = 'guru.ddst.create_from_antropometri';
+            $routeDdstCetak = 'guru.ddst.cetak_laporan';
+        } elseif ($user->hasRole('super_admin')) {
+            $routeNameStore = 'superadmin.data-tumbuh-kembang.store';
+            $routeDdstCreate = 'superadmin.ddst.create_from_antropometri';
+            $routeDdstCetak = 'superadmin.ddst.cetak_laporan';
+        } else {
+            abort(403, 'Role tidak dikenali');
+        }
+        // tampilkan semua data antropometri (atau filter per sekolah/guru)
+        $dataAntropometri = Antropometri::with('anak', 'anak.sekolah', 'ddstTests')
+            ->latest('tanggal_ukur')->paginate(10);
+
+        $dataAnak = Anak::orderBy('nama_anak')->get();
+
+        return view('shared.tumbuh_kembang.index', compact('dataAntropometri', 'dataAnak', 'routeNameStore', 'routeDdstCreate', 'routeDdstCetak'));
     }
 
     /**
@@ -20,7 +63,6 @@ class AntropometriController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -29,6 +71,32 @@ class AntropometriController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'anaks_id' => 'required|exists:anaks,id',
+            'tanggal_ukur' => 'required|date',
+            'tinggi_badan' => 'nullable|numeric',
+            'berat_badan' => 'nullable|numeric',
+            'lingkar_kepala' => 'nullable|numeric',
+            'lingkar_lengan' => 'nullable|numeric',
+            'status_gizi' => 'nullable|in:normal,gizi_kurang,gizi_berlebih',
+            'status_bb' => 'nullable|in:normal,resiko',
+            'status_tb' => 'nullable|in:normal,pendek',
+        ]);
+
+        Antropometri::create($request->only([
+            'anaks_id',
+            'tanggal_ukur',
+            'tinggi_badan',
+            'berat_badan',
+            'lingkar_kepala',
+            'lingkar_lengan',
+            'status_gizi',
+            'status_bb',
+            'status_tb',
+        ]));
+
+        return redirect()->route($this->getTumbuhKembangIndexRouteName())
+            ->with('success', 'Data tumbuh kembang berhasil disimpan.');
     }
 
     /**

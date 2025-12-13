@@ -24,7 +24,7 @@
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
                 <form id="modal_edit_sekolah_form" class="form form-loading"
-                    action="{{ route('admin.sekolah.update', $sekolah->id) }}" method="POST">
+                    action="{{ route($routeNameUpdate, $sekolah->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="form_source" value="edit_sekolah">

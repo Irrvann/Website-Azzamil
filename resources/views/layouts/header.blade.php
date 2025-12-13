@@ -1,9 +1,9 @@
 <!--begin::Header-->
 <div id="kt_app_header" class="app-header" data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}"
     data-kt-sticky-name="app-header-minimize" data-kt-sticky-offset="{default: '200px', lg: '0'}"
-    data-kt-sticky-animation="false" style="background-color:#0D0E12;" >
+    data-kt-sticky-animation="false" style="background-color:#0D0E12;">
 
-    
+
 
     <!--begin::Header container-->
     <div class="app-container container-fluid d-flex align-items-stretch justify-content-between"
@@ -37,14 +37,15 @@
                 <!--begin::Menu-->
                 <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0"
                     id="kt_app_header_menu" data-kt-menu="true">
-                <div  data-kt-menu-placement="bottom-start"
+                    <div data-kt-menu-placement="bottom-start"
                         class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                    <span class="menu-link">
+                        <span class="menu-link">
                             <span class="menu-title">Azzamil School</span>
                             <span class="menu-arrow d-lg-none"></span>
-                        </span></div>
+                        </span>
+                    </div>
                 </div>
-                    {{-- <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0"
+                {{-- <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0"
                         id="kt_app_header_menu" data-kt-menu="true">
                         <!--begin:Menu item-->
                         <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
@@ -3284,7 +3285,7 @@
             <!--end::Menu wrapper-->
             <!--begin::Navbar-->
             <div class="app-navbar flex-shrink-0">
-                
+
                 <!--end::My apps links-->
                 <!--begin::Theme mode-->
                 <div class="app-navbar-item ms-1 ms-md-4">
@@ -3316,8 +3317,7 @@
                         data-kt-menu="true" data-kt-element="theme-mode-menu">
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="light">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="light">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-duotone ki-night-day fs-2">
                                         <span class="path1"></span>
@@ -3338,8 +3338,7 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="dark">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="dark">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-duotone ki-moon fs-2">
                                         <span class="path1"></span>
@@ -3371,47 +3370,53 @@
                 </div>
                 <!--end::Theme mode-->
                 <!--begin::User menu-->
-
+                @php
+                    $user = Auth::user();
+                @endphp
                 <div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
                     <!--begin::Menu wrapper-->
                     <div class="cursor-pointer symbol symbol-35px"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        <img src="/template_admin/demo1/assets/media/avatars/300-3.jpg" class="rounded-3"
-                            alt="user" />
+                        <img src="{{ $user->avatarUrl() }}" class="rounded-3" alt="user" />
                     </div>
                     <!--begin::User account menu-->
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
                         data-kt-menu="true">
                         <!--begin::Menu item-->
+
+
                         <div class="menu-item px-3">
                             <div class="menu-content d-flex align-items-center px-3">
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
-                                    <img alt="Logo" src="/template_admin/demo1/assets/media/avatars/300-3.jpg" />
+                                    <img alt="Avatar" src="{{ $user->avatarUrl() }}" />
                                 </div>
                                 <!--end::Avatar-->
+
                                 <!--begin::Username-->
                                 <div class="d-flex flex-column">
-                                    <div class="fw-bold d-flex align-items-center fs-5">Robert Fox
-                                        <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
+                                    <div class="fw-bold d-flex align-items-center fs-5">
+                                        {{ $user->displayName() }}
                                     </div>
-                                    <a href="#"
-                                        class="fw-semibold text-muted text-hover-primary fs-7">robert@kt.com</a>
+                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
+                                        {{ $user->displayEmail() }}
+                                    </a>
                                 </div>
                                 <!--end::Username-->
                             </div>
                         </div>
+
                         <!--end::Menu item-->
                         <!--begin::Menu separator-->
                         <div class="separator my-2"></div>
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="account/overview.html" class="menu-link px-5">Profile Saya</a>
+                            <a href="#" class="menu-link px-5">Profile Saya</a>
                         </div>
                         <!--end::Menu item-->
-                        
+
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
                             <form method="POST" action="{{ route('logout') }}">

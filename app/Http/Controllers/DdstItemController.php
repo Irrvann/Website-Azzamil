@@ -13,6 +13,8 @@ class DdstItemController extends Controller
     public function index()
     {
         //
+        $dataDdstItems = DdstItem::paginate(10);
+        return view('shared.ddst_item.index', compact('dataDdstItems'));
     }
 
     /**

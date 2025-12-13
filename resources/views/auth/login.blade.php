@@ -65,7 +65,7 @@ License: For each use you must have a valid license purchased only from above li
 
 <head>
     <base href="../../../" />
-    <title>Metronic - The World's #1 Selling Tailwind CSS & Bootstrap Admin Template by KeenThemes</title>
+    <title>Azzamil School</title>
     <meta charset="utf-8" />
     <meta name="description"
         content="The most advanced Tailwind CSS & Bootstrap 5 Admin Theme with 40 unique prebuilt layouts on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel versions. Grab your copy now and get life-time updates for free." />
@@ -136,12 +136,14 @@ License: For each use you must have a valid license purchased only from above li
                 <!--begin::Aside-->
                 <div class="d-flex flex-center flex-lg-start flex-column">
                     <!--begin::Logo-->
-                    <a href="index.html" class="mb-7">
-                        <img alt="Logo" src="template_admin/demo1/assets/media/logos/custom-3.svg" />
+                    <a href="#" class="mb-7 d-block text-center text-lg-start">
+                        <img alt="Logo" src="/assets/media/logo/logo-azzamil.png" class="img-fluid"
+                            style="max-width: 500px; width: 100%; height: auto;" />
                     </a>
+
                     <!--end::Logo-->
                     <!--begin::Title-->
-                    <h2 class="text-white fw-normal m-0">Branding tools designed for your business</h2>
+                    {{-- <h2 class="text-white fw-normal m-0">Azzamil School</h2> --}}
                     <!--end::Title-->
                 </div>
                 <!--begin::Aside-->
@@ -216,10 +218,10 @@ License: For each use you must have a valid license purchased only from above li
                     <div class="d-flex flex-stack px-lg-10">
 
                         <!--begin::Links-->
-                        <div class="d-flex fw-semibold text-primary fs-base gap-5">
+                        {{-- <div class="d-flex fw-semibold text-primary fs-base gap-5">
 
                             <a href="pages/contact.html" target="_blank">Contact Us</a>
-                        </div>
+                        </div> --}}
                         <!--end::Links-->
                     </div>
                     <!--end::Footer-->

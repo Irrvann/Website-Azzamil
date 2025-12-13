@@ -36,18 +36,35 @@
                     <!--begin::Card header-->
                     <div class="card-header border-0 pt-6">
                         <!--begin::Card title-->
-                        <div class="card-title">
-                            <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <input type="text" data-sekolah-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13" placeholder="Cari Sekolah" />
+                        <form method="GET" action="{{ url()->current() }}">
+                            <div class="card-title d-flex align-items-center gap-3">
+                                <!-- Search -->
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
+                                    <input type="text" name="search" value="{{ request('search') }}"
+                                        class="form-control form-control-solid w-250px ps-13" placeholder="Cari Sekolah" />
+                                </div>
+
+                                <!-- Filter Daerah -->
+                                <select name="daerahs_id" class="form-select form-select-solid w-200px">
+                                    <option value="">Semua Daerah</option>
+                                    @foreach ($dataDaerah as $daerah)
+                                        <option value="{{ $daerah->id }}" @selected(request('daerahs_id') == $daerah->id)>
+                                            {{ $daerah->nama_daerah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <button class="btn btn-primary">Filter</button>
+                                <a href="{{ url()->current() }}" class="btn btn-light">Reset</a>
                             </div>
-                            <!--end::Search-->
-                        </div>
+                        </form>
+
+
                         <!--begin::Card title-->
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
@@ -100,10 +117,26 @@
                                             </td> --}}
                                             <td>{{ $dataSekolah->firstItem() + $index }}</td>
                                             <td>{{ $sekolah->nama_sekolah ?? '-' }}</td>
-                                            <td>{{ $sekolah->jenis_sekolah ?? '-' }}</td>
+                                            <td>
+                                                @if ($sekolah->jenis_sekolah === 'baby')
+                                                    Baby
+                                                @elseif ($sekolah->jenis_sekolah === 'toddler')
+                                                    Toddler
+                                                @elseif ($sekolah->jenis_sekolah === 'pra_kb')
+                                                    Pra KB
+                                                @elseif ($sekolah->jenis_sekolah === 'kb_kecil')
+                                                    KB Kecil
+                                                @elseif ($sekolah->jenis_sekolah === 'kb_besar')
+                                                    KB Besar
+                                                @elseif ($sekolah->jenis_sekolah === 'tk')
+                                                    TK
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td>{{ $sekolah->kelas ?? '-' }}</td>
                                             <td>{{ $sekolah->daerah->nama_daerah ?? '-' }}</td>
-                                            
+
 
                                             <td class="text-end">
 
@@ -215,6 +248,26 @@
                 if (noDataRow) {
                     noDataRow.style.display = (visibleCount === 0) ? '' : 'none';
                 }
+            });
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form[method="GET"]');
+            if (!form) return;
+
+            const daerah = form.querySelector('select[name="daerahs_id"]');
+            const search = form.querySelector('input[name="search"]');
+            if (!daerah || !search) return;
+
+            daerah.addEventListener('change', () => form.submit());
+
+            let t;
+            search.addEventListener('input', () => {
+                clearTimeout(t);
+                t = setTimeout(() => form.submit(), 500);
             });
         });
     </script>

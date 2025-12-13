@@ -17,6 +17,10 @@ class Antropometri extends Model
         'tinggi_badan',
         'berat_badan',
         'lingkar_kepala',
+        'lingkar_lengan',
+        'status_gizi',
+        'status_bb',
+        'status_tb',
     ];
 
     protected $casts = [
@@ -24,10 +28,16 @@ class Antropometri extends Model
         'tinggi_badan' => 'float',
         'berat_badan' => 'float',
         'lingkar_kepala' => 'float',
+        'lingkar_lengan' => 'float',
     ];
 
     public function anak()
     {
         return $this->belongsTo(Anak::class, 'anaks_id');
+    }
+
+    public function ddstTests()
+    {
+        return $this->hasMany(DdstTest::class, 'antropometris_id');
     }
 }

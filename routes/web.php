@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnakController;
+use App\Http\Controllers\AntropometriController;
 use App\Http\Controllers\DaerahController;
 use App\Http\Controllers\DdstItemController;
 use App\Http\Controllers\DdstTestController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\DdstTestItemController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\OrangTuaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RaportController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SuperadminController;
 use App\Models\Antropometri;
@@ -29,9 +31,43 @@ Route::middleware(['auth', 'role:super_admin'])
 
         Route::resource('data-daerah', DaerahController::class)
             ->names('daerah');
+
         Route::resource('data-admin', AdminController::class)
             ->names('admin');
 
+        Route::resource('data-sekolah', SekolahController::class)
+            ->names('sekolah');
+
+
+        Route::resource('data-guru', GuruController::class)
+            ->names('guru');
+
+        Route::resource('data-orang-tua', OrangTuaController::class)
+            ->names('orang_tua');
+
+        Route::resource('data-anak', AnakController::class)
+            ->names('anak');
+
+
+        Route::resource('data-raport', RaportController::class)
+            ->names('raport');
+
+        Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
+            ->name('raport.cetak-pdf');
+
+        // Modul tumbuh kembang = antropometri
+        Route::resource('data-tumbuh-kembang', AntropometriController::class)
+            ->names('data-tumbuh-kembang');
+
+        // Tambahan khusus: buat DDST dari satu data antropometri
+        Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
+            ->name('ddst.create_from_antropometri');
+
+        Route::post('antropometri/{antropometri}/ddst', [DdstTestController::class, 'storeFromAntropometri'])
+            ->name('ddst.store_from_antropometri');
+
+        Route::get('antropometri/{antropometri}/ddst/cetak', [DdstTestController::class, 'cetakLaporan'])
+            ->name('ddst.cetak_laporan');
     });
 
 
@@ -59,17 +95,29 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('data-anak', AnakController::class)
             ->names('anak');
 
-        Route::resource('data-antropometri', Antropometri::class)
-            ->names('antropometri');
+        // Tumbuh Kembang
+    
+        // Modul tumbuh kembang = antropometri
+        Route::resource('data-tumbuh-kembang', AntropometriController::class)
+            ->names('data-tumbuh-kembang');
 
-        Route::resource('data-ddst-items', DdstItemController::class)
-            ->names('ddst_item');
+        // Tambahan khusus: buat DDST dari satu data antropometri
+        Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
+            ->name('ddst.create_from_antropometri');
 
-        Route::resource('data-ddst-tests', DdstTestController::class)
-            ->names('ddst_test');
+        Route::post('antropometri/{antropometri}/ddst', [DdstTestController::class, 'storeFromAntropometri'])
+            ->name('ddst.store_from_antropometri');
 
-        Route::resource('data-ddst-test-items', DdstTestItemController::class)
-            ->names('ddst_test_item');
+        Route::get('antropometri/{antropometri}/ddst/cetak', [DdstTestController::class, 'cetakLaporan'])
+            ->name('ddst.cetak_laporan');
+
+
+
+        Route::resource('data-raport', RaportController::class)
+            ->names('raport');
+
+        Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
+            ->name('raport.cetak-pdf');
     });
 
 Route::middleware(['auth', 'role:guru'])
@@ -81,6 +129,36 @@ Route::middleware(['auth', 'role:guru'])
 
         Route::resource('data-anak', AnakController::class)
             ->names('anak');
+
+        // Modul tumbuh kembang = antropometri
+        Route::resource('data-tumbuh-kembang', AntropometriController::class)
+            ->names('data-tumbuh-kembang');
+
+        // Tambahan khusus: buat DDST dari satu data antropometri
+        Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
+            ->name('ddst.create_from_antropometri');
+
+        Route::post('antropometri/{antropometri}/ddst', [DdstTestController::class, 'storeFromAntropometri'])
+            ->name('ddst.store_from_antropometri');
+
+        Route::get('antropometri/{antropometri}/ddst/cetak', [DdstTestController::class, 'cetakLaporan'])
+            ->name('ddst.cetak_laporan');
+
+        Route::resource('data-raport', RaportController::class)
+            ->names('raport');
+
+        Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
+            ->name('raport.cetak-pdf');
+    });
+
+
+Route::middleware(['auth', 'role:orang_tua'])
+    ->prefix('orang_tua')
+    ->name('orang_tua.')
+    ->group(function () {
+        Route::get('/dashboard', [OrangTuaController::class, 'dashboardOrangTua'])
+            ->name('dashboard');
+
     });
 
 require __DIR__ . '/auth.php';

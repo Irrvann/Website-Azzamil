@@ -34,7 +34,7 @@
                         Batal
                     </button>
 
-                    <form action="{{ route('admin.sekolah.destroy', $sekolah->id) }}" method="POST"
+                    <form action="{{ route($routeNameDelete, $sekolah->id) }}" method="POST"
                         class="d-inline form-loading">
                         @csrf
                         @method('DELETE')

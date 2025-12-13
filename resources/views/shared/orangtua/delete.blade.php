@@ -34,7 +34,7 @@
                         Batal
                     </button>
 
-                    <form action="{{ route('admin.orang_tua.destroy', $orangTua->id) }}" method="POST"
+                    <form action="{{ route($routeNameDelete, $orangTua->id) }}" method="POST"
                         class="d-inline form-loading">
                         @csrf
                         @method('DELETE')

@@ -24,7 +24,7 @@
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
                 <form enctype="multipart/form-data" id="modal_add_guru_form" class="form form-loading"
-                    action="{{ route('admin.guru.store') }}" method="POST">
+                    action="{{ route($routeNameStore) }}" method="POST">
                     @csrf
                     <input type="hidden" name="form_source" value="add_guru">
 

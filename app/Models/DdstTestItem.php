@@ -27,4 +27,10 @@ class DdstTestItem extends Model
     {
         return $this->belongsTo(DdstItem::class, 'ddst_items_id');
     }
+
+    public function item()
+    {
+        return $this->belongsTo(DdstItem::class, 'ddst_items_id');
+    }
+
 }

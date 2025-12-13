@@ -5,12 +5,19 @@
     <!--begin::Logo-->
     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
         <!--begin::Logo image-->
-        <a href="index.html">
-            <img alt="Logo" src="/template_admin/demo1/assets/media/logos/default-dark.svg"
-                class="h-25px app-sidebar-logo-default" />
-            <img alt="Logo" src="/template_admin/demo1/assets/media/logos/default-small.svg"
-                class="h-20px app-sidebar-logo-minimize" />
+        <a href="#" class="app-sidebar-logo d-flex align-items-center gap-3">
+            <!-- Logo besar -->
+            <img alt="Logo" src="/assets/media/logo/logo-azzamil.png" class="h-50px app-sidebar-logo-default" />
+
+            <!-- Tulisan -->
+            <span class="app-sidebar-logo-text fw-bold fs-5 text-dark app-sidebar-logo-default">
+                Azzamil School
+            </span>
+
+            <!-- Logo kecil (minimize) -->
+            <img alt="Logo" src="/assets/media/logo/logo-azzamil.png" class="h-30px app-sidebar-logo-minimize" />
         </a>
+
         <!--end::Logo image-->
         <!--begin::Sidebar toggle-->
         <!--begin::Minimized sidebar setup:
@@ -47,432 +54,445 @@
                 <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu"
                     data-kt-menu="true" data-kt-menu-expand="false">
                     <!--begin:Menu item-->
-                    @hasrole('super_admin')
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
 
-                            <a class="menu-link" href="/superadmin/dashboard">
+                    @hasrole('super_admin')
+
+                        {{-- DASHBOARD --}}
+                        <div class="menu-item {{ request()->is('superadmin/dashboard*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/dashboard*') ? 'active' : '' }}"
+                                href="/superadmin/dashboard">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
+                                    <i class="ki-duotone ki-home fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
                                     </i>
-                                </span>
-                                <span class="menu-title">Dashboards</span>
-                            </a>
-                            <!--end:Menu link-->
 
+                                </span>
+                                <span class="menu-title">Dashboard</span>
+                            </a>
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
+
                         <div class="menu-item pt-5">
-                            <!--begin:Menu content-->
                             <div class="menu-content">
                                 <span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
                             </div>
-                            <!--end:Menu content-->
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
 
-                            <a class="menu-link" href="/superadmin/data-daerah">
+                        {{-- DATA DAERAH --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-daerah*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-daerah*') ? 'active' : '' }}"
+                                href="/superadmin/data-daerah">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
+                                    <i class="ki-duotone ki-geolocation fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Daerah</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
 
-                            <a class="menu-link" href="/superadmin/data-admin">
+                        {{-- DATA ADMIN --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-admin*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-admin*') ? 'active' : '' }}"
+                                href="/superadmin/data-admin">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
+                                    <i class="ki-duotone ki-user fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
                                     </i>
+
                                 </span>
                                 <span class="menu-title">Data Admin</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
 
-                            <a class="menu-link" href="#">
+                        {{-- DATA SEKOLAH --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-sekolah*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-sekolah*') ? 'active' : '' }}"
+                                href="/superadmin/data-sekolah">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
+                                    <i class="ki-duotone ki-bank fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">Data Guru</span>
-                            </a>
-                            <!--end:Menu link-->
-
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="#">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">Data anak</span>
-                            </a>
-                            <!--end:Menu link-->
-
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="#">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Sekolah</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
 
-                            <a class="menu-link" href="#">
+                        {{-- DATA GURU --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-guru*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-guru*') ? 'active' : '' }}"
+                                href="/superadmin/data-guru">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
+                                    <i class="ki-duotone ki-profile-circle fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
                                     </i>
+
+                                </span>
+                                <span class="menu-title">Data Guru</span>
+                            </a>
+                        </div>
+
+                        {{-- DATA ORANG TUA --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-orang-tua*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-orang-tua*') ? 'active' : '' }}"
+                                href="/superadmin/data-orang-tua">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-user-square fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                </span>
+
+
+                                <span class="menu-title">Data Orang Tua</span>
+                            </a>
+                        </div>
+
+                        {{-- DATA ANAK --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-anak*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-anak*') ? 'active' : '' }}"
+                                href="/superadmin/data-anak">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-user-tick fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
+                                </span>
+                                <span class="menu-title">Data Anak</span>
+                            </a>
+                        </div>
+
+                        {{-- DATA TUMBUH KEMBANG --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-tumbuh-kembang*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-tumbuh-kembang*') ? 'active' : '' }}"
+                                href="/superadmin/data-tumbuh-kembang">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-heart fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
+                                </span>
+                                <span class="menu-title">Data Tumbuh Kembang</span>
+                            </a>
+                        </div>
+
+                        {{-- DATA RAPORT --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-raport*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-raport*') ? 'active' : '' }}"
+                                href="/superadmin/data-raport">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-note-2 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
+                                </span>
+                                <span class="menu-title">Data Raport</span>
+                            </a>
+                        </div>
+
+                        {{-- PROFILE --}}
+                        <div class="menu-item {{ request()->is('superadmin/profile*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/profile*') ? 'active' : '' }}"
+                                href="#">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-setting-2 fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
                                 </span>
                                 <span class="menu-title">Profile</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
+
                     @endrole
 
 
+
+
+                    {{-- =========================
+ROLE: ADMIN
+========================= --}}
                     @hasrole('admin')
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/dashboard">
+                        {{-- Dashboard --}}
+                        <div class="menu-item menu-accordion {{ request()->is('admin/dashboard*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/dashboard*') ? 'active' : '' }}"
+                                href="/admin/dashboard">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-home fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">Dashboards</span>
+                                <span class="menu-title">Dashboard</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
+
                         <div class="menu-item pt-5">
-                            <!--begin:Menu content-->
                             <div class="menu-content">
                                 <span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
                             </div>
-                            <!--end:Menu content-->
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
 
-                            <a class="menu-link" href="/admin/data-sekolah">
+                        {{-- Data Sekolah --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('admin/data-sekolah*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/data-sekolah*') ? 'active' : '' }}"
+                                href="/admin/data-sekolah">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-bank fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Sekolah</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
 
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-guru">
+                        {{-- Data Guru --}}
+                        <div class="menu-item menu-accordion {{ request()->is('admin/data-guru*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/data-guru*') ? 'active' : '' }}"
+                                href="/admin/data-guru">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-profile-circle fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Guru</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
 
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-orang-tua">
+                        {{-- Data Orang Tua --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('admin/data-orang-tua*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/data-orang-tua*') ? 'active' : '' }}"
+                                href="/admin/data-orang-tua">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
+                                    <i class="ki-duotone ki-user-square fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Orang Tua</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
 
-
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-anak">
+                        {{-- Data Anak --}}
+                        <div class="menu-item menu-accordion {{ request()->is('admin/data-anak*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/data-anak*') ? 'active' : '' }}"
+                                href="/admin/data-anak">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-user-tick fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Anak</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
 
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-tumbuh-kembang">
+                        {{-- Tumbuh Kembang --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('admin/data-tumbuh-kembang*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/data-tumbuh-kembang*') ? 'active' : '' }}"
+                                href="/admin/data-tumbuh-kembang">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-heart fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Tumbuh Kembang</span>
                             </a>
-                            <!--end:Menu link-->
+                        </div>
 
+                        {{-- Data Raport --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('admin/data-raport*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/data-raport*') ? 'active' : '' }}"
+                                href="/admin/data-raport">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-note-2 fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Raport</span>
+                            </a>
+                        </div>
+
+                        {{-- Profil (kalau belum ada route, biarkan #) --}}
+                        <div class="menu-item menu-accordion {{ request()->is('admin/profil*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/profil*') ? 'active' : '' }}" href="#">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-setting-2 fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Profil</span>
+                            </a>
                         </div>
                     @endrole
 
+
+                    {{-- =========================
+ROLE: GURU
+========================= --}}
                     @hasrole('guru')
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/guru/dashboard">
+                        {{-- Dashboard --}}
+                        <div class="menu-item menu-accordion {{ request()->is('guru/dashboard*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('guru/dashboard*') ? 'active' : '' }}"
+                                href="/guru/dashboard">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-home fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">Dashboards</span>
+                                <span class="menu-title">Dashboard</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
+
                         <div class="menu-item pt-5">
-                            <!--begin:Menu content-->
                             <div class="menu-content">
                                 <span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
                             </div>
-                            <!--end:Menu content-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-sekolah">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">Data Sekolah</span>
-                            </a>
-                            <!--end:Menu link-->
-
-                        </div>
-                        <!--end:Menu item-->
-
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-guru">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">Data Guru</span>
-                            </a>
-                            <!--end:Menu link-->
-
                         </div>
 
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-orang-tua">
+                        {{-- Data Anak --}}
+                        <div class="menu-item menu-accordion {{ request()->is('guru/data-anak*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('guru/data-anak*') ? 'active' : '' }}"
+                                href="/guru/data-anak">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">Data Orang Tua</span>
-                            </a>
-                            <!--end:Menu link-->
-
-                        </div>
-
-
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/guru/data-anak">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-user-tick fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Data Anak</span>
                             </a>
-                            <!--end:Menu link-->
-
                         </div>
 
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                            <!--begin:Menu link-->
-
-                            <a class="menu-link" href="/admin/data-tumbuh-kembang">
+                        {{-- Tumbuh Kembang --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('guru/data-tumbuh-kembang*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('guru/data-tumbuh-kembang*') ? 'active' : '' }}"
+                                href="/guru/data-tumbuh-kembang">
                                 <span class="menu-icon">
-                                    <i class="ki-duotone ki-element-11 fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                        <span class="path6"></span>
+                                    <i class="ki-duotone ki-heart fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
                                 <span class="menu-title">Tumbuh Kembang</span>
                             </a>
-                            <!--end:Menu link-->
+                        </div>
 
+                        {{-- Data Raport --}}
+                        <div class="menu-item menu-accordion {{ request()->is('guru/data-raport*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('guru/data-raport*') ? 'active' : '' }}"
+                                href="/guru/data-raport">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-note-2 fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Raport</span>
+                            </a>
+                        </div>
+
+                        {{-- Profil --}}
+                        <div class="menu-item menu-accordion {{ request()->is('guru/profil*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('guru/profil*') ? 'active' : '' }}" href="#">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-setting-2 fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Profil</span>
+                            </a>
                         </div>
                     @endrole
+
+
+                    {{-- =========================
+ROLE: ORANG TUA
+========================= --}}
+                    @hasrole('orang_tua')
+                        {{-- Dashboard --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('orang_tua/dashboard*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('orang_tua/dashboard*') ? 'active' : '' }}"
+                                href="/orang_tua/dashboard">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-home fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Dashboard</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item pt-5">
+                            <div class="menu-content">
+                                <span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
+                            </div>
+                        </div>
+
+                        {{-- Data Informasi Anak (BETULKAN LINK: harus orang_tua, bukan guru) --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('orang_tua/data-anak*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('orang_tua/data-anak*') ? 'active' : '' }}"
+                                href="/orang_tua/data-anak">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-user-tick fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Informasi Anak</span>
+                            </a>
+                        </div>
+
+                        {{-- Tumbuh Kembang (BETULKAN LINK: harus orang_tua, bukan admin) --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('orang_tua/data-tumbuh-kembang*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('orang_tua/data-tumbuh-kembang*') ? 'active' : '' }}"
+                                href="/orang_tua/data-tumbuh-kembang">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-heart fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Tumbuh Kembang</span>
+                            </a>
+                        </div>
+
+                        {{-- Data Raport --}}
+                        <div
+                            class="menu-item menu-accordion {{ request()->is('orang_tua/data-raport*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('orang_tua/data-raport*') ? 'active' : '' }}"
+                                href="/orang_tua/data-raport">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-note-2 fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Data Raport</span>
+                            </a>
+                        </div>
+
+                        {{-- Profil --}}
+                        <div class="menu-item menu-accordion {{ request()->is('orang_tua/profil*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('orang_tua/profil*') ? 'active' : '' }}" href="#">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-setting-2 fs-2">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">Profil</span>
+                            </a>
+                        </div>
+                    @endrole
+
                 </div>
                 <!--end::Menu-->
             </div>

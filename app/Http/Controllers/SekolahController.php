@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Daerah;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SekolahController extends Controller
@@ -12,16 +13,50 @@ class SekolahController extends Controller
     /**
      * Display a listing of the resource.
      */
+    private function getSekolahIndexRouteName(): string
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return 'admin.sekolah.index';
+        }
+
+        if ($user->hasRole('super_admin')) {
+            return 'superadmin.sekolah.index';
+        }
+
+        abort(403, 'Role tidak dikenali');
+    }
     public function index()
     {
         //
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $routeNameStore = 'admin.sekolah.store';
+            $routeNameUpdate = 'admin.sekolah.update';
+            $routeNameDelete = 'admin.sekolah.destroy';
+        } elseif ($user->hasRole('super_admin')) {
+            $routeNameStore = 'superadmin.sekolah.store';
+            $routeNameUpdate = 'superadmin.sekolah.update';
+            $routeNameDelete = 'superadmin.sekolah.destroy';
+        } else {
+            abort(403, 'Role tidak dikenali');
+        }
 
+        $search = request('search');
+        $daerahId = request('daerahs_id');
 
-        $dataSekolah = Sekolah::with(['daerah'])->paginate(10);
+        $dataSekolah = Sekolah::with('daerah')
+            ->when($search, fn($q) => $q->where('nama_sekolah', 'like', "%{$search}%"))
+            ->when($daerahId, fn($q) => $q->where('daerahs_id', $daerahId))
+            ->orderBy('nama_sekolah', 'asc')
+            ->paginate(10)
+            ->appends(request()->query());
+
         $dataDaerah = Daerah::orderBy('nama_daerah', 'asc')->get();
 
 
-        return view('shared.sekolah.index', compact('dataSekolah', 'dataDaerah'));
+        return view('shared.sekolah.index', compact('dataSekolah', 'dataDaerah', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
 
     /**
@@ -66,7 +101,7 @@ class SekolahController extends Controller
             'kelas' => $request->kelas,
         ]);
 
-        return redirect()->route('admin.sekolah.index')->with('success', 'Sekolah berhasil ditambahkan.');
+        return redirect()->route($this->getSekolahIndexRouteName())->with('success', 'Sekolah berhasil ditambahkan.');
     }
 
     /**
@@ -121,7 +156,7 @@ class SekolahController extends Controller
             'kelas' => $request->kelas,
         ]);
 
-        return redirect()->route('admin.sekolah.index')->with('success', 'Sekolah berhasil diperbarui.');
+        return redirect()->route($this->getSekolahIndexRouteName())->with('success', 'Sekolah berhasil diperbarui.');
     }
 
     /**
@@ -153,13 +188,13 @@ class SekolahController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('admin.sekolah.index')
+                ->route($this->getSekolahIndexRouteName())
                 ->with('success', 'Sekolah beserta semua guru & user terkait berhasil dihapus.');
         } catch (\Throwable $th) {
             DB::rollBack();
 
             return redirect()
-                ->route('admin.sekolah.index')
+                ->route($this->getSekolahIndexRouteName())
                 ->with('error', 'Gagal menghapus sekolah: ' . $th->getMessage());
         }
     }

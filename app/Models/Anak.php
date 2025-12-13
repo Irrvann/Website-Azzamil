@@ -44,7 +44,7 @@ class Anak extends Model
 
     public function antropometris()
     {
-        return $this->hasMany(Antropometri::class);
+        return $this->hasMany(Antropometri::class, 'anaks_id');
     }
 
     public function ddstTests()

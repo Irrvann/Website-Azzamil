@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrangTua;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -13,14 +14,44 @@ class OrangTuaController extends Controller
     /**
      * Display a listing of the resource.
      */
+    private function getOrangTuaIndexRouteName(): string
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return 'admin.orang_tua.index';
+        }
+
+        if ($user->hasRole('super_admin')) {
+            return 'superadmin.orang_tua.index';
+        }
+
+        abort(403, 'Role tidak dikenali');
+    }
     public function index()
     {
         //
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $routeNameStore = 'admin.orang_tua.store';
+            $routeNameUpdate = 'admin.orang_tua.update';
+            $routeNameDelete = 'admin.orang_tua.destroy';
+        } elseif ($user->hasRole('super_admin')) {
+            $routeNameStore = 'superadmin.orang_tua.store';
+            $routeNameUpdate = 'superadmin.orang_tua.update';
+            $routeNameDelete = 'superadmin.orang_tua.destroy';
+        } else {
+            abort(403, 'Role tidak dikenali');
+        }
         $dataOrangtua = OrangTua::with('user')->paginate(10);
 
-        return view('shared.orangtua.index', compact('dataOrangtua'));
+        return view('shared.orangtua.index', compact('dataOrangtua', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
 
+    public function dashboardOrangTua()
+    {
+        return view('orang_tua.dashboard.index');
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -79,7 +110,7 @@ class OrangTuaController extends Controller
             'no_hp_ibu' => $request->no_hp_ibu,
             'alamat' => $request->alamat,
         ]);
-        return redirect()->route('admin.orang_tua.index')->with('success', 'Data orang tua berhasil ditambahkan.');
+        return redirect()->route($this->getOrangTuaIndexRouteName())->with('success', 'Data orang tua berhasil ditambahkan.');
     }
 
     /**
@@ -176,7 +207,7 @@ class OrangTuaController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.orang_tua.index')
+            ->route($this->getOrangTuaIndexRouteName())
             ->with('success', 'Data orang tua berhasil diperbarui.');
     }
 
@@ -196,7 +227,7 @@ class OrangTuaController extends Controller
         }
 
         return redirect()
-            ->route('admin.orang_tua.index')
+            ->route($this->getOrangTuaIndexRouteName())
             ->with('success', 'Data orang tua & user berhasil dihapus.');
     }
 }

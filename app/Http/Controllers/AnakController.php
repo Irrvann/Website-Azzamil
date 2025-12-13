@@ -27,6 +27,10 @@ class AnakController extends Controller
             return 'guru.anak.index';
         }
 
+        if ($user->hasRole('super_admin')) {
+            return 'superadmin.anak.index';
+        }
+
         abort(403, 'Role tidak dikenali');
     }
 
@@ -43,6 +47,10 @@ class AnakController extends Controller
             $routeNameStore = 'guru.anak.store';
             $routeNameUpdate = 'guru.anak.update';
             $routeNameDelete = 'guru.anak.destroy';
+        } elseif ($user->hasRole('super_admin')) {
+            $routeNameStore = 'superadmin.anak.store';
+            $routeNameUpdate = 'superadmin.anak.update';
+            $routeNameDelete = 'superadmin.anak.destroy';
         } else {
             abort(403, 'Role tidak dikenali');
         }

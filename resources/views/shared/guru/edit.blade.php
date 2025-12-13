@@ -39,7 +39,7 @@
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
                 <form enctype="multipart/form-data" id="modal_edit_guru_form_{{ $guru->id }}"
-                    class="form form-loading" action="{{ route('admin.guru.update', $guru->id) }}" method="POST">
+                    class="form form-loading" action="{{ route($routeNameUpdate, $guru->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 

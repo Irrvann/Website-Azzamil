@@ -24,7 +24,7 @@
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
                 <form id="modal_add_orangtua_form" class="form form-loading"
-                    action="{{ route('admin.orang_tua.store') }}" method="POST">
+                    action="{{ route($routeNameStore) }}" method="POST">
                     @csrf
                     <input type="hidden" name="form_source" value="add_orangtua">
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="modal_add_orangtua_scroll"

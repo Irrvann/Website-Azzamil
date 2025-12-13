@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -15,15 +16,43 @@ class GuruController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    private function getGuruIndexRouteName(): string
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return 'admin.guru.index';
+        }
+
+        if ($user->hasRole('super_admin')) {
+            return 'superadmin.guru.index';
+        }
+
+        abort(403, 'Role tidak dikenali');
+    }
+
     public function index()
     {
         //
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $routeNameStore = 'admin.guru.store';
+            $routeNameUpdate = 'admin.guru.update';
+            $routeNameDelete = 'admin.guru.destroy';
+        } elseif ($user->hasRole('super_admin')) {
+            $routeNameStore = 'superadmin.guru.store';
+            $routeNameUpdate = 'superadmin.guru.update';
+            $routeNameDelete = 'superadmin.guru.destroy';
+        } else {
+            abort(403, 'Role tidak dikenali');
+        }
         $dataGuru = Guru::with(['sekolah', 'user'])->paginate(10);
 
         // Data daerah untuk form tambah/edit
         $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();
 
-        return view('shared.guru.index', compact('dataGuru', 'dataSekolah'));
+        return view('shared.guru.index', compact('dataGuru', 'dataSekolah', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
 
     public function dashboardGuru()
@@ -126,7 +155,7 @@ class GuruController extends Controller
             'foto' => $fotoPath,
             'tanggal_masuk' => $request->tanggal_masuk,
         ]);
-        return redirect()->route('admin.guru.index')->with('success', 'Guru berhasil ditambahkan.');
+        return redirect()->route($this->getGuruIndexRouteName())->with('success', 'Guru berhasil ditambahkan.');
     }
 
     /**
@@ -228,7 +257,7 @@ class GuruController extends Controller
         $userData = [
             'username' => $request->username,
             // kalau kamu nanti punya field status di form edit guru, bisa tambahkan di sini
-            'status'   => $request->status,
+            'status' => $request->status,
         ];
 
         // Kalau password diisi, update password
@@ -285,7 +314,7 @@ class GuruController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.guru.index')
+            ->route($this->getGuruIndexRouteName())
             ->with('success', 'Data guru berhasil diperbarui.');
     }
 
@@ -310,7 +339,7 @@ class GuruController extends Controller
         }
 
         return redirect()
-            ->route('admin.guru.index')
+            ->route($this->getGuruIndexRouteName())
             ->with('success', 'Data guru & user berhasil dihapus.');
     }
 }
