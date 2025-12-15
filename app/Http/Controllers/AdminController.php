@@ -20,12 +20,9 @@ class AdminController extends Controller
     {
         //
         // mengambil data admin dengan relasi, dan paginate
-        $dataAdmin = Admin::with(['daerah', 'user'])->paginate(10);
+        $dataAdmin = Admin::with(['user'])->paginate(10);
 
-        // Data daerah untuk form tambah/edit
-        $dataDaerah = Daerah::orderBy('nama_daerah', 'asc')->get();
-
-        return view('superadmin.admin.index', compact('dataAdmin', 'dataDaerah'));
+        return view('superadmin.admin.index', compact('dataAdmin', ));
     }
 
     public function dashboardAdmin()
@@ -50,7 +47,6 @@ class AdminController extends Controller
         //
         $request->validate(
             [
-                'daerahs_id' => 'required|exists:daerahs,id',
                 'nik' => 'nullable|string|max:20|unique:admins,nik',
                 'nipa' => 'nullable|string|max:50',
                 'nama' => 'required|string|max:255',
@@ -68,9 +64,6 @@ class AdminController extends Controller
                 'nik.unique' => 'NIK sudah terdaftar.',
                 'username.required' => 'Username wajib diisi.',
                 'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
-
-                'daerahs_id.required' => 'Daerah wajib dipilih.',
-                'daerahs_id.exists' => 'Daerah tidak valid.',
                 'nama.required' => 'Nama wajib diisi.',
                 'foto.image' => 'Foto harus berupa gambar.',
                 'foto.mimes' => 'Foto harus berformat jpeg, png, atau jpg.',
@@ -109,7 +102,6 @@ class AdminController extends Controller
 
         Admin::create([
             'users_id' => $user->id,
-            'daerahs_id' => $request->daerahs_id,
             'nik' => $request->nik,
             'nipa' => $request->nipa,
             'nama' => $request->nama,
@@ -168,7 +160,6 @@ class AdminController extends Controller
                     'min:8',
 
                 ],
-                'daerahs_id' => ['required', 'exists:daerahs,id'],
                 'nik' => [
                     'nullable',
                     'string',
@@ -188,10 +179,6 @@ class AdminController extends Controller
             [
                 'username.required' => 'Username wajib diisi.',
                 'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
-
-                'daerahs_id.required' => 'Daerah wajib dipilih.',
-                'daerahs_id.exists' => 'Daerah tidak valid.',
-
                 'nama.required' => 'Nama wajib diisi.',
 
                 'nik.unique' => 'NIK sudah terdaftar.',
@@ -240,7 +227,6 @@ class AdminController extends Controller
         }
 
         $admin->update([
-            'daerahs_id' => $request->daerahs_id,
             'nik' => $request->nik,
             'nipa' => $request->nipa,
             'nama' => $request->nama,

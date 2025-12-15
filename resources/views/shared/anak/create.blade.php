@@ -245,8 +245,8 @@
                             <label class="fs-6 fw-semibold mb-2">Orang Tua<span
                                     class="text-danger ms-1">*</span></label>
                             <select class="form-select form-select-solid" data-control="select2"
-                                data-hide-search="true" data-placeholder="Pilih Orang Tua..." name="orang_tuas_id">
-                                <option value="">Pilih Orang Tua...</option>
+                                data-placeholder="Pilih Orang Tua..." name="orang_tuas_id">
+                                <option value=""></option>
                                 @foreach ($dataOrangTua as $orangTua)
                                     <option value="{{ $orangTua->id }}"
                                         {{ old('orang_tuas_id') == $orangTua->id ? 'selected' : '' }}>
@@ -254,19 +254,14 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @if (old('form_source') == 'add_anak')
-                                @error('orang_tuas_id')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
-                                @enderror
-                            @endif
                         </div>
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Sekolah<span
                                     class="text-danger ms-1">*</span></label>
                             <select class="form-select form-select-solid" data-control="select2"
-                                data-hide-search="true" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value="">Pilih Sekolah...</option>
+                                data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                <option value=""></option>
                                 @foreach ($dataSekolah as $sekolah)
                                     <option value="{{ $sekolah->id }}"
                                         {{ old('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
@@ -274,12 +269,8 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @if (old('form_source') == 'add_anak')
-                                @error('sekolahs_id')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
-                                @enderror
-                            @endif
                         </div>
+
 
                     </div>
                     <div class="text-center pt-10">
@@ -310,3 +301,45 @@
         });
     </script>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalId = '#modal_add_anak';
+        const modalEl = document.querySelector(modalId);
+
+        // 1) FIX focus lock bootstrap modal (biar bisa ngetik di search select2)
+        // Bootstrap 4/5 beda, tapi ini aman
+        if (window.bootstrap && bootstrap.Modal) {
+            // Bootstrap 5 biasanya aman, tapi Metronic kadang masih lock focus -> kita paksa fokus saja saat open
+        } else if ($.fn.modal && $.fn.modal.Constructor) {
+            // Bootstrap 4 fallback
+            $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+        }
+
+        // 2) Init select2 khusus dalam modal (destroy dulu kalau sudah ada)
+        modalEl.addEventListener('shown.bs.modal', function() {
+            $(modalEl).find('select[data-control="select2"]').each(function() {
+                // destroy jika sudah ter-init (Metronic sering init dari awal)
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2('destroy');
+                }
+
+                $(this).select2({
+                    dropdownParent: $(modalId),
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Pilih...',
+                    minimumResultsForSearch: 0 // paksa search selalu muncul
+                });
+            });
+        });
+
+        // 3) Paksa fokus ke input search tiap dropdown dibuka
+        $(document).on('select2:open', function() {
+            setTimeout(function() {
+                const el = document.querySelector(
+                    '.select2-container--open .select2-search__field');
+                if (el) el.focus();
+            }, 0);
+        });
+    });
+</script>

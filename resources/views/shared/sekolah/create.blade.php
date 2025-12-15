@@ -52,12 +52,9 @@
                             <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
                                 data-placeholder="Pilih Jenis Sekolah..." name="jenis_sekolah">
                                 <option value="">Pilih Jenis Sekolah...</option>
-                                <option value="baby" {{ old('jenis_sekolah') == 'baby' ? 'selected' : '' }}>Baby</option>
-                                <option value="toddler" {{ old('jenis_sekolah') == 'toddler' ? 'selected' : '' }}>Toddler</option>
-                                <option value="pra_kb" {{ old('jenis_sekolah') == 'pra_kb' ? 'selected' : '' }}>Pra KB</option>
-                                <option value="kb_kecil" {{ old('jenis_sekolah') == 'kb_kecil' ? 'selected' : '' }}>KB Kecil</option>
-                                <option value="kb_besar" {{ old('jenis_sekolah') == 'kb_besar' ? 'selected' : '' }}>KB Besar</option>
-                                <option value="tk" {{ old('jenis_sekolah') == 'tk' ? 'selected' : '' }}>TK</option>
+                                <option value="tpa" {{ old('jenis_sekolah') == 'tpa' ? 'selected' : '' }}>TPA</option>
+                                <option value="kb" {{ old('jenis_sekolah') == 'kb' ? 'selected' : '' }}>KB</option>
+                                <option value="tpa_kb_tk" {{ old('jenis_sekolah') == 'tpa_kb_tk' ? 'selected' : '' }}>TPA KB TK</option>
                             </select>
                             @if (old('form_source') == 'add_sekolah')
                                 @error('jenis_sekolah')

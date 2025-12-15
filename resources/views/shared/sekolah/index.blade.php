@@ -118,18 +118,14 @@
                                             <td>{{ $dataSekolah->firstItem() + $index }}</td>
                                             <td>{{ $sekolah->nama_sekolah ?? '-' }}</td>
                                             <td>
-                                                @if ($sekolah->jenis_sekolah === 'baby')
-                                                    Baby
-                                                @elseif ($sekolah->jenis_sekolah === 'toddler')
-                                                    Toddler
-                                                @elseif ($sekolah->jenis_sekolah === 'pra_kb')
-                                                    Pra KB
-                                                @elseif ($sekolah->jenis_sekolah === 'kb_kecil')
-                                                    KB Kecil
-                                                @elseif ($sekolah->jenis_sekolah === 'kb_besar')
-                                                    KB Besar
+                                                @if ($sekolah->jenis_sekolah === 'tpa')
+                                                    TPA
+                                                @elseif ($sekolah->jenis_sekolah === 'kb')
+                                                    KB
                                                 @elseif ($sekolah->jenis_sekolah === 'tk')
                                                     TK
+                                                @elseif ($sekolah->jenis_sekolah === 'tpa_kb_tk')
+                                                    TPA KB TK
                                                 @else
                                                     -
                                                 @endif

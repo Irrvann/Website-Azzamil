@@ -11,6 +11,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\OrangTuaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RaportController;
+use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SuperadminController;
 use App\Models\Antropometri;
@@ -68,6 +69,15 @@ Route::middleware(['auth', 'role:super_admin'])
 
         Route::get('antropometri/{antropometri}/ddst/cetak', [DdstTestController::class, 'cetakLaporan'])
             ->name('ddst.cetak_laporan');
+
+        Route::resource('data-reviewer', ReviewerController::class)
+            ->names('reviewer');
+
+        Route::get('/ajax/sekolah/{sekolah}/anak-guru', [RaportController::class, 'getAnakGuru'])
+            ->name('ajax.sekolah.anak-guru');
+
+        Route::get('/ajax/sekolah/{sekolah}/anak', [AntropometriController::class, 'ajaxAnakBySekolah'])
+            ->name('ajax.sekolah.anak');
     });
 
 
@@ -118,6 +128,12 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
             ->name('raport.cetak-pdf');
+
+        Route::get('/ajax/sekolah/{sekolah}/anak-guru', [RaportController::class, 'getAnakGuru'])
+            ->name('ajax.sekolah.anak-guru');
+
+        Route::get('/ajax/sekolah/{sekolah}/anak', [AntropometriController::class, 'ajaxAnakBySekolah'])
+            ->name('ajax.sekolah.anak');
     });
 
 Route::middleware(['auth', 'role:guru'])
@@ -149,6 +165,15 @@ Route::middleware(['auth', 'role:guru'])
 
         Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
             ->name('raport.cetak-pdf');
+
+        // routes/web.php
+        Route::get('/ajax/sekolah/{sekolah}/anak-guru', [RaportController::class, 'getAnakGuru'])
+            ->name('ajax.sekolah.anak-guru');
+
+        Route::get('/ajax/sekolah/{sekolah}/anak', [AntropometriController::class, 'ajaxAnakBySekolah'])
+            ->name('ajax.sekolah.anak');
+
+
     });
 
 

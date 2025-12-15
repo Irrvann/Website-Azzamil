@@ -92,7 +92,6 @@
                                         {{-- <th class="min-w-125px">Alamat</th>
                                         <th class="min-w-125px">Email</th>
                                         <th class="min-w-125px">No HP</th> --}}
-                                        <th class="min-w-125px">Daerah</th>
                                         <th class="min-w-125px">Status</th>
                                         <th class="min-w-125px">Username</th>
                                         {{-- <th class="min-w-125px">Foto</th> --}}
@@ -118,7 +117,6 @@
                                             {{-- <td>{{ $admin->alamat ?? '-' }}</td>
                                             <td>{{ $admin->email ?? '-' }}</td>
                                             <td>{{ $admin->no_hp ?? '-' }}</td> --}}
-                                            <td>{{ $admin->daerah->nama_daerah ?? '-' }}</td>
                                             <td>
                                                 @php
                                                     $status = $admin->user->status ?? null;

@@ -33,27 +33,49 @@
                         data-kt-scroll-dependencies="#modal_add_antropometri_header"
                         data-kt-scroll-wrappers="#modal_add_antropometri_scroll" data-kt-scroll-offset="300px">
 
-                        <!-- ANAK -->
+                        <!-- SEKOLAH -->
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nama Anak
-                                <span class="text-danger ms-1">*</span>
+                            <label class="fs-6 fw-semibold mb-2">
+                                Sekolah <span class="text-danger ms-1">*</span>
                             </label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                data-placeholder="Pilih Anak..." name="anaks_id">
-                                <option value="">Pilih Anak...</option>
-                                @foreach ($dataAnak as $anak)
-                                    <option value="{{ $anak->id }}"
-                                        {{ old('anaks_id') == $anak->id ? 'selected' : '' }}>
-                                        {{ $anak->nama_anak }}
+
+                            <select id="sekolah_select_antropometri" class="form-select form-select-solid"
+                                data-control="select2" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                <option value=""></option>
+                                @foreach ($dataSekolah as $s)
+                                    <option value="{{ $s->id }}"
+                                        {{ old('sekolahs_id') == $s->id ? 'selected' : '' }}>
+                                        {{ $s->nama_sekolah }}
                                     </option>
                                 @endforeach
                             </select>
+
+                            @if (old('form_source') == 'add_antropometri')
+                                @error('sekolahs_id')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            @endif
+                        </div>
+
+                        <!-- ANAK -->
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold mb-2">
+                                Nama Anak <span class="text-danger ms-1">*</span>
+                            </label>
+
+                            <select id="anak_select_antropometri" class="form-select form-select-solid"
+                                data-control="select2" data-placeholder="Pilih Anak..." name="anaks_id">
+                                <option value=""></option>
+                            </select>
+
                             @if (old('form_source') == 'add_antropometri')
                                 @error('anaks_id')
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             @endif
                         </div>
+
+
 
                         <!-- TANGGAL UKUR -->
                         <div class="fv-row mb-7">
@@ -92,8 +114,7 @@
                                 <option value="normal" {{ old('status_bb') == 'normal' ? 'selected' : '' }}>
                                     Normal
                                 </option>
-                                <option value="resiko"
-                                    {{ old('status_bb') == 'resiko' ? 'selected' : '' }}>
+                                <option value="resiko" {{ old('status_bb') == 'resiko' ? 'selected' : '' }}>
                                     Resiko
                                 </option>
                             </select>
@@ -127,8 +148,7 @@
                                 <option value="normal" {{ old('status_tb') == 'normal' ? 'selected' : '' }}>
                                     Normal
                                 </option>
-                                <option value="pendek"
-                                    {{ old('status_tb') == 'pendek' ? 'selected' : '' }}>
+                                <option value="pendek" {{ old('status_tb') == 'pendek' ? 'selected' : '' }}>
                                     Pendek
                                 </option>
                             </select>
@@ -227,3 +247,124 @@
         });
     </script>
 @endif
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        $(document).on('select2:open', function() {
+            setTimeout(function() {
+                const el = document.querySelector(
+                    '.select2-container--open .select2-search__field');
+                if (el) el.focus();
+            }, 0);
+        });
+
+        document.querySelectorAll('.modal').forEach(function(modalEl) {
+            modalEl.addEventListener('shown.bs.modal', function() {
+
+                $(modalEl).find('select[data-control="select2"]').each(function() {
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+
+                    $(this).select2({
+                        dropdownParent: $(modalEl),
+                        width: '100%',
+                        placeholder: $(this).data('placeholder') || 'Pilih...',
+                        minimumResultsForSearch: 0
+                    });
+                });
+
+            });
+        });
+
+    });
+</script>
+
+<script>
+    (function() {
+        const modalId = 'modal_add_antropometri';
+        const modalEl = document.getElementById(modalId);
+        if (!modalEl) return;
+
+        function initSelect2($modal) {
+            $modal.find('select[data-control="select2"]').each(function() {
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2('destroy');
+                }
+
+                $(this).select2({
+                    dropdownParent: $modal,
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Pilih...',
+                    minimumResultsForSearch: 0,
+                    minimumInputLength: 0 // ✅ INI PENTING BIAR LIST LANGSUNG KELUAR
+                });
+            });
+        }
+
+        function resetOptions($el) {
+            $el.find('option').not(':first').remove();
+            $el.val(null).trigger('change');
+        }
+
+        async function loadAnak($anak, sekolahId) {
+            resetOptions($anak);
+            if (!sekolahId) return;
+
+            const url = "{{ route($routeAjaxAnakBySekolah, ['sekolah' => '__ID__']) }}"
+                .replace('__ID__', sekolahId);
+
+            const res = await fetch(url, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
+
+            const data = await res.json();
+
+            (data.anak || []).forEach(a => {
+                $anak.append(new Option(a.text, a.id, false, false));
+            });
+
+            // 🔥 FORCE REFRESH SELECT2 BIAR OPTION LANGSUNG KEDETEKSI
+            $anak.select2('destroy');
+            $anak.select2({
+                dropdownParent: $anak.closest('.modal'),
+                width: '100%',
+                placeholder: $anak.data('placeholder') || 'Pilih Anak...',
+                minimumResultsForSearch: 0,
+                minimumInputLength: 0
+            });
+
+            $anak.trigger('change');
+        }
+
+        modalEl.addEventListener('shown.bs.modal', async function() {
+            const $modal = $('#' + modalId);
+            const $sekolah = $modal.find('#sekolah_select_antropometri');
+            const $anak = $modal.find('#anak_select_antropometri');
+
+            initSelect2($modal);
+            resetOptions($anak);
+
+            $sekolah.off('change.dependent').on('change.dependent', function() {
+                loadAnak($anak, this.value);
+            });
+
+            // ✅ AUTO LOAD SAAT BALIK DARI VALIDASI
+            const oldSekolah = @json(old('sekolahs_id'));
+            const oldAnak = @json(old('anaks_id'));
+
+            if (oldSekolah) {
+                $sekolah.val(String(oldSekolah)).trigger('change');
+                await loadAnak($anak, String(oldSekolah));
+
+                if (oldAnak) {
+                    $anak.val(String(oldAnak)).trigger('change');
+                }
+            }
+        });
+    })();
+</script>

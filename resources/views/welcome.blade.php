@@ -85,8 +85,8 @@
                                 <span class="text-white text-xl">✓</span>
                             </div>
                             <div>
-                                <div class="font-bold text-gray-800">Akreditasi A</div>
-                                <div class="text-sm text-gray-600">Terakreditasi Nasional</div>
+                                <div class="font-bold text-gray-800">Sekolah Unggulan</div>
+                                <div class="text-sm text-gray-600">azzamil school</div>
                             </div>
                         </div>
                     </div>

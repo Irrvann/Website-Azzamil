@@ -40,7 +40,7 @@
             <div id="kt_app_content_container" class="app-container container-xxl">
 
                 {{-- FORM dibuka di sini supaya antropometri & DDST disimpan bareng --}}
-                <form action="{{ route($routeNameStore, $antropometri->id) }}" method="POST">
+                <form action="{{ route($routeNameStore, $antropometri->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <input type="hidden" name="usia_bulan" value="{{ $usiaBulan }}">
@@ -49,7 +49,7 @@
                     <div class="card mb-5">
                         <div class="card-header border-0 pt-6">
                             <div class="card-title">
-                            <h3 class="fw-bold mb-0">Informasi Anak & Antropometri</h3>
+                                <h3 class="fw-bold mb-0">Informasi Anak & Antropometri</h3>
                             </div>
                         </div>
                         <div class="card-body">
@@ -84,13 +84,16 @@
                                     </div>
                                 </div>
 
+                                
+
                                 <div class="col-md-4">
-                                    <div class="mb-2 fw-semibold text-gray-600">Guru Pemeriksa <span
-                                            class="text-danger">*</span></div>
+                                    <div class="mb-2 fw-semibold text-gray-600">
+                                        Guru Pemeriksa <span class="text-danger">*</span>
+                                    </div>
 
-                                    <select name="gurus_id" class="form-select form-select-solid" required>
-                                        <option value="">Pilih Guru...</option>
-
+                                    <select name="gurus_id" class="form-select form-select-solid" data-control="select2"
+                                        data-placeholder="Pilih Guru..." required>
+                                        <option value=""></option>
                                         @foreach ($listGuru as $guru)
                                             <option value="{{ $guru->id }}"
                                                 {{ old('gurus_id', $ddstTest->gurus_id ?? '') == $guru->id ? 'selected' : '' }}>
@@ -100,6 +103,31 @@
                                     </select>
 
                                     @error('gurus_id')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+
+
+                                    <div class="mb-2 fw-semibold text-gray-600 mt-4">
+                                        Reviewer <span class="text-danger">*</span>
+                                    </div>
+
+                                    <select name="reviewers_id" class="form-select form-select-solid" data-control="select2"
+                                        data-placeholder="Pilih Reviewer..." required>
+                                        <option value=""></option>
+                                        @foreach ($listReviewer as $reviewer)
+                                            <option value="{{ $reviewer->id }}"
+                                                {{ old('reviewers_id', $ddstTest->reviewers_id ?? '') == $reviewer->id ? 'selected' : '' }}>
+                                                {{ $reviewer->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('reviewers_id')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+
+
+                                    @error('reviewers_id')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
 
@@ -132,7 +160,7 @@
                                             Normal
                                         </option>
                                         <option value="resiko"
-                                            {{ old('status_bb', $antropometri->status_bb) == 'resiko' ? 'selected' : '' }}> 
+                                            {{ old('status_bb', $antropometri->status_bb) == 'resiko' ? 'selected' : '' }}>
                                             Resiko
                                         </option>
                                     </select>
@@ -289,6 +317,15 @@
                                                                 required>
                                                             <span class="form-check-label">Belum Tercapai</span>
                                                         </label>
+
+                                                        <label class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="items[{{ $item->id }}][status]"
+                                                                value="ragu_ragu"
+                                                                {{ $currentStatus == 'ragu_ragu' ? 'checked' : '' }}
+                                                                required>
+                                                            <span class="form-check-label">Ragu-Ragu</span>
+                                                        </label>
                                                     </div>
                                                 </td>
 
@@ -359,26 +396,13 @@
                                 @enderror
                             </div>
 
-                            <div class="row mb-5">
-                                <div class="col-md-6">
-                                    <label class="fw-semibold text-gray-700 mb-1">Tugas perkembangan yang belum
-                                        tercapai</label>
-                                    <textarea name="tugas_belum_tercapai" rows="4" class="form-control form-control-solid"
-                                        placeholder="Tuliskan item/tugas yang belum tercapai">{{ old('tugas_belum_tercapai', $ddstTest->tugas_belum_tercapai ?? '') }}</textarea>
-                                    @error('tugas_belum_tercapai')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="fw-semibold text-gray-700 mb-1">Tugas perkembangan yang perlu
-                                        ditingkatkan</label>
-                                    <textarea name="tugas_perlu_ditingkatkan" rows="4" class="form-control form-control-solid"
-                                        placeholder="Tuliskan tugas yang sudah mulai muncul namun perlu latihan">{{ old('tugas_perlu_ditingkatkan', $ddstTest->tugas_perlu_ditingkatkan ?? '') }}</textarea>
-                                    @error('tugas_perlu_ditingkatkan')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                            <div class="mb-5">
+                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter</label>
+                                <textarea name="profile_dan_karakter" rows="3" class="form-control form-control-solid"
+                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter', $ddstTest->profile_dan_karakter ?? '') }}</textarea>
+                                @error('profile_dan_karakter')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="mb-5">
@@ -389,6 +413,57 @@
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="mb-5">
+                                <label class="fw-semibold text-gray-700 mb-1">Foto DDST</label>
+
+                                <input type="file" name="fotos[]" id="fotosInput"
+                                    class="form-control form-control-solid" accept="image/*" multiple>
+
+                                <div class="form-text">
+                                    Format: JPG/PNG/WebP. Bisa pilih banyak foto sekaligus.
+                                </div>
+
+                                @error('fotos')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                                @error('fotos.*')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+
+                                {{-- Preview foto BARU yang dipilih --}}
+                                <div id="previewFotos" class="d-flex flex-wrap gap-3 mt-3"></div>
+
+                                {{-- Foto SEBELUMNYA (kalau edit) --}}
+                                @if (!empty($ddstTest) && $ddstTest->fotos && $ddstTest->fotos->count())
+                                    <div class="mt-4">
+                                        <div class="fw-semibold text-gray-600 mb-2">Foto sebelumnya:</div>
+
+                                        <div id="existingFotos" class="d-flex flex-wrap gap-3">
+                                            @foreach ($ddstTest->fotos as $foto)
+                                                <div class="foto-card position-relative border rounded p-2"
+                                                    data-existing-id="{{ $foto->id }}">
+                                                    <button type="button"
+                                                        class="btn btn-icon btn-sm btn-light-danger position-absolute"
+                                                        style="top:-10px; right:-10px; width:28px; height:28px; border-radius:999px;"
+                                                        data-action="remove-existing" data-id="{{ $foto->id }}">
+                                                        ✕
+                                                    </button>
+
+                                                    <img src="{{ asset('storage/' . $foto->foto) }}" style="height:110px"
+                                                        class="rounded" alt="Foto DDST">
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        {{-- tempat hidden input untuk id foto yang mau dihapus --}}
+                                        <div id="deletedExistingInputs"></div>
+                                    </div>
+                                @endif
+                            </div>
+
+
+
                         </div>
                         <!--end::Card body (ringkasan DDST)-->
 
@@ -421,4 +496,118 @@
     <!--end::Content wrapper-->
 
     <!--end:::Main-->
+
+    <script>
+        const input = document.getElementById('fotosInput');
+        const preview = document.getElementById('previewFotos');
+
+        // Simpan list file terpilih agar bisa dihapus 1-1
+        let selectedFiles = [];
+
+        function renderPreview() {
+            preview.innerHTML = '';
+
+            selectedFiles.forEach((file, idx) => {
+                if (!file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const card = document.createElement('div');
+                    card.className = 'position-relative border rounded p-2';
+                    card.style.width = 'fit-content';
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn btn-icon btn-sm btn-light-danger position-absolute';
+                    btn.style.cssText = 'top:-10px; right:-10px; width:28px; height:28px; border-radius:999px;';
+                    btn.innerText = '✕';
+                    btn.addEventListener('click', () => removeNewFile(idx));
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.height = '110px';
+                    img.className = 'rounded';
+
+                    card.appendChild(btn);
+                    card.appendChild(img);
+                    preview.appendChild(card);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            syncInputFiles();
+        }
+
+        function syncInputFiles() {
+            // Update input.files agar sesuai selectedFiles (biar yang dihapus beneran tidak ikut submit)
+            const dt = new DataTransfer();
+            selectedFiles.forEach(f => dt.items.add(f));
+            input.files = dt.files;
+        }
+
+        function removeNewFile(index) {
+            selectedFiles.splice(index, 1);
+            renderPreview();
+        }
+
+        input.addEventListener('change', (e) => {
+            // kalau user pilih lagi, kita replace list dengan pilihan terbaru
+            selectedFiles = Array.from(e.target.files || []);
+            renderPreview();
+        });
+
+        // Hapus foto lama: kita "tandai" untuk dihapus saat submit
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('[data-action="remove-existing"]');
+            if (!btn) return;
+
+            const id = btn.getAttribute('data-id');
+
+            // hilangkan card dari UI
+            const card = document.querySelector(`.foto-card[data-existing-id="${id}"]`);
+            if (card) card.remove();
+
+            // tambahkan hidden input delete ids
+            const holder = document.getElementById('deletedExistingInputs');
+            const inputHidden = document.createElement('input');
+            inputHidden.type = 'hidden';
+            inputHidden.name = 'delete_foto_ids[]';
+            inputHidden.value = id;
+            holder.appendChild(inputHidden);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            $(document).on('select2:open', function() {
+                setTimeout(function() {
+                    const el = document.querySelector(
+                        '.select2-container--open .select2-search__field');
+                    if (el) el.focus();
+                }, 0);
+            });
+
+            document.querySelectorAll('.modal').forEach(function(modalEl) {
+                modalEl.addEventListener('shown.bs.modal', function() {
+
+                    $(modalEl).find('select[data-control="select2"]').each(function() {
+                        if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).select2('destroy');
+                        }
+
+                        $(this).select2({
+                            dropdownParent: $(modalEl),
+                            width: '100%',
+                            placeholder: $(this).data('placeholder') || 'Pilih...',
+                            minimumResultsForSearch: 0
+                        });
+                    });
+
+                });
+            });
+
+        });
+    </script>
+
+
 @endsection

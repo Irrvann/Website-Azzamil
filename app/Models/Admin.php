@@ -11,7 +11,6 @@ class Admin extends Model
 
     protected $fillable = [
         'users_id',
-        'daerahs_id',
         'nik',
         'nipa',
         'nama',
@@ -31,10 +30,5 @@ class Admin extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'users_id');
-    }
-
-    public function daerah()
-    {
-        return $this->belongsTo(Daerah::class, 'daerahs_id');
     }
 }

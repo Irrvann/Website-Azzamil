@@ -167,6 +167,21 @@
                             </a>
                         </div>
 
+                        {{-- DATA REVIEWER --}}
+                        <div class="menu-item {{ request()->is('superadmin/data-reviewer*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('superadmin/data-reviewer*') ? 'active' : '' }}"
+                                href="/superadmin/data-reviewer">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-check-circle fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
+                                </span>
+                                <span class="menu-title">Data Reviewer</span>
+                            </a>
+                        </div>
+
                         {{-- DATA TUMBUH KEMBANG --}}
                         <div class="menu-item {{ request()->is('superadmin/data-tumbuh-kembang*') ? 'here show' : '' }}">
                             <a class="menu-link {{ request()->is('superadmin/data-tumbuh-kembang*') ? 'active' : '' }}"

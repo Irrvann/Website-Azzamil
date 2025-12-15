@@ -1,5 +1,10 @@
 {{-- Modal Edit Raport --}}
-<div class="modal fade" id="modal_edit_raport_{{ $raport->id }}" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_edit_raport_{{ $raport->id }}"
+    data-selected-sekolah="{{ old('sekolahs_id', $raport->sekolah_id ?? ($raport->sekolahs_id ?? '')) }}"
+    data-selected-anak="{{ old('anaks_id', $raport->anak_id ?? ($raport->anaks_id ?? '')) }}"
+    data-selected-guru="{{ old('gurus_id', $raport->guru_id ?? ($raport->gurus_id ?? '')) }}" tabindex="-1"
+    aria-hidden="true">
+
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             {{-- Header --}}
@@ -17,7 +22,7 @@
             {{-- Body --}}
             <div class="modal-body px-5 my-7">
                 <form enctype="multipart/form-data" id="modal_edit_raport_form_{{ $raport->id }}"
-                    class="form form-loading" action="{{ route($routeNameUpdate, $raport->id)  }}" method="POST">
+                    class="form form-loading" action="{{ route($routeNameUpdate, $raport->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -33,9 +38,11 @@
                             <label class="fs-6 fw-semibold mb-2">
                                 Sekolah <span class="text-danger ms-1">*</span>
                             </label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value="">Pilih Sekolah...</option>
+
+                            <select id="sekolah_select_{{ $raport->id }}" class="form-select form-select-solid"
+                                data-control="select2" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+
+                                <option value=""></option>
                                 @foreach ($dataSekolah as $sekolah)
                                     <option value="{{ $sekolah->id }}"
                                         {{ old('sekolahs_id', $raport->sekolah_id ?? ($raport->sekolahs_id ?? null)) == $sekolah->id ? 'selected' : '' }}>
@@ -43,6 +50,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @error('sekolahs_id')
                                 <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
@@ -53,18 +61,13 @@
                             <label class="fs-6 fw-semibold mb-2">
                                 Nama Anak <span class="text-danger ms-1">*</span>
                             </label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                data-placeholder="Pilih Anak..." name="anaks_id">
-                                <option value="">Pilih Anak...</option>
-                                @foreach ($dataAnak as $anak)
-                                    <option value="{{ $anak->id }}"
-                                        {{ old('anaks_id', $raport->anak_id ?? ($raport->anaks_id ?? null)) == $anak->id ? 'selected' : '' }}>
-                                        {{ $anak->nama_anak }}
-                                        (BB: {{ $anak->antropometris->first()->berat_badan ?? '-' }},
-                                        TB: {{ $anak->antropometris->first()->tinggi_badan ?? '-' }})
-                                    </option>
-                                @endforeach
+
+                            <select id="anak_select_{{ $raport->id }}" class="form-select form-select-solid"
+                                data-control="select2" data-placeholder="Pilih Anak..." name="anaks_id">
+                                <option value=""></option>
                             </select>
+
+
                             @error('anaks_id')
                                 <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
@@ -75,20 +78,18 @@
                             <label class="fs-6 fw-semibold mb-2">
                                 Nama Guru <span class="text-danger ms-1">*</span>
                             </label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                data-placeholder="Pilih Guru..." name="gurus_id">
-                                <option value="">Pilih Guru...</option>
-                                @foreach ($dataGuru as $guru)
-                                    <option value="{{ $guru->id }}"
-                                        {{ old('gurus_id', $raport->guru_id ?? ($raport->gurus_id ?? null)) == $guru->id ? 'selected' : '' }}>
-                                        {{ $guru->nama_guru }}
-                                    </option>
-                                @endforeach
+
+                            <select id="guru_select_{{ $raport->id }}" class="form-select form-select-solid"
+                                data-control="select2" data-placeholder="Pilih Guru..." name="gurus_id">
+                                <option value=""></option>
                             </select>
+
+
                             @error('gurus_id')
                                 <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
                         </div>
+
 
                         {{-- Semester --}}
                         <div class="fv-row mb-7">
@@ -359,7 +360,8 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Refleksi Guru</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru" placeholder="Type Refleksi Guru">{{ old('refleksi_guru', $raport->refleksi_guru) }}</textarea>
+                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru"
+                                placeholder="Type Refleksi Guru">{{ old('refleksi_guru', $raport->refleksi_guru) }}</textarea>
                         </div>
 
                         {{-- Kehadiran --}}
@@ -544,4 +546,102 @@
     //     input.value = fotoId;
     //     container.appendChild(input);
     // }
+</script>
+
+<script>
+    (function() {
+        const cache = {};
+
+        function initSelect2($modal) {
+            $modal.find('select[data-control="select2"]').each(function() {
+                if ($(this).hasClass('select2-hidden-accessible')) $(this).select2('destroy');
+                $(this).select2({
+                    dropdownParent: $modal,
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Pilih...',
+                    minimumResultsForSearch: 0
+                });
+            });
+        }
+
+        function resetOptions($el) {
+            $el.find('option').not(':first').remove();
+            $el.val(null).trigger('change.select2');
+        }
+
+        async function fetchAnakGuru(sekolahId) {
+            if (cache[sekolahId]) return cache[sekolahId];
+
+            const url = `{{ route($routeAnakGuru, ['sekolah' => '__ID__']) }}`.replace('__ID__', sekolahId);
+            const res = await fetch(url, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
+            const data = await res.json();
+            cache[sekolahId] = data;
+            return data;
+        }
+
+        function fillOptionsNoDouble($select, items) {
+            const exists = new Set();
+            $select.find('option').each(function() {
+                exists.add(String(this.value));
+            });
+
+            items.forEach(it => {
+                const id = String(it.id);
+                if (exists.has(id)) return;
+                $select.append(new Option(it.text, id, false, false));
+                exists.add(id);
+            });
+        }
+
+        async function loadAndSet($modal, raportId, sekolahId) {
+            const $anak = $modal.find('#anak_select_' + raportId);
+            const $guru = $modal.find('#guru_select_' + raportId);
+
+            resetOptions($anak);
+            resetOptions($guru);
+            if (!sekolahId) return;
+
+            const data = await fetchAnakGuru(String(sekolahId));
+            fillOptionsNoDouble($anak, data.anak);
+            fillOptionsNoDouble($guru, data.guru);
+
+            // ✅ set OLD setelah option ada
+            const selectedAnak = String($modal.data('selected-anak') || '');
+            const selectedGuru = String($modal.data('selected-guru') || '');
+
+            if (selectedAnak) $anak.val(selectedAnak).trigger('change.select2');
+            if (selectedGuru) $guru.val(selectedGuru).trigger('change.select2');
+        }
+
+        document.addEventListener('shown.bs.modal', function(e) {
+            const modalEl = e.target;
+            if (!modalEl.id.startsWith('modal_edit_raport_')) return;
+
+            const raportId = modalEl.id.replace('modal_edit_raport_', '');
+            const $modal = $('#' + modalEl.id);
+
+            initSelect2($modal);
+
+            const $sekolah = $modal.find('#sekolah_select_' + raportId);
+
+            // ✅ pastikan sekolah ikut old juga
+            const selectedSekolah = String($modal.data('selected-sekolah') || '');
+            if (selectedSekolah) $sekolah.val(selectedSekolah).trigger('change.select2');
+
+            // bind change (hapus dulu biar ga numpuk)
+            $sekolah.off('change.dependent').on('change.dependent', function() {
+                // kalau user ganti sekolah manual, reset pilihan anak/guru lama
+                $modal.data('selected-anak', '');
+                $modal.data('selected-guru', '');
+                loadAndSet($modal, raportId, this.value);
+            });
+
+            // load pertama kali
+            loadAndSet($modal, raportId, $sekolah.val());
+        });
+    })();
 </script>

@@ -11,7 +11,7 @@
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <!--begin::Title-->
                     <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                        Dashboard admin</h1>
+                        Dashboard Admin</h1>
                     <!--end::Title-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -1067,7 +1067,7 @@
                 </div>
                 <!--end::Row-->
                 <!--begin::Row-->
-                <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+                {{-- <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
                     <!--begin::Col-->
                     <div class="col-xxl-4">
                         <!--begin::Engage widget 1-->
@@ -1222,10 +1222,10 @@
                         <!--end::Chart widget 23-->
                     </div>
                     <!--end::Col-->
-                </div>
+                </div> --}}
                 <!--end::Row-->
                 <!--begin::Row-->
-                <div class="row g-5 g-xl-10">
+                {{-- <div class="row g-5 g-xl-10">
                     <!--begin::Col-->
                     <div class="col-xxl-4">
                         <!--begin::Chart widget 25-->
@@ -1396,7 +1396,7 @@
                         <!--end::Chart widget 24-->
                     </div>
                     <!--end::Col-->
-                </div>
+                </div> --}}
                 <!--end::Row-->
             </div>
             <!--end::Content container-->
@@ -1405,31 +1405,6 @@
     </div>
     <!--end::Content wrapper-->
     <!--begin::Footer-->
-    <div id="kt_app_footer" class="app-footer">
-        <!--begin::Footer container-->
-        <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-            <!--begin::Copyright-->
-            <div class="text-gray-900 order-2 order-md-1">
-                <span class="text-muted fw-semibold me-1">2024&copy;</span>
-                <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
-            </div>
-            <!--end::Copyright-->
-            <!--begin::Menu-->
-            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                <li class="menu-item">
-                    <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-                </li>
-                <li class="menu-item">
-                    <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-                </li>
-                <li class="menu-item">
-                    <a href="https://1.envato.market/Vm7VRE" target="_blank" class="menu-link px-2">Purchase</a>
-                </li>
-            </ul>
-            <!--end::Menu-->
-        </div>
-        <!--end::Footer container-->
-    </div>
     <!--end::Footer-->
     <!--end:::Main-->
 @endsection

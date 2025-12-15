@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Antropometri;
 use App\Models\DdstItem;
 use App\Models\DdstTest;
+use App\Models\DdstTestFoto;
 use App\Models\DdstTestItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DdstTestController extends Controller
 {
@@ -73,9 +75,14 @@ class DdstTestController extends Controller
 
 
         // 1) Cek apakah SUDAH ada tes untuk antropometri ini
-        $ddstTest = DdstTest::where('antropometris_id', $antropometri->id)
+        // $ddstTest = DdstTest::where('antropometris_id', $antropometri->id)
+        //     ->where('anaks_id', $anak->id)
+        //     ->first();
+        $ddstTest = DdstTest::with('fotos')
+            ->where('antropometris_id', $antropometri->id)
             ->where('anaks_id', $anak->id)
             ->first();
+
 
         $existingItems = collect();
 
@@ -99,7 +106,16 @@ class DdstTestController extends Controller
         }
 
         // list guru untuk dropdown
-        $listGuru = \App\Models\Guru::orderBy('nama_guru')->get();
+        // ✅ list guru sesuai sekolah anak
+        $sekolahId = $anak->sekolahs_id ?? $anak->sekolah_id ?? null;
+
+        $listGuru = \App\Models\Guru::query()
+            ->when($sekolahId, fn($q) => $q->where('sekolahs_id', $sekolahId)) // kalau kolomnya sekolah_id, ganti di sini
+            ->orderBy('nama_guru')
+            ->get();
+
+        $listReviewer = \App\Models\Reviewer::orderBy('nama')->get();
+
 
         return view('shared.tumbuh_kembang.ddst_test', [
             'antropometri' => $antropometri,
@@ -109,6 +125,7 @@ class DdstTestController extends Controller
             'ddstTest' => $ddstTest,      // bisa null (tes baru)
             'existingItems' => $existingItems, // bisa dari tes ini / tes sebelumnya
             'listGuru' => $listGuru,
+            'listReviewer' => $listReviewer,
             'routeNameStore' => $routeNameStore,
         ]);
     }
@@ -124,9 +141,10 @@ class DdstTestController extends Controller
 
         $request->validate([
             'gurus_id' => 'required|exists:gurus,id',
+            'reviewers_id' => 'required|exists:reviewers,id',
             'usia_bulan' => 'required|integer',
             'items' => 'required|array',
-            'items.*.status' => 'required|in:tercapai,belum_tercapai',
+            'items.*.status' => 'required|in:tercapai,belum_tercapai,ragu_ragu',
             'items.*.keterangan' => 'nullable|string',
 
             'tanggal_ukur' => 'required|date',
@@ -142,9 +160,15 @@ class DdstTestController extends Controller
             'semester' => 'nullable|string|max:20',
             'tahun_ajaran' => 'nullable|string|max:20',
             'interpretasi_ddst' => 'nullable|string',
-            'tugas_belum_tercapai' => 'nullable|string',
-            'tugas_perlu_ditingkatkan' => 'nullable|string',
+            'profile_dan_karakter' => 'nullable|string',
             'saran_rujukan' => 'nullable|string',
+
+            'fotos' => 'nullable|array',
+            'fotos.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'delete_foto_ids' => 'nullable|array',
+            'delete_foto_ids.*' => 'integer',
+
+
         ]);
 
         DB::beginTransaction();
@@ -170,16 +194,47 @@ class DdstTestController extends Controller
                 ],
                 [
                     'gurus_id' => $request->gurus_id, // 🔥 ambil dari dropdown
+                    'reviewers_id' => $request->reviewers_id,
                     'tanggal_test' => $antropometri->tanggal_ukur,
                     'usia_bulan' => $request->usia_bulan,
                     'semester' => $request->semester,
                     'tahun_ajaran' => $request->tahun_ajaran,
                     'interpretasi_ddst' => $request->interpretasi_ddst,
-                    'tugas_belum_tercapai' => $request->tugas_belum_tercapai,
-                    'tugas_perlu_ditingkatkan' => $request->tugas_perlu_ditingkatkan,
+                    'profile_dan_karakter' => $request->profile_dan_karakter,
                     'saran_rujukan' => $request->saran_rujukan,
                 ]
             );
+
+            // hapus foto lama yang ditandai
+            if ($request->filled('delete_foto_ids')) {
+                $ids = $request->input('delete_foto_ids', []);
+
+                $fotosToDelete = DdstTestFoto::where('ddst_tests_id', $ddstTest->id)
+                    ->whereIn('id', $ids)
+                    ->get();
+
+                foreach ($fotosToDelete as $foto) {
+                    // hapus file fisik
+                    if (!empty($foto->foto)) {
+                        Storage::disk('public')->delete($foto->foto);
+                    }
+                    // hapus record
+                    $foto->delete();
+                }
+            }
+
+            // 2.5 simpan foto (multiple)
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $file) {
+                    $path = $file->store('ddst/foto-anak', 'public');
+
+                    $ddstTest->fotos()->create([
+                        'foto' => $path,
+                        'caption' => null,
+                    ]);
+                }
+            }
+
 
 
             // 3. simpan tiap item (updateOrCreate biar tidak dobel)
@@ -215,6 +270,8 @@ class DdstTestController extends Controller
         $antropometri->load([
             'anak.sekolah',
             'ddstTests.guru',
+            'ddstTests.reviewer',
+            'ddstTests.fotos',
             'ddstTests.items.item', // Antropometri -> ddstTests -> items -> item (DdstItem)
         ]);
 
@@ -239,7 +296,16 @@ class DdstTestController extends Controller
         $ddstTest = $ddstTests->sortByDesc('tanggal_test')->first();
         $guru = $ddstTest->guru; // ✅ ini pemeriksa
 
-
+        // ✅ GALLERY: semua foto sampai ddst yang dicetak (bulan-bulan sebelumnya ikut)
+        $galleryFotos = DdstTestFoto::query()
+            ->with(['ddstTest:id,anaks_id,tanggal_test'])
+            ->whereHas('ddstTest', function ($q) use ($anak, $tglTes) {
+                $q->where('anaks_id', $anak->id)
+                    ->whereDate('tanggal_test', '<=', $tglTes->toDateString());
+            })
+            // urut lama -> baru (biar enak dilihat)
+            ->orderBy('id', 'asc')
+            ->get();
 
         $pdf = Pdf::loadView('shared.tumbuh_kembang.ddst_laporan_pdf', [
             'antropometri' => $antropometri,
@@ -247,6 +313,7 @@ class DdstTestController extends Controller
             'ddstTest' => $ddstTest,      // kirim yang singular
             'usiaFormatted' => $usiaFormatted,
             'guru' => $guru,
+            'galleryFotos' => $galleryFotos,
         ])->setPaper('A4', 'portrait');
 
         $filename = 'Laporan-DDST-' . ($anak->nama_anak ?? 'anak') . '-' .

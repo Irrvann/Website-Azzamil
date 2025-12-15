@@ -7,7 +7,7 @@
             <!--begin::Modal header-->
             <div class="modal-header" id="modal_add_raport_header">
                 <!--begin::Modal title-->
-                <h2 class="fw-bold">Tambah Sekolah</h2>
+                <h2 class="fw-bold">Tambah Raport</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal"
@@ -34,10 +34,13 @@
                         <!--begin::Input group-->
 
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Sekolah<span class="text-danger ms-1">*</span></label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
+                            <label class="fs-6 fw-semibold mb-2">
+                                Sekolah <span class="text-danger ms-1">*</span>
+                            </label>
+
+                            <select id="sekolah_select" class="form-select form-select-solid" data-control="select2"
                                 data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value="">Pilih Sekolah...</option>
+                                <option value=""></option>
                                 @foreach ($dataSekolah as $sekolah)
                                     <option value="{{ $sekolah->id }}"
                                         {{ old('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
@@ -45,6 +48,7 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @if (old('form_source') == 'add_raport')
                                 @error('sekolahs_id')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -52,22 +56,15 @@
                             @endif
                         </div>
 
-                        <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nama Anak<span
-                                    class="text-danger ms-1">*</span></label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                data-placeholder="Pilih Anak..." name="anaks_id">
-                                <option value="">Pilih Anak...</option>
-                                @foreach ($dataAnak as $anak)
-                                    <option value="{{ $anak->id }}"
-                                        data-bb="{{ $anak->antropometris->first()->berat_badan ?? '' }}"
-                                        data-tb="{{ $anak->antropometris->first()->tinggi_badan ?? '' }}">
-                                        {{ $anak->nama_anak }}
-                                        (BB: {{ $anak->antropometris->first()->berat_badan ?? '-' }},
-                                        TB: {{ $anak->antropometris->first()->tinggi_badan ?? '-' }})
-                                    </option>
-                                @endforeach
 
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold mb-2">
+                                Nama Anak <span class="text-danger ms-1">*</span>
+                            </label>
+
+                            <select id="anak_select" class="form-select form-select-solid" data-control="select2"
+                                data-placeholder="Pilih Anak..." name="anaks_id">
+                                <option value=""></option>
                             </select>
 
                             @if (old('form_source') == 'add_raport')
@@ -77,25 +74,24 @@
                             @endif
                         </div>
 
+
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nama Guru<span
-                                    class="text-danger ms-1">*</span></label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
+                            <label class="fs-6 fw-semibold mb-2">
+                                Nama Guru <span class="text-danger ms-1">*</span>
+                            </label>
+
+                            <select id="guru_select" class="form-select form-select-solid" data-control="select2"
                                 data-placeholder="Pilih Guru..." name="gurus_id">
-                                <option value="">Pilih Guru...</option>
-                                @foreach ($dataGuru as $guru)
-                                    <option value="{{ $guru->id }}"
-                                        {{ old('gurus_id') == $guru->id ? 'selected' : '' }}>
-                                        {{ $guru->nama_guru }}
-                                    </option>
-                                @endforeach
+                                <option value=""></option>
                             </select>
+
                             @if (old('form_source') == 'add_raport')
                                 @error('gurus_id')
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             @endif
                         </div>
+
 
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Semester<span class="text-danger ms-1">*</span></label>
@@ -234,7 +230,8 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Refleksi Guru</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru" placeholder="Type Refleksi Guru">{{ old('refleksi_guru') }}</textarea>
+                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru"
+                                placeholder="Type Refleksi Guru">{{ old('refleksi_guru') }}</textarea>
                         </div>
 
                         {{-- Kehadiran --}}
@@ -385,4 +382,123 @@
         // update input hidden
         syncHiddenInput(key);
     }
+</script>
+
+<script>
+    (function() {
+        const modalId = 'modal_add_raport';
+        const modalEl = document.getElementById(modalId);
+
+        if (!modalEl) return;
+
+        let lastSekolahId = null;
+        let loading = false;
+
+        function initSelect2($modal) {
+            $modal.find('select[data-control="select2"]').each(function() {
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2('destroy');
+                }
+                $(this).select2({
+                    dropdownParent: $modal,
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Pilih...',
+                    minimumResultsForSearch: 0
+                });
+            });
+        }
+
+        function resetOptions($el) {
+            // buang semua option kecuali placeholder kosong
+            $el.find('option').not(':first').remove();
+            $el.val(null).trigger('change.select2');
+        }
+
+        async function loadAnakGuru($anak, $guru, sekolahId) {
+            if (!sekolahId) return;
+
+            // ✅ HAPUS OPTION LAMA TOTAL (kecuali placeholder)
+            $anak.find('option').not(':first').remove();
+            $guru.find('option').not(':first').remove();
+
+            const url = "{{ route($routeAnakGuru, ['sekolah' => '__ID__']) }}"
+                .replace('__ID__', sekolahId);
+
+            const res = await fetch(url, {
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            // ✅ BUAT SET existing value biar gak pernah dobel
+            const anakValues = new Set();
+            $anak.find('option').each(function() {
+                anakValues.add(String(this.value));
+            });
+
+            const guruValues = new Set();
+            $guru.find('option').each(function() {
+                guruValues.add(String(this.value));
+            });
+
+            data.anak.forEach(a => {
+                const id = String(a.id);
+                if (anakValues.has(id)) return;
+                $anak.append(new Option(a.text, id, false, false));
+                anakValues.add(id);
+            });
+
+            data.guru.forEach(g => {
+                const id = String(g.id);
+                if (guruValues.has(id)) return;
+                $guru.append(new Option(g.text, id, false, false));
+                guruValues.add(id);
+            });
+
+            $anak.trigger('change.select2');
+            $guru.trigger('change.select2');
+        }
+
+
+        // ✅ SATU PINTU SAJA
+        modalEl.addEventListener('shown.bs.modal', async function() {
+            const $modal = $('#' + modalId);
+            const $sekolah = $modal.find('#sekolah_select');
+            const $anak = $modal.find('#anak_select');
+            const $guru = $modal.find('#guru_select');
+
+            // init select2 dulu (sekali modal muncul)
+            initSelect2($modal);
+
+            // reset state tiap buka modal
+            lastSekolahId = null;
+            loading = false;
+
+            // reset dropdown anak & guru
+            resetOptions($anak);
+            resetOptions($guru);
+
+            // bind change SEKALI (hapus dulu biar gak numpuk)
+            $sekolah.off('change.dependent').on('change.dependent', function() {
+                loadAnakGuru($anak, $guru, this.value);
+            });
+
+            // auto load kalau balik validasi
+            const oldSekolah = @json(old('sekolahs_id'));
+            const oldAnak = @json(old('anaks_id'));
+            const oldGuru = @json(old('gurus_id'));
+
+            if (oldSekolah) {
+                // set sekolah di select2
+                $sekolah.val(String(oldSekolah)).trigger('change.select2');
+
+                await loadAnakGuru($anak, $guru, String(oldSekolah));
+
+                if (oldAnak) $anak.val(String(oldAnak)).trigger('change.select2');
+                if (oldGuru) $guru.val(String(oldGuru)).trigger('change.select2');
+            }
+        });
+
+    })();
 </script>

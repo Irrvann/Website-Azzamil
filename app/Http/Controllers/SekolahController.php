@@ -77,7 +77,7 @@ class SekolahController extends Controller
             [
                 'daerahs_id' => 'required|exists:daerahs,id',
                 'nama_sekolah' => 'required|string|max:255',
-                'jenis_sekolah' => 'required|in:baby,toddler,pra_kb,kb_kecil,kb_besar,tk',
+                'jenis_sekolah' => 'required|in:tpa,kb,tk,tpa_kb_tk',
                 'kelas' => 'required|string|max:100',
             ],
             [
@@ -130,7 +130,7 @@ class SekolahController extends Controller
             [
                 'daerahs_id' => 'required|exists:daerahs,id',
                 'nama_sekolah' => 'required|string|max:255',
-                'jenis_sekolah' => 'required|in:baby,toddler,pra_kb,kb_kecil,kb_besar,tk',
+                'jenis_sekolah' => 'required|in:tpa,kb,tk,tpa_kb_tk',
                 'kelas' => 'required|string|max:100',
             ],
             [

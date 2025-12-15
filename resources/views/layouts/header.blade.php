@@ -3399,9 +3399,11 @@
                                     <div class="fw-bold d-flex align-items-center fs-5">
                                         {{ $user->displayName() }}
                                     </div>
-                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
-                                        {{ $user->displayEmail() }}
+                                    <a href="#"
+                                        class="fw-semibold text-muted text-hover-primary fs-7 text-capitalize">
+                                        {{ $user->displayJabatan() }}
                                     </a>
+
                                 </div>
                                 <!--end::Username-->
                             </div>

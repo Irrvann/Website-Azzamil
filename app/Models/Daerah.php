@@ -19,9 +19,4 @@ class Daerah extends Model
         return $this->hasMany(Sekolah::class);
     }
 
-    // kode dibawah ini untuk relasi: satu daerah punya banyak admin
-    public function admins()
-    {
-        return $this->hasMany(Admin::class);
-    }
 }

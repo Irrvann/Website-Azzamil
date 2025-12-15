@@ -283,8 +283,8 @@
                             <label class="fs-6 fw-semibold mb-2">Orang Tua<span
                                     class="text-danger ms-1">*</span></label>
                             <select class="form-select form-select-solid" data-control="select2"
-                                data-hide-search="true" data-placeholder="Pilih Orang Tua..." name="orang_tuas_id">
-                                <option value="">Pilih Orang Tua...</option>
+                                data-placeholder="Pilih Orang Tua..." name="orang_tuas_id">
+                                <option value=""></option>
                                 @foreach ($dataOrangTua as $orangTua)
                                     <option value="{{ $orangTua->id }}"
                                         {{ old('orang_tuas_id', $anak->orang_tuas_id) == $orangTua->id ? 'selected' : '' }}>
@@ -292,11 +292,6 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @if (old('form_source') == 'edit_anak' && old('anak_id') == $anak->id)
-                                @error('orang_tuas_id')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
-                                @enderror
-                            @endif
                         </div>
 
                         {{-- SEKOLAH --}}
@@ -304,8 +299,8 @@
                             <label class="fs-6 fw-semibold mb-2">Sekolah<span
                                     class="text-danger ms-1">*</span></label>
                             <select class="form-select form-select-solid" data-control="select2"
-                                data-hide-search="true" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value="">Pilih Sekolah...</option>
+                                data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                <option value=""></option>
                                 @foreach ($dataSekolah as $sekolah)
                                     <option value="{{ $sekolah->id }}"
                                         {{ old('sekolahs_id', $anak->sekolahs_id) == $sekolah->id ? 'selected' : '' }}>
@@ -313,12 +308,8 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @if (old('form_source') == 'edit_anak' && old('anak_id') == $anak->id)
-                                @error('sekolahs_id')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
-                                @enderror
-                            @endif
                         </div>
+
 
                     </div>
 
@@ -353,3 +344,40 @@
         });
     </script>
 @endif
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // paksa focus ke input search saat select2 kebuka
+        $(document).on('select2:open', function() {
+            setTimeout(function() {
+                const el = document.querySelector(
+                    '.select2-container--open .select2-search__field');
+                if (el) el.focus();
+            }, 0);
+        });
+
+        // init ulang select2 setiap modal dibuka (add & edit)
+        document.querySelectorAll('.modal').forEach(function(modalEl) {
+            modalEl.addEventListener('shown.bs.modal', function() {
+
+                $(modalEl).find('select[data-control="select2"]').each(function() {
+                    // kalau sudah ter-init (Metronic suka init duluan), destroy biar gak bug focus
+                    if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).select2('destroy');
+                    }
+
+                    $(this).select2({
+                        dropdownParent: $(modalEl),
+                        width: '100%',
+                        placeholder: $(this).data('placeholder') || 'Pilih...',
+                        minimumResultsForSearch: 0 // paksa search selalu ada
+                    });
+                });
+
+            });
+        });
+
+    });
+</script>

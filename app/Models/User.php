@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable
 {
@@ -96,52 +99,54 @@ class User extends Authenticatable
         return (string) $this->username;
     }
 
-    public function displayEmail(): string
+    public function displayJabatan(): string
     {
         $p = $this->profile();
-        return (string) ($p->email ?? $this->username);
+        return (string) ($p->jabatan ?? $this->username);
     }
+
 
     public function avatarUrl(): string
     {
-        // pastikan relasi ada (kalau belum di-load, ini tetap bisa akses tapi bisa query berulang)
         $sa = $this->superadmin;
         $ad = $this->admin;
         $gr = $this->guru;
         $ot = $this->orangTua;
 
-        // ===== AMBIL FOTO SESUAI ROLE =====
-        // GANTI nama kolom di bawah kalau beda
         $foto =
-            $sa->foto ?? null
-            ?: $ad->foto ?? null
-            ?: $gr->foto ?? null
-            ?: $ot->foto ?? null;
+            ($sa->foto ?? null)
+            ?: ($ad->foto ?? null)
+            ?: ($gr->foto ?? null)
+            ?: ($ot->foto ?? null);
 
+        // fallback
         if (!$foto) {
-            return asset('assets/media/avatars/blank.png');
+            return asset('assets/media/foto/blank.png');
         }
 
-        // ===== NORMALISASI PATH =====
         $foto = ltrim($foto, '/');
 
-        // kalau sudah URL
-        if (str_starts_with($foto, 'http://') || str_starts_with($foto, 'https://')) {
+        // sudah URL
+        if (Str::startsWith($foto, ['http://', 'https://'])) {
             return $foto;
         }
 
-        // kalau simpan "storage/xxx"
-        if (str_starts_with($foto, 'storage/')) {
-            return asset($foto);
+        // ===== FOTO DARI STORAGE (sesuai pola yang kamu pakai) =====
+        if (
+            Str::startsWith($foto, [
+                'foto_guru/',
+                'foto_admin/',
+                'foto_superadmin/',
+                'foto_orangtua/',
+            ])
+        ) {
+            return asset('storage/' . $foto); // butuh php artisan storage:link
         }
 
-        // kalau simpan "public/xxx" (storage disk)
-        if (str_starts_with($foto, 'public/')) {
-            return asset(str_replace('public/', 'storage/', $foto));
-        }
-
-        // default: anggap tersimpan di storage/app/public/xxx
-        return asset('storage/' . $foto);
+        // ===== SELAIN ITU = PUBLIC (assets, images, dll) =====
+        return asset($foto);
     }
+
+
 
 }

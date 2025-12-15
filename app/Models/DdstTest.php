@@ -14,6 +14,7 @@ class DdstTest extends Model
     protected $fillable = [
         'anaks_id',
         'gurus_id',
+        'reviewers_id',
         'tanggal_test',
         'usia_bulan',
         'hasil_akhir',
@@ -21,8 +22,7 @@ class DdstTest extends Model
         'semester',
         'tahun_ajaran',
         'interpretasi_ddst',
-        'tugas_belum_tercapai',
-        'tugas_perlu_ditingkatkan',
+        'profile_dan_karakter',
         'saran_rujukan',
         'hasil_akhir',
     ];
@@ -50,6 +50,16 @@ class DdstTest extends Model
     public function antropometri()
     {
         return $this->belongsTo(Antropometri::class, 'antropometris_id');
+    }
+
+    public function fotos()
+    {
+        return $this->hasMany(DdstTestFoto::class, 'ddst_tests_id');
+    }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(Reviewer::class, 'reviewers_id');
     }
 
 }

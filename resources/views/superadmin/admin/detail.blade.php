@@ -42,9 +42,6 @@
                                 <span class="badge badge-light">-</span>
                             @endif
 
-                            @if ($admin->daerah?->nama_daerah)
-                                <span class="badge badge-light-success">{{ $admin->daerah->nama_daerah }}</span>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -99,13 +96,6 @@
                             <span class="fw-bold fs-6 text-gray-800">
                                 {{ $admin->tempat_lahir ?? '-' }},
                                 {{ $admin->tanggal_lahir ? \Carbon\Carbon::parse($admin->tanggal_lahir)->format('d-m-Y') : '-' }}
-                            </span>
-                        </div>
-
-                        <div class="d-flex flex-column mb-4">
-                            <span class="text-gray-600 fw-semibold fs-8 text-uppercase mb-1">Daerah</span>
-                            <span class="fw-bold fs-6 text-gray-800">
-                                {{ $admin->daerah->nama_daerah ?? '-' }}
                             </span>
                         </div>
 

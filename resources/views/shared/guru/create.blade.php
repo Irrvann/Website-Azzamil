@@ -120,7 +120,8 @@
                             <label class="fw-semibold fs-6 mb-2">Tempat Lahir<span
                                     class="text-danger ms-1">*</span></label>
                             <input type="text" name="tempat_lahir"
-                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tempat Lahir guru" value="{{ old('tempat_lahir') }}" />
+                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tempat Lahir guru"
+                                value="{{ old('tempat_lahir') }}" />
                             @if (old('form_source') == 'add_guru')
                                 @error('tempat_lahir')
                                     <div class="text-danger mt-2">{{ $message }}</div>
@@ -164,8 +165,10 @@
                                 data-hide-search="true" data-placeholder="Pilih Jenis Kelamin..."
                                 name="jenis_kelamin">
                                 <option value="">Pilih Jenis Kelamin...</option>
-                                <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki
+                                </option>
+                                <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan
+                                </option>
                             </select>
                             @if (old('form_source') == 'add_guru')
                                 @error('jenis_kelamin')
@@ -180,8 +183,10 @@
                             <select class="form-select form-select-solid" data-control="select2"
                                 data-hide-search="true" data-placeholder="Pilih Jabatan..." name="jabatan">
                                 <option value="">Pilih Jabatan...</option>
-                                <option value="kepala_sekolah" {{ old('jabatan') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
-                                <option value="operator" {{ old('jabatan') == 'operator' ? 'selected' : '' }}>Operator</option>
+                                <option value="kepala_sekolah"
+                                    {{ old('jabatan') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                                <option value="operator" {{ old('jabatan') == 'operator' ? 'selected' : '' }}>Operator
+                                </option>
                                 <option value="guru" {{ old('jabatan') == 'guru' ? 'selected' : '' }}>Guru</option>
                             </select>
                             @if (old('form_source') == 'add_guru')
@@ -225,13 +230,20 @@
                                 data-hide-search="true" data-placeholder="Pilih Pendidikan Terakhir..."
                                 name="pend_terakhir">
                                 <option value="">Pilih Pendidikan Terakhir...</option>
-                                <option value="smp" {{ old('pend_terakhir') == 'smp' ? 'selected' : '' }}>SMP</option>
-                                <option value="sma" {{ old('pend_terakhir') == 'sma' ? 'selected' : '' }}>SMA</option>
-                                <option value="smk" {{ old('pend_terakhir') == 'smk' ? 'selected' : '' }}>SMK</option>
-                                <option value="d3" {{ old('pend_terakhir') == 'd3' ? 'selected' : '' }}>D3</option>
-                                <option value="s1" {{ old('pend_terakhir') == 's1' ? 'selected' : '' }}>S1</option>
-                                <option value="s2" {{ old('pend_terakhir') == 's2' ? 'selected' : '' }}>S2</option>
-                                <option value="s3" {{ old('pend_terakhir') == 's3' ? 'selected' : '' }}>S3</option>
+                                <option value="smp" {{ old('pend_terakhir') == 'smp' ? 'selected' : '' }}>SMP
+                                </option>
+                                <option value="sma" {{ old('pend_terakhir') == 'sma' ? 'selected' : '' }}>SMA
+                                </option>
+                                <option value="smk" {{ old('pend_terakhir') == 'smk' ? 'selected' : '' }}>SMK
+                                </option>
+                                <option value="d3" {{ old('pend_terakhir') == 'd3' ? 'selected' : '' }}>D3
+                                </option>
+                                <option value="s1" {{ old('pend_terakhir') == 's1' ? 'selected' : '' }}>S1
+                                </option>
+                                <option value="s2" {{ old('pend_terakhir') == 's2' ? 'selected' : '' }}>S2
+                                </option>
+                                <option value="s3" {{ old('pend_terakhir') == 's3' ? 'selected' : '' }}>S3
+                                </option>
                             </select>
                             @if (old('form_source') == 'add_guru')
                                 @error('pend_terakhir')
@@ -281,11 +293,13 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Sekolah<span
-                                    class="text-danger ms-1">*</span></label>
+                            <label class="fs-6 fw-semibold mb-2">
+                                Sekolah <span class="text-danger ms-1">*</span>
+                            </label>
+
                             <select class="form-select form-select-solid" data-control="select2"
-                                data-hide-search="true" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value="">Pilih Sekolah...</option>
+                                data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                <option value=""></option>
                                 @foreach ($dataSekolah as $sekolah)
                                     <option value="{{ $sekolah->id }}"
                                         {{ old('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
@@ -293,12 +307,14 @@
                                     </option>
                                 @endforeach
                             </select>
+
                             @if (old('form_source') == 'add_guru')
                                 @error('sekolahs_id')
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             @endif
                         </div>
+
 
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Username <span class="text-danger">*</span></label>
@@ -353,3 +369,37 @@
         });
     </script>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalId = '#modal_add_guru';
+        const modalEl = document.querySelector(modalId);
+
+        // init select2 saat modal dibuka
+        modalEl.addEventListener('shown.bs.modal', function() {
+            $(modalEl).find('select[data-control="select2"]').each(function() {
+
+                // destroy kalau sudah pernah ke-init
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2('destroy');
+                }
+
+                $(this).select2({
+                    dropdownParent: $(modalId),
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Pilih...',
+                    minimumResultsForSearch: 0
+                });
+            });
+        });
+
+        // paksa fokus ke input search setiap select2 kebuka (biar bisa ngetik)
+        $(document).on('select2:open', function() {
+            setTimeout(function() {
+                const el = document.querySelector(
+                    '.select2-container--open .select2-search__field');
+                if (el) el.focus();
+            }, 0);
+        });
+    });
+</script>

@@ -19,7 +19,7 @@ class RaportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
+
     private function getRaportIndexRouteName(): string
     {
         $user = auth()->user();
@@ -39,6 +39,8 @@ class RaportController extends Controller
         abort(403, 'Role tidak dikenali');
     }
 
+
+
     public function index()
     {
         //
@@ -48,21 +50,26 @@ class RaportController extends Controller
             $routeNameUpdate = 'admin.raport.update';
             $routeNameDelete = 'admin.raport.destroy';
             $routeCetakPdf = 'admin.raport.cetak-pdf';
+            $routeAnakGuru = 'admin.ajax.sekolah.anak-guru';
         } elseif ($user->hasRole('super_admin')) {
             $routeNameStore = 'superadmin.raport.store';
             $routeNameUpdate = 'superadmin.raport.update';
             $routeNameDelete = 'superadmin.raport.destroy';
             $routeCetakPdf = 'superadmin.raport.cetak-pdf';
+            $routeAnakGuru = 'superadmin.ajax.sekolah.anak-guru';
+
 
         } elseif ($user->hasRole(roles: 'guru')) {
             $routeNameStore = 'guru.raport.store';
             $routeNameUpdate = 'guru.raport.update';
             $routeNameDelete = 'guru.raport.destroy';
             $routeCetakPdf = 'guru.raport.cetak-pdf';
-
+            $routeAnakGuru = 'guru.ajax.sekolah.anak-guru';
         } else {
             abort(403, 'Role tidak dikenali');
         }
+
+        
         $dataRaports = Raport::with(['anak', 'guru', 'sekolah', 'fotos'])
             ->latest()
             ->paginate(10);
@@ -77,7 +84,7 @@ class RaportController extends Controller
         $dataGuru = Guru::orderBy('nama_guru', 'asc')->get();
 
 
-        return view('shared.raport.index', compact('dataRaports', 'dataSekolah', 'dataAnak', 'dataGuru', 'routeNameStore','routeNameUpdate', 'routeNameDelete', 'routeCetakPdf'));
+        return view('shared.raport.index', compact('dataRaports', 'dataSekolah', 'dataAnak', 'dataGuru', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete', 'routeCetakPdf', 'routeAnakGuru'));
     }
 
     /**
@@ -367,5 +374,41 @@ class RaportController extends Controller
         return $pdf->stream($fileName);
         // atau: return $pdf->download($fileName);
     }
+
+    // RaportController.php
+    public function getAnakGuru($sekolahId)
+    {
+        $anak = \App\Models\Anak::with([
+            'antropometris' => function ($q) {
+                $q->latest('tanggal_ukur'); // ambil yang terbaru
+            }
+        ])
+            ->where('sekolahs_id', $sekolahId)
+            ->orderBy('nama_anak')
+            ->get()
+            ->map(function ($a) {
+                $ant = $a->antropometris->first();
+                return [
+                    'id' => $a->id,
+                    'text' => $a->nama_anak . ' (BB: ' . ($ant->berat_badan ?? '-') . ', TB: ' . ($ant->tinggi_badan ?? '-') . ')',
+                    'bb' => $ant->berat_badan ?? '',
+                    'tb' => $ant->tinggi_badan ?? '',
+                ];
+            });
+
+        $guru = \App\Models\Guru::where('sekolahs_id', $sekolahId)
+            ->orderBy('nama_guru')
+            ->get()
+            ->map(fn($g) => [
+                'id' => $g->id,
+                'text' => $g->nama_guru,
+            ]);
+
+        return response()->json([
+            'anak' => $anak,
+            'guru' => $guru,
+        ]);
+    }
+
 
 }

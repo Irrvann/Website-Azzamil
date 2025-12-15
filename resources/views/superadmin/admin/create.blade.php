@@ -193,24 +193,6 @@
                             @endif
                         </div>
 
-                        <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Daerah<span class="text-danger ms-1">*</span></label>
-                            <select class="form-select form-select-solid" data-control="select2"
-                                data-hide-search="true" data-placeholder="Pilih Daerah..." name="daerahs_id">
-                                <option value="">Pilih Daerah...</option>
-                                @foreach ($dataDaerah as $daerah)
-                                    <option value="{{ $daerah->id }}"
-                                        {{ old('daerahs_id') == $daerah->id ? 'selected' : '' }}>
-                                        {{ $daerah->nama_daerah }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @if (old('form_source') == 'add_admin')
-                                @error('daerahs_id')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
-                                @enderror
-                            @endif
-                        </div>
 
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Username <span class="text-danger">*</span></label>
