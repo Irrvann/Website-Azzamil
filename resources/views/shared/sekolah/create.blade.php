@@ -63,17 +63,7 @@
                             @endif
                         </div>
 
-                        <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Kelas<span
-                                    class="text-danger ms-1">*</span></label>
-                            <input type="text" name="kelas"
-                                class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kelas" value="{{ old('kelas') }}" />
-                            @if (old('form_source') == 'add_sekolah')
-                                @error('kelas')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
-                                @enderror
-                            @endif
-                        </div>
+                        
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Daerah<span class="text-danger ms-1">*</span></label>

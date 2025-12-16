@@ -102,7 +102,7 @@
                                         <th class="min-w-125px">No</th>
                                         <th class="min-w-125px">Nama Sekolah</th>
                                         <th class="min-w-125px">Jenis Sekolah</th>
-                                        <th class="min-w-125px">Kelas</th>
+                                        
                                         <th class="min-w-125px">Daerah</th>
                                         <th class="text-end min-w-100px">Aksi</th>
                                     </tr>
@@ -130,7 +130,7 @@
                                                     -
                                                 @endif
                                             </td>
-                                            <td>{{ $sekolah->kelas ?? '-' }}</td>
+                                            
                                             <td>{{ $sekolah->daerah->nama_daerah ?? '-' }}</td>
 
 

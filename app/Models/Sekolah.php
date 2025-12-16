@@ -13,7 +13,6 @@ class Sekolah extends Model
         'daerahs_id',
         'nama_sekolah',
         'jenis_sekolah',
-        'kelas',
     ];
 
     public function daerah()

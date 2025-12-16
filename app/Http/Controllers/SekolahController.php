@@ -78,7 +78,6 @@ class SekolahController extends Controller
                 'daerahs_id' => 'required|exists:daerahs,id',
                 'nama_sekolah' => 'required|string|max:255',
                 'jenis_sekolah' => 'required|in:tpa,kb,tk,tpa_kb_tk',
-                'kelas' => 'required|string|max:100',
             ],
             [
                 'daerahs_id.required' => 'Daerah wajib dipilih.',
@@ -88,9 +87,6 @@ class SekolahController extends Controller
                 'nama_sekolah.max' => 'Nama sekolah maksimal 255 karakter.',
                 'jenis_sekolah.required' => 'Jenis sekolah wajib diisi.',
                 'jenis_sekolah.in' => 'Jenis sekolah harus berupa Negeri atau Swasta.',
-                'kelas.required' => 'Kelas wajib diisi.',
-                'kelas.string' => 'Kelas harus berupa teks.',
-                'kelas.max' => 'Kelas maksimal 100 karakter.',
             ]
         );
 
@@ -98,7 +94,6 @@ class SekolahController extends Controller
             'daerahs_id' => $request->daerahs_id,
             'nama_sekolah' => $request->nama_sekolah,
             'jenis_sekolah' => $request->jenis_sekolah,
-            'kelas' => $request->kelas,
         ]);
 
         return redirect()->route($this->getSekolahIndexRouteName())->with('success', 'Sekolah berhasil ditambahkan.');
@@ -131,7 +126,6 @@ class SekolahController extends Controller
                 'daerahs_id' => 'required|exists:daerahs,id',
                 'nama_sekolah' => 'required|string|max:255',
                 'jenis_sekolah' => 'required|in:tpa,kb,tk,tpa_kb_tk',
-                'kelas' => 'required|string|max:100',
             ],
             [
                 'daerahs_id.required' => 'Daerah wajib dipilih.',
@@ -141,9 +135,6 @@ class SekolahController extends Controller
                 'nama_sekolah.max' => 'Nama sekolah maksimal 255 karakter.',
                 'jenis_sekolah.required' => 'Jenis sekolah wajib diisi.',
                 'jenis_sekolah.in' => 'Jenis sekolah harus berupa Negeri atau Swasta.',
-                'kelas.required' => 'Kelas wajib diisi.',
-                'kelas.string' => 'Kelas harus berupa teks.',
-                'kelas.max' => 'Kelas maksimal 100 karakter.',
             ]
         );
 
@@ -153,7 +144,6 @@ class SekolahController extends Controller
             'daerahs_id' => $request->daerahs_id,
             'nama_sekolah' => $request->nama_sekolah,
             'jenis_sekolah' => $request->jenis_sekolah,
-            'kelas' => $request->kelas,
         ]);
 
         return redirect()->route($this->getSekolahIndexRouteName())->with('success', 'Sekolah berhasil diperbarui.');
