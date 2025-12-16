@@ -185,6 +185,18 @@ class DdstTestController extends Controller
                 'status_bb' => $request->status_bb,
                 'status_tb' => $request->status_tb,
             ]);
+            $user = Auth::user();
+
+            if ($user->hasRole('guru')) {
+                $guruLoginId = $user->guru?->id;
+                if (!$guruLoginId)
+                    abort(403, 'Akun guru belum terhubung ke data guru');
+
+                $gurusId = $guruLoginId; // 🔒 paksa dari login
+            } else {
+                $gurusId = $request->gurus_id; // admin/superadmin dari form
+            }
+
 
             // 2. create / update header ddst_tests (1 per antropometri)
             $ddstTest = DdstTest::updateOrCreate(
@@ -193,7 +205,7 @@ class DdstTestController extends Controller
                     'anaks_id' => $anak->id,
                 ],
                 [
-                    'gurus_id' => $request->gurus_id, // 🔥 ambil dari dropdown
+                    'gurus_id' => $gurusId,
                     'reviewers_id' => $request->reviewers_id,
                     'tanggal_test' => $antropometri->tanggal_ukur,
                     'usia_bulan' => $request->usia_bulan,

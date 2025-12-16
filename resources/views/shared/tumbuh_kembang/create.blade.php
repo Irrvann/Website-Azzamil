@@ -39,16 +39,33 @@
                                 Sekolah <span class="text-danger ms-1">*</span>
                             </label>
 
-                            <select id="sekolah_select_antropometri" class="form-select form-select-solid"
-                                data-control="select2" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value=""></option>
-                                @foreach ($dataSekolah as $s)
-                                    <option value="{{ $s->id }}"
-                                        {{ old('sekolahs_id') == $s->id ? 'selected' : '' }}>
-                                        {{ $s->nama_sekolah }}
+                            @role('guru')
+                                @php
+                                    $sekolahGuru = $dataSekolah->first(); // harusnya 1 sekolah
+                                @endphp
+
+                                {{-- tampil terkunci --}}
+                                <select id="sekolah_select_antropometri" class="form-select form-select-solid" disabled>
+                                    <option value="{{ $sekolahGuru?->id }}">
+                                        {{ $sekolahGuru?->nama_sekolah ?? 'Sekolah belum di-set' }}
                                     </option>
-                                @endforeach
-                            </select>
+                                </select>
+
+                                {{-- yang benar-benar dikirim ke backend --}}
+                                <input type="hidden" name="sekolahs_id"
+                                    value="{{ old('sekolahs_id', $sekolahGuru?->id) }}">
+                            @else
+                                <select id="sekolah_select_antropometri" class="form-select form-select-solid"
+                                    data-control="select2" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                    <option value=""></option>
+                                    @foreach ($dataSekolah as $s)
+                                        <option value="{{ $s->id }}"
+                                            {{ old('sekolahs_id') == $s->id ? 'selected' : '' }}>
+                                            {{ $s->nama_sekolah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endrole
 
                             @if (old('form_source') == 'add_antropometri')
                                 @error('sekolahs_id')
@@ -56,6 +73,7 @@
                                 @enderror
                             @endif
                         </div>
+
 
                         <!-- ANAK -->
                         <div class="fv-row mb-7">
@@ -349,22 +367,36 @@
             initSelect2($modal);
             resetOptions($anak);
 
+            // ambil sekolahId:
+            // - admin/superadmin: dari select sekolah
+            // - guru: dari hidden input name="sekolahs_id"
+            const hiddenSekolah = $modal.find('input[name="sekolahs_id"]').val();
+            const sekolahId = hiddenSekolah || $sekolah.val();
+
+            // bind change untuk admin/superadmin
             $sekolah.off('change.dependent').on('change.dependent', function() {
                 loadAnak($anak, this.value);
             });
 
-            // ✅ AUTO LOAD SAAT BALIK DARI VALIDASI
+            // ✅ AUTO LOAD: guru (langsung), atau balik dari validasi
             const oldSekolah = @json(old('sekolahs_id'));
             const oldAnak = @json(old('anaks_id'));
 
-            if (oldSekolah) {
-                $sekolah.val(String(oldSekolah)).trigger('change');
-                await loadAnak($anak, String(oldSekolah));
+            const finalSekolah = oldSekolah || sekolahId;
+
+            if (finalSekolah) {
+                // untuk admin/superadmin set value select sekolahnya
+                if ($sekolah.length && !$sekolah.prop('disabled')) {
+                    $sekolah.val(String(finalSekolah)).trigger('change');
+                }
+
+                await loadAnak($anak, String(finalSekolah));
 
                 if (oldAnak) {
                     $anak.val(String(oldAnak)).trigger('change');
                 }
             }
         });
+
     })();
 </script>

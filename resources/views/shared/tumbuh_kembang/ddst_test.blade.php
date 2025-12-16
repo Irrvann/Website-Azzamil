@@ -84,23 +84,39 @@
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="col-md-4">
                                     <div class="mb-2 fw-semibold text-gray-600">
                                         Guru Pemeriksa <span class="text-danger">*</span>
                                     </div>
 
-                                    <select name="gurus_id" class="form-select form-select-solid" data-control="select2"
-                                        data-placeholder="Pilih Guru..." required>
-                                        <option value=""></option>
-                                        @foreach ($listGuru as $guru)
-                                            <option value="{{ $guru->id }}"
-                                                {{ old('gurus_id', $ddstTest->gurus_id ?? '') == $guru->id ? 'selected' : '' }}>
-                                                {{ $guru->nama_guru }}
+                                    @role('guru')
+                                        @php
+                                            $guruLogin = auth()->user()->guru; // pastikan relasi user->guru ada
+                                        @endphp
+
+                                        {{-- tampil terkunci --}}
+                                        <select class="form-select form-select-solid" disabled>
+                                            <option value="{{ $guruLogin?->id }}">
+                                                {{ $guruLogin?->nama_guru ?? 'Guru tidak ditemukan' }}
                                             </option>
-                                        @endforeach
-                                    </select>
+                                        </select>
+
+                                        {{-- value yang dikirim --}}
+                                        <input type="hidden" name="gurus_id" value="{{ old('gurus_id', $guruLogin?->id) }}">
+                                    @else
+                                        <select name="gurus_id" class="form-select form-select-solid" data-control="select2"
+                                            data-placeholder="Pilih Guru..." required>
+                                            <option value=""></option>
+                                            @foreach ($listGuru as $guru)
+                                                <option value="{{ $guru->id }}"
+                                                    {{ old('gurus_id', $ddstTest->gurus_id ?? '') == $guru->id ? 'selected' : '' }}>
+                                                    {{ $guru->nama_guru }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    @endrole
 
                                     @error('gurus_id')
                                         <div class="text-danger mt-1">{{ $message }}</div>
@@ -132,7 +148,7 @@
                                     @enderror
 
                                     {{-- Tanggal ukur --}}
-                                    <div class="mb-2 fw-semibold text-gray-600">Tanggal Ukur <span
+                                    <div class="mb-2 fw-semibold text-gray-600 mt-4">Tanggal Ukur <span
                                             class="text-danger">*</span></div>
                                     <input type="date" name="tanggal_ukur" class="form-control form-control-solid mb-4"
                                         value="{{ old('tanggal_ukur', \Carbon\Carbon::parse($antropometri->tanggal_ukur)->format('Y-m-d')) }}">

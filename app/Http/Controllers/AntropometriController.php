@@ -58,12 +58,43 @@ class AntropometriController extends Controller
         } else {
             abort(403, 'Role tidak dikenali');
         }
-        // tampilkan semua data antropometri (atau filter per sekolah/guru)
-        $dataAntropometri = Antropometri::with('anak', 'anak.sekolah', 'ddstTests')
-            ->latest('tanggal_ukur')->paginate(10);
 
-        $dataAnak = Anak::orderBy('nama_anak')->get();
-        $dataSekolah = Sekolah::orderBy('nama_sekolah')->get();
+        $guruSekolahId = $user->hasRole('guru') ? $user->guru?->sekolahs_id : null;
+
+        // kalau guru belum punya sekolah, tampilkan kosong
+        if ($user->hasRole('guru') && !$guruSekolahId) {
+            $dataAntropometri = Antropometri::whereRaw('1=0')->paginate(10);
+            $dataAnak = collect();
+            $dataSekolah = collect();
+
+            return view('shared.tumbuh_kembang.index', compact(
+                'dataAntropometri',
+                'dataAnak',
+                'routeNameStore',
+                'routeDdstCreate',
+                'routeDdstCetak',
+                'dataSekolah',
+                'routeAjaxAnakBySekolah',
+                'routeAntropometriDestroy'
+            ));
+        }
+
+        $dataAntropometri = Antropometri::with(['anak.sekolah', 'ddstTests'])
+            ->when($user->hasRole('guru'), function ($q) use ($guruSekolahId) {
+                $q->whereHas('anak', fn($qa) => $qa->where('sekolahs_id', $guruSekolahId));
+            })
+            ->latest('tanggal_ukur')
+            ->paginate(10);
+
+        // dropdown & list anak untuk modal tambah
+        $dataAnak = Anak::when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
+            ->orderBy('nama_anak')
+            ->get();
+
+        $dataSekolah = Sekolah::when($user->hasRole('guru'), fn($q) => $q->where('id', $guruSekolahId))
+            ->orderBy('nama_sekolah')
+            ->get();
+
 
 
         return view('shared.tumbuh_kembang.index', compact('dataAntropometri', 'dataAnak', 'routeNameStore', 'routeDdstCreate', 'routeDdstCetak', 'dataSekolah', 'routeAjaxAnakBySekolah', 'routeAntropometriDestroy'));
@@ -82,6 +113,8 @@ class AntropometriController extends Controller
     public function store(Request $request)
     {
         //
+
+
         $request->validate([
             'anaks_id' => 'required|exists:anaks,id',
             'tanggal_ukur' => 'required|date',
@@ -93,6 +126,19 @@ class AntropometriController extends Controller
             'status_bb' => 'nullable|in:normal,resiko',
             'status_tb' => 'nullable|in:normal,pendek',
         ]);
+
+        $user = Auth::user();
+
+        if ($user->hasRole('guru')) {
+            $guruSekolahId = $user->guru?->sekolahs_id;
+            if (!$guruSekolahId)
+                abort(403, 'Akun guru belum memiliki sekolah');
+
+            $anak = Anak::findOrFail($request->anaks_id);
+            if ((int) $anak->sekolahs_id !== (int) $guruSekolahId) {
+                abort(403, 'Tidak boleh menambah antropometri untuk anak dari sekolah lain');
+            }
+        }
 
         Antropometri::create($request->only([
             'anaks_id',
@@ -141,6 +187,13 @@ class AntropometriController extends Controller
 
     public function ajaxAnakBySekolah($sekolahId)
     {
+        $user = Auth::user();
+        if ($user->hasRole('guru')) {
+            $guruSekolahId = $user->guru?->sekolahs_id;
+            if (!$guruSekolahId || (int) $sekolahId !== (int) $guruSekolahId) {
+                abort(403);
+            }
+        }
         $anak = Anak::where('sekolahs_id', $sekolahId) // kalau kolomnya sekolah_id, ganti di sini
             ->orderBy('nama_anak')
             ->get()
