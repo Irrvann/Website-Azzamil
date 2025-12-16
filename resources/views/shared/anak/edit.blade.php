@@ -298,17 +298,42 @@
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Sekolah<span
                                     class="text-danger ms-1">*</span></label>
-                            <select class="form-select form-select-solid" data-control="select2"
-                                data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value=""></option>
-                                @foreach ($dataSekolah as $sekolah)
-                                    <option value="{{ $sekolah->id }}"
-                                        {{ old('sekolahs_id', $anak->sekolahs_id) == $sekolah->id ? 'selected' : '' }}>
-                                        {{ $sekolah->nama_sekolah }}
+
+                            @role('guru')
+                                @php
+                                    // karena di controller guru, $dataSekolah biasanya cuma 1 (sekolahnya dia)
+                                    $sekolahGuru = $dataSekolah->first();
+                                @endphp
+
+                                {{-- tampil tapi terkunci --}}
+                                <select class="form-select form-select-solid" disabled>
+                                    <option value="{{ $sekolahGuru?->id }}">
+                                        {{ $sekolahGuru?->nama_sekolah ?? 'Sekolah belum di-set' }}
                                     </option>
-                                @endforeach
-                            </select>
+                                </select>
+
+                                {{-- tetap kirim value --}}
+                                <input type="hidden" name="sekolahs_id"
+                                    value="{{ old('sekolahs_id', $anak->sekolahs_id) }}">
+                            @else
+                                <select class="form-select form-select-solid" data-control="select2"
+                                    data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                    <option value=""></option>
+                                    @foreach ($dataSekolah as $sekolah)
+                                        <option value="{{ $sekolah->id }}"
+                                            {{ old('sekolahs_id', $anak->sekolahs_id) == $sekolah->id ? 'selected' : '' }}>
+                                            {{ $sekolah->nama_sekolah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endrole
+
+                            {{-- kalau kamu mau tampilkan error edit sekolah --}}
+                            @error('sekolahs_id')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                            @enderror
                         </div>
+
 
 
                     </div>

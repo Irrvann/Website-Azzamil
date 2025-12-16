@@ -36,7 +36,6 @@ class AnakController extends Controller
 
     public function index()
     {
-        //
         $user = Auth::user();
 
         if ($user->hasRole('admin')) {
@@ -54,12 +53,51 @@ class AnakController extends Controller
         } else {
             abort(403, 'Role tidak dikenali');
         }
-        $dataAnak = Anak::with(['orangTua', 'sekolah'])->paginate(10);
-        $dataOrangTua = OrangTua::orderBy('nama_ayah', 'asc')->orderBy('nama_ibu', 'asc')->get();
-        $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();
 
-        return view('shared.anak.index', compact('dataAnak', 'dataOrangTua', 'dataSekolah', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
+        // ✅ BASE QUERY
+        $query = Anak::with(['orangTua', 'sekolah']);
+
+        // ✅ FILTER KHUSUS GURU: hanya anak dari sekolah guru tersebut
+        if ($user->hasRole('guru')) {
+            $guru = $user->guru;
+
+            if (!$guru || !$guru->sekolahs_id) {
+                // paginate kosong yang aman untuk view ->links()
+                $dataAnak = Anak::whereRaw('1=0')->paginate(10);
+            } else {
+                $dataAnak = $query->where('sekolahs_id', $guru->sekolahs_id)->paginate(10);
+            }
+        } else {
+            $dataAnak = $query->paginate(10);
+        }
+
+
+        $dataAnak = $query->paginate(10);
+
+        $dataOrangTua = OrangTua::orderBy('nama_ayah', 'asc')->orderBy('nama_ibu', 'asc')->get();
+
+        // ✅ dropdown sekolah:
+        // admin & super_admin bisa pilih semua
+        // guru hanya sekolahnya sendiri (atau kosongkan dropdown dan paksa dari backend)
+        if ($user->hasRole('guru')) {
+            $guru = $user->guru;
+            $dataSekolah = Sekolah::when($guru?->sekolahs_id, fn($q) => $q->where('id', $guru->sekolahs_id))
+                ->orderBy('nama_sekolah', 'asc')
+                ->get();
+        } else {
+            $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();
+        }
+
+        return view('shared.anak.index', compact(
+            'dataAnak',
+            'dataOrangTua',
+            'dataSekolah',
+            'routeNameStore',
+            'routeNameUpdate',
+            'routeNameDelete'
+        ));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -75,6 +113,7 @@ class AnakController extends Controller
     public function store(Request $request)
     {
         //
+        $user = Auth::user();
         $request->validate(
             [
                 'orang_tuas_id' => 'required|exists:orang_tuas,id',
@@ -128,6 +167,16 @@ class AnakController extends Controller
             ]
         );
 
+        // ✅ kunci sekolah untuk guru
+        if ($user->hasRole('guru')) {
+            $guru = $user->guru;
+            if (!$guru || !$guru->sekolahs_id)
+                abort(403, 'Akun guru belum memiliki sekolah');
+            $sekolahsId = $guru->sekolahs_id;
+        } else {
+            $sekolahsId = $request->sekolahs_id;
+        }
+
         $fotoPath = null;
 
         // path default (sesuaikan dengan lokasi file-mu)
@@ -147,7 +196,7 @@ class AnakController extends Controller
 
 
         Anak::create([
-            'sekolahs_id' => $request->sekolahs_id,
+            'sekolahs_id' => $sekolahsId,
             'orang_tuas_id' => $request->orang_tuas_id,
             'nik' => $request->nik,
             'nisn' => $request->nisn,
@@ -187,7 +236,19 @@ class AnakController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = Auth::user();
         $anak = Anak::findOrFail($id);
+
+        if ($user->hasRole('guru')) {
+            $guru = $user->guru;
+            if (!$guru || !$guru->sekolahs_id)
+                abort(403, 'Akun guru belum memiliki sekolah');
+
+            // ✅ guru tidak boleh edit anak sekolah lain
+            if ((int) $anak->sekolahs_id !== (int) $guru->sekolahs_id) {
+                abort(403, 'Tidak boleh mengubah data anak dari sekolah lain');
+            }
+        }
 
         $request->validate(
             [
@@ -242,6 +303,16 @@ class AnakController extends Controller
             ]
         );
 
+        // ✅ kunci sekolah untuk guru
+        if ($user->hasRole('guru')) {
+            $guru = $user->guru;
+            if (!$guru || !$guru->sekolahs_id)
+                abort(403, 'Akun guru belum memiliki sekolah');
+            $sekolahsId = $guru->sekolahs_id;
+        } else {
+            $sekolahsId = $request->sekolahs_id;
+        }
+
         $defaultFotoPath = 'assets/media/foto/blank.png';
         $fotoPath = $anak->foto ?: $defaultFotoPath;
 
@@ -267,7 +338,7 @@ class AnakController extends Controller
         }
 
         $anak->update([
-            'sekolahs_id' => $request->sekolahs_id,
+            'sekolahs_id' => $sekolahsId,
             'orang_tuas_id' => $request->orang_tuas_id,
             'nik' => $request->nik,
             'nisn' => $request->nisn,
