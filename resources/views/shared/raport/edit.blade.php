@@ -1,9 +1,26 @@
 {{-- Modal Edit Raport --}}
+@php
+    $isThisEdit = old('form_source') === 'edit_raport' && (string)old('edit_id') === (string)$raport->id;
+
+    $selectedSekolah = $isThisEdit
+        ? old('sekolahs_id')
+        : ($raport->sekolah_id ?? ($raport->sekolahs_id ?? ''));
+
+    $selectedAnak = $isThisEdit
+        ? old('anaks_id')
+        : ($raport->anak_id ?? ($raport->anaks_id ?? ''));
+
+    $selectedGuru = $isThisEdit
+        ? old('gurus_id')
+        : ($raport->guru_id ?? ($raport->gurus_id ?? ''));
+@endphp
+
+
 <div class="modal fade" id="modal_edit_raport_{{ $raport->id }}"
-    data-selected-sekolah="{{ old('sekolahs_id', $raport->sekolah_id ?? ($raport->sekolahs_id ?? '')) }}"
-    data-selected-anak="{{ old('anaks_id', $raport->anak_id ?? ($raport->anaks_id ?? '')) }}"
-    data-selected-guru="{{ old('gurus_id', $raport->guru_id ?? ($raport->gurus_id ?? '')) }}" tabindex="-1"
-    aria-hidden="true">
+    data-selected-sekolah="{{ $selectedSekolah }}"
+    data-selected-anak="{{ $selectedAnak }}"
+    data-selected-guru="{{ $selectedGuru }}"
+    tabindex="-1" aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
@@ -33,28 +50,50 @@
                         data-kt-scroll-wrappers="#modal_edit_raport_scroll_{{ $raport->id }}"
                         data-kt-scroll-offset="300px">
 
+                        <input type="hidden" name="form_source" value="edit_raport">
+                        <input type="hidden" name="edit_id" value="{{ $raport->id }}">
+
+
                         {{-- Sekolah --}}
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">
                                 Sekolah <span class="text-danger ms-1">*</span>
                             </label>
 
-                            <select id="sekolah_select_{{ $raport->id }}" class="form-select form-select-solid"
-                                data-control="select2" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                            @role('guru')
+                                @php
+                                    $sekolahGuru = $dataSekolah->first(); // controller harus ngirim 1 sekolah saja utk guru
+                                    $sekolahIdVal = old('sekolahs_id', $sekolahGuru?->id);
+                                @endphp
 
-                                <option value=""></option>
-                                @foreach ($dataSekolah as $sekolah)
-                                    <option value="{{ $sekolah->id }}"
-                                        {{ old('sekolahs_id', $raport->sekolah_id ?? ($raport->sekolahs_id ?? null)) == $sekolah->id ? 'selected' : '' }}>
-                                        {{ $sekolah->nama_sekolah }}
+                                {{-- tampil terkunci --}}
+                                <select id="sekolah_select_{{ $raport->id }}" class="form-select form-select-solid"
+                                    disabled>
+                                    <option value="{{ $sekolahGuru?->id }}">
+                                        {{ $sekolahGuru?->nama_sekolah ?? 'Sekolah belum di-set' }}
                                     </option>
-                                @endforeach
-                            </select>
+                                </select>
+
+                                {{-- nilai yang benar2 dikirim --}}
+                                <input type="hidden" name="sekolahs_id" value="{{ $sekolahIdVal }}">
+                            @else
+                                <select id="sekolah_select_{{ $raport->id }}" class="form-select form-select-solid"
+                                    data-control="select2" data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                    <option value=""></option>
+                                    @foreach ($dataSekolah as $sekolah)
+                                        <option value="{{ $sekolah->id }}"
+                                            {{ old('sekolahs_id', $raport->sekolah_id ?? ($raport->sekolahs_id ?? null)) == $sekolah->id ? 'selected' : '' }}>
+                                            {{ $sekolah->nama_sekolah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endrole
 
                             @error('sekolahs_id')
                                 <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
                         </div>
+
 
                         {{-- Anak --}}
                         <div class="fv-row mb-7">
@@ -627,21 +666,33 @@
             initSelect2($modal);
 
             const $sekolah = $modal.find('#sekolah_select_' + raportId);
+            const $anak = $modal.find('#anak_select_' + raportId);
+            const $guru = $modal.find('#guru_select_' + raportId);
 
-            // ✅ pastikan sekolah ikut old juga
+            // ✅ sekolahId: guru -> hidden input, selain itu -> select
+            const hiddenSekolah = $modal.find('input[name="sekolahs_id"]').val();
             const selectedSekolah = String($modal.data('selected-sekolah') || '');
-            if (selectedSekolah) $sekolah.val(selectedSekolah).trigger('change.select2');
+            const sekolahId = String(hiddenSekolah || selectedSekolah || $sekolah.val() || '');
 
-            // bind change (hapus dulu biar ga numpuk)
+            // kalau admin/superadmin, set select sekolah ke selectedSekolah
+            if ($sekolah.length && !$sekolah.prop('disabled') && sekolahId) {
+                $sekolah.val(sekolahId).trigger('change.select2');
+            }
+
+            // bind change hanya kalau tidak disabled (admin/superadmin)
             $sekolah.off('change.dependent').on('change.dependent', function() {
-                // kalau user ganti sekolah manual, reset pilihan anak/guru lama
+                if ($(this).prop('disabled')) return;
+
+                // kalau ganti sekolah manual, reset pilihan anak/guru lama
                 $modal.data('selected-anak', '');
                 $modal.data('selected-guru', '');
+
                 loadAndSet($modal, raportId, this.value);
             });
 
-            // load pertama kali
-            loadAndSet($modal, raportId, $sekolah.val());
+            // ✅ load pertama kali (guru & admin sama-sama)
+            loadAndSet($modal, raportId, sekolahId);
         });
+
     })();
 </script>

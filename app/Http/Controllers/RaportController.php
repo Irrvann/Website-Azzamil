@@ -69,19 +69,61 @@ class RaportController extends Controller
             abort(403, 'Role tidak dikenali');
         }
 
-        
-        $dataRaports = Raport::with(['anak', 'guru', 'sekolah', 'fotos'])
+
+        $user = Auth::user();
+        $guruSekolahId = null;
+
+        if ($user->hasRole('guru')) {
+            $guruSekolahId = $user->guru?->sekolahs_id;
+
+            // kalau guru belum punya sekolah → tampilkan kosong
+            if (!$guruSekolahId) {
+                $dataRaports = Raport::whereRaw('1=0')->paginate(10);
+
+                return view('shared.raport.index', compact(
+                    'dataRaports',
+                    'dataSekolah',
+                    'dataAnak',
+                    'dataGuru',
+                    'routeNameStore',
+                    'routeNameUpdate',
+                    'routeNameDelete',
+                    'routeCetakPdf',
+                    'routeAnakGuru'
+                ));
+            }
+        }
+
+        $dataRaports = Raport::with(['anak.sekolah', 'guru', 'fotos'])
+            ->when($user->hasRole('guru'), function ($q) use ($guruSekolahId) {
+                $q->whereHas('anak', function ($qa) use ($guruSekolahId) {
+                    $qa->where('sekolahs_id', $guruSekolahId);
+                });
+            })
             ->latest()
             ->paginate(10);
 
-        $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();
+
+        $dataSekolah = Sekolah::when(
+            $user->hasRole('guru'),
+            fn($q) => $q->where('id', $guruSekolahId)
+        )->orderBy('nama_sekolah')->get();
+
         $dataAnak = Anak::with([
             'antropometris' => function ($q) {
                 $q->latest('tanggal_ukur')->limit(1);
             }
-        ])->orderBy('nama_anak', 'asc')->get();
+        ])
+            ->when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
+            ->orderBy('nama_anak')
+            ->get();
 
-        $dataGuru = Guru::orderBy('nama_guru', 'asc')->get();
+
+        $dataGuru = Guru::when(
+            $user->hasRole('guru'),
+            fn($q) => $q->where('id', $user->guru?->id)
+        )->orderBy('nama_guru')->get();
+
 
 
         return view('shared.raport.index', compact('dataRaports', 'dataSekolah', 'dataAnak', 'dataGuru', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete', 'routeCetakPdf', 'routeAnakGuru'));
@@ -124,6 +166,21 @@ class RaportController extends Controller
             'foto_literasi_sains.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'foto_p5.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        $user = Auth::user();
+
+        if ($user->hasRole('guru')) {
+            $guruSekolahId = $user->guru?->sekolahs_id;
+            if (!$guruSekolahId)
+                abort(403);
+
+            $anak = Anak::findOrFail($validated['anaks_id']);
+
+            if ((int) $anak->sekolahs_id !== (int) $guruSekolahId) {
+                abort(403, 'Tidak boleh mengelola raport sekolah lain');
+            }
+        }
+
 
         DB::beginTransaction();
 
@@ -234,6 +291,29 @@ class RaportController extends Controller
             'foto_p5.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        $user = Auth::user();
+
+        if ($user->hasRole('guru')) {
+            $guruSekolahId = $user->guru?->sekolahs_id;
+            if (!$guruSekolahId)
+                abort(403, 'Akun guru belum memiliki sekolah');
+
+            // paksa sekolah_id
+            $validated['sekolahs_id'] = $guruSekolahId;
+
+            $anak = Anak::findOrFail($validated['anaks_id']);
+            if ((int) $anak->sekolahs_id !== (int) $guruSekolahId) {
+                abort(403, 'Tidak boleh memilih anak dari sekolah lain');
+            }
+
+            $guru = Guru::findOrFail($validated['gurus_id']);
+            if ((int) $guru->sekolahs_id !== (int) $guruSekolahId) {
+                abort(403, 'Tidak boleh memilih guru dari sekolah lain');
+            }
+        }
+
+
+
         DB::beginTransaction();
 
         try {
@@ -297,6 +377,13 @@ class RaportController extends Controller
     public function destroy($id)
     {
         // Ambil raport beserta fotonya
+        $user = Auth::user();
+
+        // ❌ guru tidak boleh hapus
+        if ($user->hasRole('guru')) {
+            abort(403, 'Guru tidak memiliki akses menghapus raport.');
+        }
+
         $raport = Raport::with('fotos')->findOrFail($id);
 
         DB::beginTransaction();

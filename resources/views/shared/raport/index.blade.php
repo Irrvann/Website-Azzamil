@@ -130,19 +130,22 @@
 
                                                     <!--end::Menu item-->
                                                     <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3" data-bs-toggle="modal"
-                                                            data-bs-target="#modal_delete_raport_{{ $raport->id }}">
-                                                            Delete
-                                                        </a>
+                                                    {{-- DELETE hanya admin & super_admin --}}
+                                                    @hasanyrole('admin|super_admin')
+                                                        <div class="menu-item px-3">
+                                                            <a href="#" class="menu-link px-3" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_delete_raport_{{ $raport->id }}">
+                                                                Delete
+                                                            </a>
+                                                        </div>
+                                                    @endhasanyrole
 
-                                                    </div>
                                                     <!--end::Menu item-->
 
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
-                                                        <a href="{{route($routeCetakPdf, $raport->id) }}"
-                                                            target="_blank" class="menu-link px-3">
+                                                        <a href="{{ route($routeCetakPdf, $raport->id) }}" target="_blank"
+                                                            class="menu-link px-3">
                                                             Cetak PDF
                                                         </a>
                                                     </div>
@@ -159,8 +162,11 @@
                                             @include('shared.raport.edit')
                                             <!--end::Modal - Edit task-->
                                             <!--begin::Modal - Delete task-->
-                                            @include('shared.raport.delete')
+                                            @hasanyrole('admin|super_admin')
+                                                @include('shared.raport.delete')
+                                            @endhasanyrole
                                             <!--end::Modal - Delete task-->
+
                                         </tr>
                                     @endforeach
 

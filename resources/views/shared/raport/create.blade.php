@@ -38,16 +38,33 @@
                                 Sekolah <span class="text-danger ms-1">*</span>
                             </label>
 
-                            <select id="sekolah_select" class="form-select form-select-solid" data-control="select2"
-                                data-placeholder="Pilih Sekolah..." name="sekolahs_id">
-                                <option value=""></option>
-                                @foreach ($dataSekolah as $sekolah)
-                                    <option value="{{ $sekolah->id }}"
-                                        {{ old('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
-                                        {{ $sekolah->nama_sekolah }}
+                            @role('guru')
+                                @php
+                                    $sekolahGuru = $dataSekolah->first(); // harusnya cuma 1
+                                @endphp
+
+                                {{-- tampil terkunci --}}
+                                <select id="sekolah_select" class="form-select form-select-solid" disabled>
+                                    <option value="{{ $sekolahGuru?->id }}">
+                                        {{ $sekolahGuru?->nama_sekolah ?? 'Sekolah belum di-set' }}
                                     </option>
-                                @endforeach
-                            </select>
+                                </select>
+
+                                {{-- nilai yang benar-benar dikirim --}}
+                                <input type="hidden" name="sekolahs_id"
+                                    value="{{ old('sekolahs_id', $sekolahGuru?->id) }}">
+                            @else
+                                <select id="sekolah_select" class="form-select form-select-solid" data-control="select2"
+                                    data-placeholder="Pilih Sekolah..." name="sekolahs_id">
+                                    <option value=""></option>
+                                    @foreach ($dataSekolah as $sekolah)
+                                        <option value="{{ $sekolah->id }}"
+                                            {{ old('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
+                                            {{ $sekolah->nama_sekolah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endrole
 
                             @if (old('form_source') == 'add_raport')
                                 @error('sekolahs_id')
@@ -55,6 +72,7 @@
                                 @enderror
                             @endif
                         </div>
+
 
 
                         <div class="fv-row mb-7">
@@ -132,8 +150,9 @@
 
                             <div id="wrapper_foto_agama">
                                 {{-- input untuk pilih file (tidak punya name) --}}
-                                <input type="file" id="input_foto_agama" class="form-control form-control-solid mb-3"
-                                    multiple onchange="handleMultiImage(this, 'foto_agama')">
+                                <input type="file" id="input_foto_agama"
+                                    class="form-control form-control-solid mb-3" multiple
+                                    onchange="handleMultiImage(this, 'foto_agama')">
 
                                 {{-- input hidden yang akan benar-benar dikirim ke server --}}
                                 <input type="file" id="store_foto_agama" name="foto_agama[]" multiple
@@ -468,37 +487,42 @@
             const $anak = $modal.find('#anak_select');
             const $guru = $modal.find('#guru_select');
 
-            // init select2 dulu (sekali modal muncul)
             initSelect2($modal);
 
-            // reset state tiap buka modal
-            lastSekolahId = null;
-            loading = false;
-
-            // reset dropdown anak & guru
             resetOptions($anak);
             resetOptions($guru);
 
-            // bind change SEKALI (hapus dulu biar gak numpuk)
+            // ambil sekolahId:
+            // - guru → dari hidden input
+            // - admin → dari select
+            const hiddenSekolah = $modal.find('input[name="sekolahs_id"]').val();
+            const sekolahId = hiddenSekolah || $sekolah.val();
+
+            // bind change hanya untuk admin/superadmin
             $sekolah.off('change.dependent').on('change.dependent', function() {
                 loadAnakGuru($anak, $guru, this.value);
             });
 
-            // auto load kalau balik validasi
+            // auto load (guru atau balik validasi)
             const oldSekolah = @json(old('sekolahs_id'));
             const oldAnak = @json(old('anaks_id'));
             const oldGuru = @json(old('gurus_id'));
 
-            if (oldSekolah) {
-                // set sekolah di select2
-                $sekolah.val(String(oldSekolah)).trigger('change.select2');
+            const finalSekolah = oldSekolah || sekolahId;
 
-                await loadAnakGuru($anak, $guru, String(oldSekolah));
+            if (finalSekolah) {
+                // admin: set select sekolah
+                if ($sekolah.length && !$sekolah.prop('disabled')) {
+                    $sekolah.val(String(finalSekolah)).trigger('change.select2');
+                }
+
+                await loadAnakGuru($anak, $guru, String(finalSekolah));
 
                 if (oldAnak) $anak.val(String(oldAnak)).trigger('change.select2');
                 if (oldGuru) $guru.val(String(oldGuru)).trigger('change.select2');
             }
         });
+
 
     })();
 </script>
