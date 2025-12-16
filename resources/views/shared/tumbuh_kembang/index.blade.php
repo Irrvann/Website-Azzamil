@@ -120,14 +120,26 @@
                                                             Cetak
                                                         </a>
                                                     @endif
+
+                                                    {{-- ❌ Guru tidak boleh hapus --}}
+                                                    @hasanyrole('admin|super_admin')
+                                                        <button type="button" class="btn btn-sm btn-light-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal_delete_antropometri_{{ $antropometri->id }}">
+                                                            Hapus
+                                                        </button>
+                                                    @endhasanyrole
                                                 </div>
                                             </td>
+
+
+
 
 
                                         </tr>
 
                                         {{-- kalau kamu pakai modal delete, letakkan include di sini --}}
-                                        {{-- @include('antropometri.delete') --}}
+                                        @include('shared.tumbuh_kembang.delete')
                                     @endforeach
 
                                     {{-- Baris "Tidak ada data" --}}

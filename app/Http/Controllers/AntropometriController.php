@@ -7,6 +7,8 @@ use App\Models\Antropometri;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AntropometriController extends Controller
 {
@@ -40,16 +42,19 @@ class AntropometriController extends Controller
             $routeDdstCreate = 'admin.ddst.create_from_antropometri';
             $routeDdstCetak = 'admin.ddst.cetak_laporan';
             $routeAjaxAnakBySekolah = 'admin.ajax.sekolah.anak';
+            $routeAntropometriDestroy = 'admin.antropometri.destroy';
         } elseif ($user->hasRole('guru')) {
             $routeNameStore = 'guru.data-tumbuh-kembang.store';
             $routeDdstCreate = 'guru.ddst.create_from_antropometri';
             $routeDdstCetak = 'guru.ddst.cetak_laporan';
             $routeAjaxAnakBySekolah = 'guru.ajax.sekolah.anak';
+            $routeAntropometriDestroy = 'guru.antropometri.destroy';
         } elseif ($user->hasRole('super_admin')) {
             $routeNameStore = 'superadmin.data-tumbuh-kembang.store';
             $routeDdstCreate = 'superadmin.ddst.create_from_antropometri';
             $routeDdstCetak = 'superadmin.ddst.cetak_laporan';
             $routeAjaxAnakBySekolah = 'superadmin.ajax.sekolah.anak';
+            $routeAntropometriDestroy = 'superadmin.antropometri.destroy';
         } else {
             abort(403, 'Role tidak dikenali');
         }
@@ -61,7 +66,7 @@ class AntropometriController extends Controller
         $dataSekolah = Sekolah::orderBy('nama_sekolah')->get();
 
 
-        return view('shared.tumbuh_kembang.index', compact('dataAntropometri', 'dataAnak', 'routeNameStore', 'routeDdstCreate', 'routeDdstCetak', 'dataSekolah', 'routeAjaxAnakBySekolah'));
+        return view('shared.tumbuh_kembang.index', compact('dataAntropometri', 'dataAnak', 'routeNameStore', 'routeDdstCreate', 'routeDdstCetak', 'dataSekolah', 'routeAjaxAnakBySekolah', 'routeAntropometriDestroy'));
     }
 
     /**
@@ -132,10 +137,7 @@ class AntropometriController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Antropometri $antropometri)
-    {
-        //
-    }
+
 
     public function ajaxAnakBySekolah($sekolahId)
     {
@@ -148,6 +150,44 @@ class AntropometriController extends Controller
             ]);
 
         return response()->json(['anak' => $anak]);
+    }
+
+    public function destroy(Antropometri $antropometri)
+    {
+        if (auth()->user()->hasRole('guru')) {
+            abort(403, 'Guru tidak memiliki izin menghapus data.');
+        }
+        DB::beginTransaction();
+
+        try {
+            // Load relasi DDST (tests -> items + fotos)
+            $antropometri->load(['ddstTests.items', 'ddstTests.fotos']);
+
+            foreach ($antropometri->ddstTests as $test) {
+                // 1) hapus file foto + record foto
+                foreach ($test->fotos as $foto) {
+                    if (!empty($foto->foto)) {
+                        Storage::disk('public')->delete($foto->foto);
+                    }
+                    $foto->delete();
+                }
+
+                // 2) hapus items ddst_test_items
+                $test->items()->delete();
+
+                // 3) hapus ddst_tests
+                $test->delete();
+            }
+
+            // 4) hapus antropometri
+            $antropometri->delete();
+
+            DB::commit();
+            return back()->with('success', 'Data antropometri berhasil dihapus.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal hapus: ' . $e->getMessage());
+        }
     }
 
 }

@@ -59,6 +59,9 @@ Route::middleware(['auth', 'role:super_admin'])
         // Modul tumbuh kembang = antropometri
         Route::resource('data-tumbuh-kembang', AntropometriController::class)
             ->names('data-tumbuh-kembang');
+        
+        Route::delete('/antropometri/{antropometri}', [AntropometriController::class, 'destroy'])
+        ->name('antropometri.destroy');
 
         // Tambahan khusus: buat DDST dari satu data antropometri
         Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
@@ -110,6 +113,9 @@ Route::middleware(['auth', 'role:admin'])
         // Modul tumbuh kembang = antropometri
         Route::resource('data-tumbuh-kembang', AntropometriController::class)
             ->names('data-tumbuh-kembang');
+
+        Route::delete('/antropometri/{antropometri}', [AntropometriController::class, 'destroy'])
+        ->name('antropometri.destroy');
 
         // Tambahan khusus: buat DDST dari satu data antropometri
         Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
