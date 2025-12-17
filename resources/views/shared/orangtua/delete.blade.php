@@ -25,7 +25,7 @@
 
                     <h3 class="fw-bold mb-2">Yakin ingin menghapus?</h3>
                     <div class="text-muted fw-semibold fs-6">
-                        Data orang tua <span class="fw-bold">{{ $orangTua->nama_ayah ?? $orangTua->nama_ibu }}</span> akan dihapus permanen.
+                        Data orang tua <span class="fw-bold">{{ $orangTua->nama_ayah ?? $orangTua->nama_ibu }}</span> akan dihapus permanen. Dan juga data semua anak dari orang tua ini akan dihapus.
                     </div>
                 </div>
 

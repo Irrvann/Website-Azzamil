@@ -111,8 +111,6 @@
                                             <td>{{ $orangTua->no_hp_ayah ?? '-' }}</td>
                                             <td>{{ $orangTua->no_hp_ibu ?? '-' }}</td>
                                             <td>{{ $orangTua->alamat ?? '-' }}</td>
-                                            <td>{{ $orangTua->user->username ?? '-' }}</td>
-                                            
                                             <td>
                                                 @php
                                                     $status = $orangTua->user->status ?? null;
@@ -123,7 +121,10 @@
                                                 @elseif ($status === 'non_aktif')
                                                     <span class="badge badge-light-danger">Tidak Aktif</span>
                                                 @endif
-                                            </td>                                
+                                            </td>     
+                                            <td>{{ $orangTua->user->username ?? '-' }}</td>
+                                            
+                                                                       
 
                                             <td class="text-end">
 
