@@ -610,13 +610,20 @@
             <div class="page-continue">
                 <div class="ddst-section-karakter">
                     <div class="ddst-box">
-                        <div class="ddst-title">Profil & Karakter :</div>
+                        <div class="ddst-title">Profil & Karakter Anak yang dikenali Guru :</div>
                         <div class="ddst-content-karakter">
-                            {{ $ddstTest->profile_dan_karakter ?? '' }}
+                            {{ $ddstTest->profile_dan_karakter_yang_dikenali_guru ?? '' }}
                         </div>
                     </div>
                 </div>
-
+                <div class="ddst-section-karakter">
+                    <div class="ddst-box">
+                        <div class="ddst-title">Profil & Karakter Anak yang dikenali Orang Tua :</div>
+                        <div class="ddst-content-karakter">
+                            {{ $ddstTest->profile_dan_karakter_yang_dikenali_ortu ?? '' }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="page-break"></div>

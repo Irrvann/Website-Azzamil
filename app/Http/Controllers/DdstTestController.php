@@ -56,21 +56,43 @@ class DdstTestController extends Controller
         $usiaBulan = (int) Carbon::parse($anak->tanggal_lahir)
             ->diffInMonths(Carbon::parse($antropometri->tanggal_ukur));
 
-        // 1) Item utama: semua yang SUDAH boleh dites (masa lalu + usia sekarang)
+        // 1) Item utama: semua yang SUDAH boleh dites (<= usia sekarang)
         $baseItems = DdstItem::where('min_bulan', '<=', $usiaBulan)
-            ->orderBy('min_bulan')
             ->orderBy('kategori_perkembangan')
+            ->orderBy('min_bulan')
             ->get();
 
-        // 2) Item "advanced": 3 item berikutnya di depan usia sekarang
-        $futureItems = DdstItem::where('min_bulan', '>', $usiaBulan)
-            ->orderBy('min_bulan')
+        // 2) Item "advanced": ambil SEMUA yang > usia sekarang, lalu ambil 3 per kategori
+        $futureItemsAll = DdstItem::where('min_bulan', '>', $usiaBulan)
             ->orderBy('kategori_perkembangan')
-            ->limit(3)
+            ->orderBy('min_bulan')
             ->get();
 
-        // 3) Gabungkan: items utama + 3 item ke depan
-        $items = $baseItems->concat($futureItems);
+        $futureItemsPerKategori = $futureItemsAll
+            ->groupBy('kategori_perkembangan')
+            ->map(fn($group) => $group->take(3))
+            ->flatten(1);
+
+        // 3) Gabungkan
+        $items = $baseItems->concat($futureItemsPerKategori);
+
+        $orderKategori = [
+            'personal_sosial' => 1,
+            'motorik_halus' => 2,
+            'bahasa' => 3,
+            'motorik_kasar' => 4,
+        ];
+
+        // urutkan: kategori dulu (sesuai urutan di atas), lalu min_bulan, lalu nama_item
+        $items = $items->sortBy(function ($item) use ($orderKategori) {
+            return [
+                $orderKategori[$item->kategori_perkembangan] ?? 999,
+                $item->min_bulan,
+                $item->nama_item,
+            ];
+        })->values();
+
+
 
 
 
@@ -160,7 +182,8 @@ class DdstTestController extends Controller
             'semester' => 'nullable|string|max:20',
             'tahun_ajaran' => 'nullable|string|max:20',
             'interpretasi_ddst' => 'nullable|string',
-            'profile_dan_karakter' => 'nullable|string',
+            'profile_dan_karakter_yang_dikenali_guru' => 'nullable|string',
+            'profile_dan_karakter_yang_dikenali_ortu' => 'nullable|string',
             'saran_rujukan' => 'nullable|string',
 
             'fotos' => 'nullable|array',
@@ -212,7 +235,8 @@ class DdstTestController extends Controller
                     'semester' => $request->semester,
                     'tahun_ajaran' => $request->tahun_ajaran,
                     'interpretasi_ddst' => $request->interpretasi_ddst,
-                    'profile_dan_karakter' => $request->profile_dan_karakter,
+                    'profile_dan_karakter_yang_dikenali_guru' => $request->profile_dan_karakter_yang_dikenali_guru,
+                    'profile_dan_karakter_yang_dikenali_ortu' => $request->profile_dan_karakter_yang_dikenali_ortu,
                     'saran_rujukan' => $request->saran_rujukan,
                 ]
             );

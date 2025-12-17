@@ -22,7 +22,8 @@ class DdstTest extends Model
         'semester',
         'tahun_ajaran',
         'interpretasi_ddst',
-        'profile_dan_karakter',
+        'profile_dan_karakter_yang_dikenali_guru',
+        'profile_dan_karakter_yang_dikenali_ortu',
         'saran_rujukan',
         'hasil_akhir',
     ];

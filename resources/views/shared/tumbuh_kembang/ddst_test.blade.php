@@ -413,10 +413,19 @@
                             </div>
 
                             <div class="mb-5">
-                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter</label>
-                                <textarea name="profile_dan_karakter" rows="3" class="form-control form-control-solid"
-                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter', $ddstTest->profile_dan_karakter ?? '') }}</textarea>
-                                @error('profile_dan_karakter')
+                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali Guru</label>
+                                <textarea name="profile_dan_karakter_yang_dikenali_guru" rows="3" class="form-control form-control-solid"
+                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter_yang_dikenali_guru', $ddstTest->profile_dan_karakter_yang_dikenali_guru ?? '') }}</textarea>
+                                @error('profile_dan_karakter_yang_dikenali_guru')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali Orang Tua</label>
+                                <textarea name="profile_dan_karakter_yang_dikenali_ortu" rows="3" class="form-control form-control-solid"
+                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter_yang_dikenali_ortu', $ddstTest->profile_dan_karakter_yang_dikenali_ortu ?? '') }}</textarea>
+                                @error('profile_dan_karakter_yang_dikenali_ortu')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
