@@ -105,7 +105,7 @@
                             @endif
                         </div>
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">NIPD</label>
+                            <label class="fw-semibold fs-6 mb-2">NIPD<span class="text-danger ms-1">*</span></label>
                             <input type="text" name="nipd" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="NIPD anak" value="{{ old('nipd') }}" />
 
@@ -214,8 +214,7 @@
 
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Tanggal Masuk<span
-                                    class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">Tanggal Masuk</label>
                             <!--begin::Input-->
                             <div class="position-relative d-flex align-items-center">
                                 <!--begin::Icon-->

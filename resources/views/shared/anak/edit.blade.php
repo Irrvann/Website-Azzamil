@@ -130,7 +130,7 @@
 
                         {{-- NIPD --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">NIPD</label>
+                            <label class="fw-semibold fs-6 mb-2">NIPD<span class="text-danger ms-1">*</span></label>
                             <input type="text" name="nipd" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="NIPD anak" value="{{ old('nipd', $anak->nipd) }}" />
 
@@ -252,7 +252,7 @@
                         {{-- Tanggal Masuk --}}
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">
-                                Tanggal Masuk <span class="text-danger ms-1">*</span>
+                                Tanggal Masuk
                             </label>
                             <div class="position-relative d-flex align-items-center">
                                 <i class="ki-duotone ki-calendar-8 fs-2 position-absolute mx-4">
