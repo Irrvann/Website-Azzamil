@@ -83,7 +83,9 @@
                                             </div>
                                         </th> --}}
                                         <th class="min-w-125px">No</th>
+                                        <th class="min-w-125px">NIK Ayah</th>
                                         <th class="min-w-125px">Nama Ayah</th>
+                                        <th class="min-w-125px">NIK Ibu</th>
                                         <th class="min-w-125px">Nama Ibu</th>
                                         <th class="min-w-125px">No Hp Ayah</th>
                                         <th class="min-w-125px">No Hp Ibu</th>
@@ -102,7 +104,9 @@
                                                 </div>
                                             </td> --}}
                                             <td>{{ $dataOrangtua->firstItem() + $index }}</td>
+                                            <td>{{ $orangTua->nik_ayah ?? '-' }}</td>
                                             <td>{{ $orangTua->nama_ayah ?? '-' }}</td>
+                                            <td>{{ $orangTua->nik_ibu ?? '-' }}</td>
                                             <td>{{ $orangTua->nama_ibu ?? '-' }}</td>
                                             <td>{{ $orangTua->no_hp_ayah ?? '-' }}</td>
                                             <td>{{ $orangTua->no_hp_ibu ?? '-' }}</td>

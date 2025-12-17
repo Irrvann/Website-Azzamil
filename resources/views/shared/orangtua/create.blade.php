@@ -33,6 +33,17 @@
                         data-kt-scroll-wrappers="#modal_add_orangtua_scroll" data-kt-scroll-offset="300px">
                         <!--begin::Input group-->
 
+                        <div class="fv-row mb-7">
+                            <label class="fw-semibold fs-6 mb-2">NIK Ayah<span
+                                    class="text-danger ms-1">*</span></label>
+                            <input maxlength="16" type="text" name="nik_ayah" class="form-control form-control-solid mb-3 mb-lg-0"
+                                placeholder="NIK Ayah" value="{{ old('nik_ayah') }}" />
+                            @if (old('form_source') == 'add_orangtua')
+                                @error('nik_ayah')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            @endif
+                        </div>
 
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Nama Ayah<span
@@ -41,6 +52,18 @@
                                 placeholder="Nama Ayah" value="{{ old('nama_ayah') }}" />
                             @if (old('form_source') == 'add_orangtua')
                                 @error('nama_ayah')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            @endif
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="fw-semibold fs-6 mb-2">NIK Ibu<span
+                                    class="text-danger ms-1">*</span></label>
+                            <input maxlength="16" type="text" name="nik_ibu" class="form-control form-control-solid mb-3 mb-lg-0"
+                                placeholder="NIK Ibu" value="{{ old('nik_ibu') }}" />
+                            @if (old('form_source') == 'add_orangtua')
+                                @error('nik_ibu')
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             @endif
@@ -58,8 +81,7 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">No. HP Ayah<span
-                                    class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">No. HP Ayah</label>
                             <input type="text" name="no_hp_ayah" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="No. HP Ayah" value="{{ old('no_hp_ayah') }}" />
                             @if (old('form_source') == 'add_orangtua')
@@ -71,8 +93,7 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">No. HP Ibu<span
-                                    class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">No. HP Ibu</label>
                             <input type="text" name="no_hp_ibu" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="No. HP Ibu" value="{{ old('no_hp_ibu') }}" />
                             @if (old('form_source') == 'add_orangtua')
@@ -83,8 +104,13 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Alamat</label>
+                            <label class="fs-6 fw-semibold mb-2">Alamat<span class="text-danger ms-1">*</span></label>
                             <textarea class="form-control form-control-solid" rows="3" name="alamat" placeholder="Type Alamat">{{ old('alamat') }}</textarea>
+                            @if (old('form_source') == 'add_orangtua')
+                                @error('alamat')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            @endif
                         </div>
 
                         <div class="fv-row mb-7">

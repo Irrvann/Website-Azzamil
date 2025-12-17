@@ -68,27 +68,46 @@ class OrangTuaController extends Controller
         //
         $request->validate(
             [
-                'nama_ayah' => 'nullable|string|max:255',
-                'nama_ibu' => 'nullable|string|max:255',
+                'nik_ayah' => [
+                    'required',
+                    'digits:16',
+                    Rule::unique('orang_tuas', 'nik_ayah'),
+                ],
+                'nik_ibu' => [
+                    'required',
+                    'digits:16',
+                    Rule::unique('orang_tuas', 'nik_ibu'),
+                ],
+                'nama_ayah' => 'required|string|max:255',
+                'nama_ibu' => 'required|string|max:255',
                 'no_hp_ayah' => 'nullable|string|max:20',
                 'no_hp_ibu' => 'nullable|string|max:20',
-                'alamat' => 'nullable|string|max:500',
+                'alamat' => 'required|string|max:500',
                 'username' => 'required|string|max:50|unique:users,username',
                 'password' => 'required|string|min:8',
             ],
             [
+                'nik_ayah.unique' => 'NIK Ayah sudah terdaftar.',
+                'nik_ibu.unique' => 'NIK Ibu sudah terdaftar.',
+                'nik_ayah.required' => 'NIK Ayah wajib diisi.',
+                'nik_ayah.digits' => 'NIK Ayah harus terdiri dari 16 digit.',
+                'nik_ibu.required' => 'NIK Ibu wajib diisi.',
+                'nik_ibu.digits' => 'NIK Ibu harus terdiri dari 16 digit.',
                 'username.required' => 'Username wajib diisi.',
                 'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
                 'nama_ayah.string' => 'Nama ayah harus berupa teks.',
                 'nama_ayah.max' => 'Nama ayah maksimal 255 karakter.',
+                'nama_ayah.required' => 'Nama ayah wajib diisi.',
                 'nama_ibu.string' => 'Nama ibu harus berupa teks.',
                 'nama_ibu.max' => 'Nama ibu maksimal 255 karakter.',
+                'nama_ibu.required' => 'Nama ibu wajib diisi.',
                 'no_hp_ayah.string' => 'Nomor HP ayah harus berupa teks.',
                 'no_hp_ayah.max' => 'Nomor HP ayah maksimal 20 karakter.',
                 'no_hp_ibu.string' => 'Nomor HP ibu harus berupa teks.',
                 'no_hp_ibu.max' => 'Nomor HP ibu maksimal 20 karakter.',
                 'alamat.string' => 'Alamat harus berupa teks.',
                 'alamat.max' => 'Alamat maksimal 500 karakter.',
+                'alamat.required' => 'Alamat wajib diisi.',
             ]
         );
 
@@ -104,7 +123,9 @@ class OrangTuaController extends Controller
 
         OrangTua::create([
             'users_id' => $user->id,
+            'nik_ayah' => $request->nik_ayah,
             'nama_ayah' => $request->nama_ayah,
+            'nik_ibu' => $request->nik_ibu,
             'nama_ibu' => $request->nama_ibu,
             'no_hp_ayah' => $request->no_hp_ayah,
             'no_hp_ibu' => $request->no_hp_ibu,
@@ -153,29 +174,51 @@ class OrangTuaController extends Controller
                     'min:8',
                 ],
 
-                'nama_ayah' => 'nullable|string|max:255',
-                'nama_ibu' => 'nullable|string|max:255',
+                'nik_ayah' => [
+                    'required',
+                    'digits:16',
+                    Rule::unique('orang_tuas', 'nik_ayah')->ignore($orangTua->id),
+                ],
+
+
+                'nama_ayah' => 'required|string|max:255',
+                'nik_ibu' => [
+                    'required',
+                    'digits:16',
+                    Rule::unique('orang_tuas', 'nik_ibu')->ignore($orangTua->id),
+                ],
+                'nama_ibu' => 'required|string|max:255',
                 'no_hp_ayah' => 'nullable|string|max:20',
                 'no_hp_ibu' => 'nullable|string|max:20',
-                'alamat' => 'nullable|string|max:500',
+                'alamat' => 'required|string|max:500',
                 'status' => [
                     'required',
                     'in:aktif,non_aktif',
                 ],
             ],
             [
+                'nik_ayah.unique' => 'NIK Ayah sudah terdaftar.',
+                'nik_ibu.unique' => 'NIK Ibu sudah terdaftar.',
+
+                'nik_ayah.digits' => 'NIK Ayah harus terdiri dari 16 digit.',
+                'nik_ibu.digits' => 'NIK Ibu harus terdiri dari 16 digit.',
+                'nik_ayah.required' => 'NIK Ayah wajib diisi.',
+                'nik_ibu.required' => 'NIK Ibu wajib diisi.',
                 'username.required' => 'Username wajib diisi.',
                 'username.unique' => 'Username sudah digunakan, silakan pilih yang lain.',
                 'nama_ayah.string' => 'Nama ayah harus berupa teks.',
                 'nama_ayah.max' => 'Nama ayah maksimal 255 karakter.',
+                'nama_ayah.required' => 'Nama ayah wajib diisi.',
                 'nama_ibu.string' => 'Nama ibu harus berupa teks.',
                 'nama_ibu.max' => 'Nama ibu maksimal 255 karakter.',
+                'nama_ibu.required' => 'Nama ibu wajib diisi.',
                 'no_hp_ayah.string' => 'Nomor HP ayah harus berupa teks.',
                 'no_hp_ayah.max' => 'Nomor HP ayah maksimal 20 karakter.',
                 'no_hp_ibu.string' => 'Nomor HP ibu harus berupa teks.',
                 'no_hp_ibu.max' => 'Nomor HP ibu maksimal 20 karakter.',
                 'alamat.string' => 'Alamat harus berupa teks.',
                 'alamat.max' => 'Alamat maksimal 500 karakter.',
+                'alamat.required' => 'Alamat wajib diisi.',
                 'status.required' => 'Status wajib diisi.',
                 'status.in' => 'Status harus berupa Aktif atau Non Aktif.',
             ]
@@ -185,7 +228,7 @@ class OrangTuaController extends Controller
         $userData = [
             'username' => $request->username,
             // kalau kamu nanti punya field status di form edit guru, bisa tambahkan di sini
-            'status'   => $request->status,
+            'status' => $request->status,
         ];
 
         // Kalau password diisi, update password
@@ -196,10 +239,12 @@ class OrangTuaController extends Controller
         if ($user) {
             $user->update($userData);
         }
-        
+
         // Update data orang tua (tabel orang_tuas)
         $orangTua->update([
+            'nik_ayah' => $request->nik_ayah,
             'nama_ayah' => $request->nama_ayah,
+            'nik_ibu' => $request->nik_ibu,
             'nama_ibu' => $request->nama_ibu,
             'no_hp_ayah' => $request->no_hp_ayah,
             'no_hp_ibu' => $request->no_hp_ibu,

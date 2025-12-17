@@ -14,7 +14,9 @@ class OrangTua extends Model
     protected $fillable = [
         'users_id',
         'nama_ayah',
+        'nik_ayah',
         'nama_ibu',
+        'nik_ibu',
         'no_hp_ayah',
         'no_hp_ibu',
         'alamat',

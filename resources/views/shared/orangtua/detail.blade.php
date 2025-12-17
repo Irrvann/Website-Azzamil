@@ -61,6 +61,12 @@
                 {{-- Detail fields --}}
                 <div class="row g-5">
                     <div class="col-md-6">
+                        <div class="d-flex flex-column mb-4">
+                            <span class="text-gray-600 fw-semibold fs-8 text-uppercase mb-1">NIK Ayah</span>
+                            <span class="fw-bold fs-6 text-gray-800">
+                                {{ $orangTua->nik_ayah ?? '-' }}
+                            </span>
+                        </div>
                         {{-- Nama Ayah --}}
                         <div class="d-flex flex-column mb-4">
                             <span class="text-gray-600 fw-semibold fs-8 text-uppercase mb-1">Nama Ayah</span>
@@ -78,6 +84,12 @@
                         </div>
                     </div>
 
+                    <div class="d-flex flex-column mb-4">
+                            <span class="text-gray-600 fw-semibold fs-8 text-uppercase mb-1">NIK Ibu</span>
+                            <span class="fw-bold fs-6 text-gray-800">
+                                {{ $orangTua->nik_ibu ?? '-' }}
+                            </span>
+                        </div>
                     <div class="col-md-6">
                         {{-- Nama Ibu --}}
                         <div class="d-flex flex-column mb-4">
