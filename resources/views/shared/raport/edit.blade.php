@@ -163,14 +163,14 @@
 
                         {{-- Nilai Agama --}}
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nilai Agama</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_agama" placeholder="Type Nilai Agama">{{ old('nilai_agama', $raport->nilai_agama) }}</textarea>
+                            <label class="fs-6 fw-semibold mb-2">Nilai Agama dan Budi Pekerti</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="nilai_agama_dan_budi_pekerti" placeholder="Type Nilai Agama">{{ old('nilai_agama_dan_budi_pekerti', $raport->nilai_agama_dan_budi_pekerti) }}</textarea>
                         </div>
 
-                        {{-- Foto Nilai Agama --}}
-                        {{-- Foto Nilai Agama --}}
+                        {{-- Foto Nilai Agama dan Budi Pekerti --}}
+                        {{-- Foto Nilai Agama dan Budi Pekerti --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Nilai Agama</label>
+                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Nilai Agama dan Budi Pekerti</label>
 
                             {{-- Foto lama + tombol silang --}}
                             {{-- Foto lama + tombol silang --}}
@@ -181,7 +181,7 @@
 
                                 @forelse ($fotosAgama as $foto)
                                     <div class="position-relative me-2 mb-2" id="existing_foto_{{ $foto->id }}">
-                                        <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto Agama"
+                                        <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto Agama dan Budi Pekerti"
                                             class="rounded" style="width:80px; height:80px; object-fit:cover;">
 
                                         {{-- checkbox hidden yang akan dikirim kalau foto dihapus --}}
@@ -204,21 +204,21 @@
 
 
                             {{-- Upload baru dengan preview + silang (seperti tambah) --}}
-                            <div id="wrapper_foto_agama_edit_{{ $raport->id }}">
-                                <input type="file" id="input_foto_agama_edit_{{ $raport->id }}"
+                            <div id="wrapper_foto_agama_dan_budi_pekerti_edit_{{ $raport->id }}">
+                                <input type="file" id="input_foto_agama_dan_budi_pekerti_edit_{{ $raport->id }}"
                                     class="form-control form-control-solid mb-3" multiple
-                                    onchange="handleMultiImage(this, 'foto_agama_edit_{{ $raport->id }}')">
+                                    onchange="handleMultiImage(this, 'foto_agama_dan_budi_pekerti_edit_{{ $raport->id }}')">
 
                                 {{-- input hidden yang berisi semua file baru --}}
-                                <input type="file" id="store_foto_agama_edit_{{ $raport->id }}"
-                                    name="foto_agama[]" multiple style="display:none;">
+                                <input type="file" id="store_foto_agama_dan_budi_pekerti_edit_{{ $raport->id }}"
+                                    name="foto_agama_dan_budi_pekerti[]" multiple style="display:none;">
                             </div>
 
                             <small class="text-muted d-block">
                                 Bisa upload lebih dari satu foto dan bisa upload lagi beberapa kali.
                             </small>
 
-                            <div id="preview_foto_agama_edit_{{ $raport->id }}"
+                            <div id="preview_foto_agama_dan_budi_pekerti_edit_{{ $raport->id }}"
                                 class="mt-3 d-flex flex-wrap gap-3"></div>
                         </div>
 
@@ -283,24 +283,24 @@
 
                         {{-- Nilai Literasi Sains --}}
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nilai Literasi Sains</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_literasi_sains"
-                                placeholder="Type Nilai Literasi Sains">{{ old('nilai_literasi_sains', $raport->nilai_literasi_sains) }}</textarea>
+                            <label class="fs-6 fw-semibold mb-2">Nilai Dasar Literasi STEAM</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="nilai_dasar_literasi_steam"
+                                placeholder="Type Nilai Literasi Sains">{{ old('nilai_dasar_literasi_steam', $raport->nilai_dasar_literasi_steam) }}</textarea>
                         </div>
 
                         {{-- Foto Literasi & Sains --}}
                         {{-- Foto Literasi & Sains --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Literasi &amp; Sains</label>
+                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Dasar Literasi &amp; STEAM</label>
 
                             <div class="mb-3 d-flex flex-wrap gap-3">
                                 @php
-                                    $fotosLiterasiSains = $raport->fotos->where('komponen', 'literasi_sains');
+                                    $fotosLiterasiSains = $raport->fotos->where('komponen', 'dasar_literasi_steam');
                                 @endphp
 
                                 @forelse ($fotosLiterasiSains as $foto)
                                     <div class="position-relative me-2 mb-2" id="existing_foto_{{ $foto->id }}">
-                                        <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto Literasi & Sains"
+                                        <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto Dasar Literasi & STEAM"
                                             class="rounded" style="width:80px; height:80px; object-fit:cover;">
 
                                         <input type="checkbox" name="delete_foto_ids[]" value="{{ $foto->id }}"
@@ -316,50 +316,50 @@
                                         </button>
                                     </div>
                                 @empty
-                                    <span class="text-muted">Belum ada foto kegiatan literasi &amp; sains.</span>
+                                    <span class="text-muted">Belum ada foto kegiatan dasar literasi &amp; STEAM.</span>
                                 @endforelse
                             </div>
 
 
-                            <div id="wrapper_foto_literasi_sains_edit_{{ $raport->id }}">
-                                <input type="file" id="input_foto_literasi_sains_edit_{{ $raport->id }}"
+                            <div id="wrapper_foto_dasar_literasi_steam_edit_{{ $raport->id }}">
+                                <input type="file" id="input_foto_dasar_literasi_steam_edit_{{ $raport->id }}"
                                     class="form-control form-control-solid mb-3" multiple
-                                    onchange="handleMultiImage(this, 'foto_literasi_sains_edit_{{ $raport->id }}')">
+                                    onchange="handleMultiImage(this, 'foto_dasar_literasi_steam_edit_{{ $raport->id }}')">
 
-                                <input type="file" id="store_foto_literasi_sains_edit_{{ $raport->id }}"
-                                    name="foto_literasi_sains[]" multiple style="display:none;">
+                                <input type="file" id="store_foto_dasar_literasi_steam_edit_{{ $raport->id }}"
+                                    name="foto_dasar_literasi_steam[]" multiple style="display:none;">
                             </div>
 
                             <small class="text-muted d-block">
                                 Bisa upload lebih dari satu foto dan bisa upload lagi beberapa kali.
                             </small>
 
-                            <div id="preview_foto_literasi_sains_edit_{{ $raport->id }}"
+                            <div id="preview_foto_dasar_literasi_steam_edit_{{ $raport->id }}"
                                 class="mt-3 d-flex flex-wrap gap-3"></div>
                         </div>
 
 
                         {{-- Nilai P5 --}}
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nilai P5</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_p5" placeholder="Type Nilai P5">{{ old('nilai_p5', $raport->nilai_p5) }}</textarea>
+                            <label class="fs-6 fw-semibold mb-2">Nilai Kokurikuler</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="nilai_kokurikuler" placeholder="Type Nilai Kokurikuler">{{ old('nilai_kokurikuler', $raport->nilai_kokurikuler) }}</textarea>
                         </div>
 
-                        {{-- Foto P5 --}}
-                        {{-- Foto P5 --}}
+                        {{-- Foto Kokurikuler --}}
+                        {{-- Foto Kokurikuler --}}
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">
-                                Foto Kegiatan P5 (Profil Pelajar Pancasila)
+                                Foto Kegiatan Kokurikuler
                             </label>
 
                             <div class="mb-3 d-flex flex-wrap gap-3">
                                 @php
-                                    $fotosP5 = $raport->fotos->where('komponen', 'p5');
+                                    $fotosKokurikuler = $raport->fotos->where('komponen', 'kokurikuler');
                                 @endphp
 
-                                @forelse ($fotosP5 as $foto)
+                                @forelse ($fotosKokurikuler as $foto)
                                     <div class="position-relative me-2 mb-2" id="existing_foto_{{ $foto->id }}">
-                                        <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto P5"
+                                        <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto Kokurikuler"
                                             class="rounded" style="width:80px; height:80px; object-fit:cover;">
 
                                         <input type="checkbox" name="delete_foto_ids[]" value="{{ $foto->id }}"
@@ -375,17 +375,17 @@
                                         </button>
                                     </div>
                                 @empty
-                                    <span class="text-muted">Belum ada foto kegiatan P5.</span>
+                                    <span class="text-muted">Belum ada foto kegiatan Kokurikuler.</span>
                                 @endforelse
                             </div>
 
 
-                            <div id="wrapper_foto_p5_edit_{{ $raport->id }}">
-                                <input type="file" id="input_foto_p5_edit_{{ $raport->id }}"
+                            <div id="wrapper_foto_kokurikuler_edit_{{ $raport->id }}">
+                                <input type="file" id="input_foto_kokurikuler_edit_{{ $raport->id }}"
                                     class="form-control form-control-solid mb-3" multiple
-                                    onchange="handleMultiImage(this, 'foto_p5_edit_{{ $raport->id }}')">
+                                    onchange="handleMultiImage(this, 'foto_kokurikuler_edit_{{ $raport->id }}')">
 
-                                <input type="file" id="store_foto_p5_edit_{{ $raport->id }}" name="foto_p5[]"
+                                <input type="file" id="store_foto_kokurikuler_edit_{{ $raport->id }}" name="foto_kokurikuler[]"
                                     multiple style="display:none;">
                             </div>
 
@@ -393,7 +393,7 @@
                                 Bisa upload lebih dari satu foto dan bisa upload lagi beberapa kali.
                             </small>
 
-                            <div id="preview_foto_p5_edit_{{ $raport->id }}" class="mt-3 d-flex flex-wrap gap-3">
+                            <div id="preview_foto_kokurikuler_edit_{{ $raport->id }}" class="mt-3 d-flex flex-wrap gap-3">
                             </div>
                         </div>
 
@@ -401,6 +401,12 @@
                             <label class="fs-6 fw-semibold mb-2">Refleksi Guru</label>
                             <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru"
                                 placeholder="Type Refleksi Guru">{{ old('refleksi_guru', $raport->refleksi_guru) }}</textarea>
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold mb-2">Refleksi Orang Tua</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_orang_tua"
+                                placeholder="Type Refleksi Orang Tua">{{ old('refleksi_orang_tua', $raport->refleksi_orang_tua) }}</textarea>
                         </div>
 
                         {{-- Kehadiran --}}

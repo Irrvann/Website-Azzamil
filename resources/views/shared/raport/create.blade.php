@@ -140,13 +140,13 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nilai Agama</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_agama" placeholder="Type Nilai Agama">{{ old('nilai_agama') }}</textarea>
+                            <label class="fs-6 fw-semibold mb-2">Nilai Agama dan Budi Pekerti</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="nilai_agama_dan_budi_pekerti" placeholder="Type Nilai Agama">{{ old('nilai_agama_dan_budi_pekerti') }}</textarea>
                         </div>
 
                         {{-- FOTO NILAI AGAMA --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Nilai Agama</label>
+                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Nilai Agama dan Budi Pekerti</label>
 
                             <div id="wrapper_foto_agama">
                                 {{-- input untuk pilih file (tidak punya name) --}}
@@ -196,22 +196,21 @@
 
 
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nilai Literasi Sains</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_literasi_sains"
-                                placeholder="Type Nilai Literasi Sains">{{ old('nilai_literasi_sains') }}</textarea>
+                            <label class="fs-6 fw-semibold mb-2">Nilai Dasar Literasi &amp; STEAM</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="nilai_dasar_literasi_steam"
+                                placeholder="Type Nilai Dasar Literasi &amp; STEAM">{{ old('nilai_dasar_literasi_steam') }}</textarea>
                         </div>
-
 
                         {{-- FOTO LITERASI & SAINS --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Literasi &amp; Sains</label>
+                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Dasar Literasi &amp; STEAM</label>
 
-                            <div id="wrapper_foto_literasi_sains">
-                                <input type="file" id="input_foto_literasi_sains"
+                            <div id="wrapper_foto_dasar_literasi_steam">
+                                <input type="file" id="input_foto_dasar_literasi_steam"
                                     class="form-control form-control-solid mb-3" multiple
-                                    onchange="handleMultiImage(this, 'foto_literasi_sains')">
+                                    onchange="handleMultiImage(this, 'foto_dasar_literasi_steam')">
 
-                                <input type="file" id="store_foto_literasi_sains" name="foto_literasi_sains[]"
+                                <input type="file" id="store_foto_dasar_literasi_steam" name="foto_dasar_literasi_steam[]"
                                     multiple style="display:none;">
                             </div>
 
@@ -219,24 +218,24 @@
                                 Bisa upload lebih dari satu foto dan bisa upload lagi beberapa kali.
                             </small>
 
-                            <div id="preview_foto_literasi_sains" class="mt-3 d-flex flex-wrap gap-3"></div>
+                            <div id="preview_foto_dasar_literasi_steam" class="mt-3 d-flex flex-wrap gap-3"></div>
                         </div>
 
 
                         <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold mb-2">Nilai P5</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_p5" placeholder="Type Nilai P5">{{ old('nilai_p5') }}</textarea>
+                            <label class="fs-6 fw-semibold mb-2">Nilai Kokurikuler</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="nilai_kokurikuler" placeholder="Type Nilai Kokurikuler">{{ old('nilai_kokurikuler') }}</textarea>
                         </div>
 
-                        {{-- FOTO P5 --}}
+                        {{-- FOTO KOKURIKULER --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan P5 (Profil Pelajar Pancasila)</label>
+                            <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Kokurikuler</label>
 
-                            <div id="wrapper_foto_p5">
-                                <input type="file" id="input_foto_p5" class="form-control form-control-solid mb-3"
-                                    multiple onchange="handleMultiImage(this, 'foto_p5')">
+                            <div id="wrapper_foto_kokurikuler">
+                                <input type="file" id="input_foto_kokurikuler" class="form-control form-control-solid mb-3"
+                                    multiple onchange="handleMultiImage(this, 'foto_kokurikuler')">
 
-                                <input type="file" id="store_foto_p5" name="foto_p5[]" multiple
+                                <input type="file" id="store_foto_kokurikuler" name="foto_kokurikuler[]" multiple
                                     style="display:none;">
                             </div>
 
@@ -244,13 +243,19 @@
                                 Bisa upload lebih dari satu foto dan bisa upload lagi beberapa kali.
                             </small>
 
-                            <div id="preview_foto_p5" class="mt-3 d-flex flex-wrap gap-3"></div>
+                            <div id="preview_foto_kokurikuler" class="mt-3 d-flex flex-wrap gap-3"></div>
                         </div>
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Refleksi Guru</label>
                             <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru"
                                 placeholder="Type Refleksi Guru">{{ old('refleksi_guru') }}</textarea>
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold mb-2">Refleksi Orang Tua</label>
+                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_orang_tua"
+                                placeholder="Type Refleksi Orang Tua">{{ old('refleksi_orang_tua') }}</textarea>
                         </div>
 
                         {{-- Kehadiran --}}

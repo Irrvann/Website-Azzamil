@@ -26,8 +26,8 @@
                 @php
                     $fotosAgama = $raport->fotos->where('komponen', 'agama');
                     $fotosJatiDiri = $raport->fotos->where('komponen', 'jati_diri');
-                    $fotosLiterasiSains = $raport->fotos->where('komponen', 'literasi_sains');
-                    $fotosP5 = $raport->fotos->where('komponen', 'p5');
+                    $fotosDasarLiterasiSteam = $raport->fotos->where('komponen', 'dasar_literasi_steam');
+                    $fotosKokurikuler = $raport->fotos->where('komponen', 'kokurikuler');
                 @endphp
 
                 {{-- Info Utama --}}
@@ -146,7 +146,7 @@
                     <div class="mb-6">
                         <div class="d-flex align-items-center mb-3">
                             <span class="bullet bullet-dot bg-primary me-2"></span>
-                            <h5 class="fw-bold text-gray-900 mb-0">Nilai Agama</h5>
+                            <h5 class="fw-bold text-gray-900 mb-0">Nilai Agama dan Budi Pekerti</h5>
                         </div>
 
                         <div class="row g-5">
@@ -154,7 +154,7 @@
                                 <div class="border rounded p-4 h-100">
                                     <div class="fw-semibold text-gray-600 mb-2">Deskripsi Nilai</div>
                                     <p class="mb-0 text-gray-700">
-                                        {{ $raport->nilai_agama ?? '-' }}
+                                        {{ $raport->nilai_agama_dan_budi_pekerti ?? '-' }}
                                     </p>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@
                     <div class="mb-6">
                         <div class="d-flex align-items-center mb-3">
                             <span class="bullet bullet-dot bg-primary me-2"></span>
-                            <h5 class="fw-bold text-gray-900 mb-0">Nilai Literasi &amp; Sains</h5>
+                            <h5 class="fw-bold text-gray-900 mb-0">Nilai Dasar Literasi &amp; STEAM</h5>
                         </div>
 
                         <div class="row g-5">
@@ -226,7 +226,7 @@
                                 <div class="border rounded p-4 h-100">
                                     <div class="fw-semibold text-gray-600 mb-2">Deskripsi Nilai</div>
                                     <p class="mb-0 text-gray-700">
-                                        {{ $raport->nilai_literasi_sains ?? '-' }}
+                                        {{ $raport->nilai_dasar_literasi_steam ?? '-' }}
                                     </p>
                                 </div>
                             </div>
@@ -235,15 +235,15 @@
                                 <div class="border rounded p-4 h-100">
                                     <div class="fw-semibold text-gray-600 mb-2">Foto Kegiatan</div>
                                     <div class="d-flex flex-wrap gap-3">
-                                        @forelse ($fotosLiterasiSains as $foto)
+                                        @forelse ($fotosDasarLiterasiSteam as $foto)
                                             <div class="position-relative">
                                                 <img src="{{ asset('storage/' . $foto->foto) }}"
-                                                    alt="Foto Literasi & Sains" class="rounded"
+                                                    alt="Foto Dasar Literasi & Steam" class="rounded"
                                                     style="width: 110px; height: 110px; object-fit: cover;">
                                             </div>
                                         @empty
-                                            <span class="text-muted">Belum ada foto kegiatan literasi &amp;
-                                                sains.</span>
+                                            <span class="text-muted">Belum ada foto kegiatan dasar literasi &amp;
+                                                steam.</span>
                                         @endforelse
                                     </div>
                                 </div>
@@ -255,7 +255,7 @@
                     <div class="mb-2">
                         <div class="d-flex align-items-center mb-3">
                             <span class="bullet bullet-dot bg-primary me-2"></span>
-                            <h5 class="fw-bold text-gray-900 mb-0">Nilai P5 (Profil Pelajar Pancasila)</h5>
+                            <h5 class="fw-bold text-gray-900 mb-0">Nilai Kokurikuler</h5>
                         </div>
 
                         <div class="row g-5">
@@ -263,7 +263,7 @@
                                 <div class="border rounded p-4 h-100">
                                     <div class="fw-semibold text-gray-600 mb-2">Deskripsi Nilai</div>
                                     <p class="mb-0 text-gray-700">
-                                        {{ $raport->nilai_p5 ?? '-' }}
+                                        {{ $raport->nilai_kokurikuler ?? '-' }}
                                     </p>
                                 </div>
                             </div>
@@ -272,14 +272,14 @@
                                 <div class="border rounded p-4 h-100">
                                     <div class="fw-semibold text-gray-600 mb-2">Foto Kegiatan</div>
                                     <div class="d-flex flex-wrap gap-3">
-                                        @forelse ($fotosP5 as $foto)
+                                        @forelse ($fotosKokurikuler as $foto)
                                             <div class="position-relative">
-                                                <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto P5"
+                                                <img src="{{ asset('storage/' . $foto->foto) }}" alt="Foto Kokurikuler"
                                                     class="rounded"
                                                     style="width: 110px; height: 110px; object-fit: cover;">
                                             </div>
                                         @empty
-                                            <span class="text-muted">Belum ada foto kegiatan P5.</span>
+                                            <span class="text-muted">Belum ada foto kegiatan Kokurikuler.</span>
                                         @endforelse
                                     </div>
                                 </div>
@@ -299,6 +299,27 @@
                                     <div class="fw-semibold text-gray-600 mb-2">Deskripsi</div>
                                     <p class="mb-0 text-gray-700">
                                         {{ $raport->refleksi_guru ?? '-' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+
+
+                    <div class="mb-2">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="bullet bullet-dot bg-primary me-2"></span>
+                            <h5 class="fw-bold text-gray-900 mb-0">Refleksi Orang Tua</h5>
+                        </div>
+
+                        <div class="row g-5">
+                            <div class="col-md-6">
+                                <div class="border rounded p-4 h-100">
+                                    <div class="fw-semibold text-gray-600 mb-2">Deskripsi</div>
+                                    <p class="mb-0 text-gray-700">
+                                        {{ $raport->refleksi_orang_tua ?? '-' }}
                                     </p>
                                 </div>
                             </div>

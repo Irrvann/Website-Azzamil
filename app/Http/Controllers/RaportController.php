@@ -150,12 +150,13 @@ class RaportController extends Controller
             'semester' => 'required|in:1,2',
             'tahun_ajaran' => 'required|string|max:20',
 
-            'nilai_agama' => 'nullable|string',
+            'nilai_agama_dan_budi_pekerti' => 'nullable|string',
             'nilai_jati_diri' => 'nullable|string',
-            'nilai_literasi_sains' => 'nullable|string',
-            'nilai_p5' => 'nullable|string',
+            'nilai_dasar_literasi_steam' => 'nullable|string',
+            'nilai_kokurikuler' => 'nullable|string',
 
             'refleksi_guru' => 'nullable|string',
+            'refleksi_orang_tua' => 'nullable|string',
 
             'sakit' => 'nullable|integer|min:0',
             'izin' => 'nullable|integer|min:0',
@@ -163,8 +164,8 @@ class RaportController extends Controller
 
             'foto_agama.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'foto_jati_diri.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_literasi_sains.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_p5.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_dasar_literasi_steam.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_kokurikuler.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $user = Auth::user();
@@ -194,11 +195,12 @@ class RaportController extends Controller
 
                 'semester' => $validated['semester'],
                 'tahun_ajaran' => $validated['tahun_ajaran'],
-                'nilai_agama' => $request->nilai_agama,
+                'nilai_agama_dan_budi_pekerti' => $request->nilai_agama_dan_budi_pekerti,
                 'nilai_jati_diri' => $request->nilai_jati_diri,
-                'nilai_literasi_sains' => $request->nilai_literasi_sains,
-                'nilai_p5' => $request->nilai_p5,
+                'nilai_dasar_literasi_steam' => $request->nilai_dasar_literasi_steam,
+                'nilai_kokurikuler' => $request->nilai_kokurikuler,
                 'refleksi_guru' => $request->refleksi_guru,
+                'refleksi_orang_tua' => $request->refleksi_orang_tua,
                 'sakit' => $request->sakit ?? 0,
                 'izin' => $request->izin ?? 0,
                 'tanpa_keterangan' => $request->tanpa_keterangan ?? 0,
@@ -206,8 +208,8 @@ class RaportController extends Controller
 
             $this->storeFotosByKomponen($raport, $request, 'foto_agama', 'agama');
             $this->storeFotosByKomponen($raport, $request, 'foto_jati_diri', 'jati_diri');
-            $this->storeFotosByKomponen($raport, $request, 'foto_literasi_sains', 'literasi_sains');
-            $this->storeFotosByKomponen($raport, $request, 'foto_p5', 'p5');
+            $this->storeFotosByKomponen($raport, $request, 'foto_dasar_literasi_steam', 'dasar_literasi_steam');
+            $this->storeFotosByKomponen($raport, $request, 'foto_kokurikuler', 'kokurikuler');
 
             DB::commit();
 
@@ -274,12 +276,13 @@ class RaportController extends Controller
             'semester' => 'required|in:1,2',
             'tahun_ajaran' => 'required|string|max:20',
 
-            'nilai_agama' => 'nullable|string',
+            'nilai_agama_dan_budi_pekerti' => 'nullable|string',
             'nilai_jati_diri' => 'nullable|string',
-            'nilai_literasi_sains' => 'nullable|string',
-            'nilai_p5' => 'nullable|string',
+            'nilai_dasar_literasi_steam' => 'nullable|string',
+            'nilai_kokurikuler' => 'nullable|string',
 
             'refleksi_guru' => 'nullable|string',
+            'refleksi_orang_tua' => 'nullable|string',
 
             'sakit' => 'nullable|integer|min:0',
             'izin' => 'nullable|integer|min:0',
@@ -287,8 +290,8 @@ class RaportController extends Controller
 
             'foto_agama.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'foto_jati_diri.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_literasi_sains.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_p5.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_dasar_literasi_steam.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_kokurikuler.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $user = Auth::user();
@@ -324,11 +327,12 @@ class RaportController extends Controller
                 'guru_id' => $validated['gurus_id'],
                 'semester' => $validated['semester'],
                 'tahun_ajaran' => $validated['tahun_ajaran'],
-                'nilai_agama' => $request->nilai_agama,
+                'nilai_agama_dan_budi_pekerti' => $request->nilai_agama_dan_budi_pekerti,
                 'nilai_jati_diri' => $request->nilai_jati_diri,
-                'nilai_literasi_sains' => $request->nilai_literasi_sains,
-                'nilai_p5' => $request->nilai_p5,
+                'nilai_dasar_literasi_steam' => $request->nilai_dasar_literasi_steam,
+                'nilai_kokurikuler' => $request->nilai_kokurikuler,
                 'refleksi_guru' => $request->refleksi_guru,
+                'refleksi_orang_tua' => $request->refleksi_orang_tua,
                 'sakit' => $request->sakit ?? 0,
                 'izin' => $request->izin ?? 0,
                 'tanpa_keterangan' => $request->tanpa_keterangan ?? 0,
@@ -355,8 +359,8 @@ class RaportController extends Controller
             // ================= TAMBAH FOTO BARU =================
             $this->storeFotosByKomponen($raport, $request, 'foto_agama', 'agama');
             $this->storeFotosByKomponen($raport, $request, 'foto_jati_diri', 'jati_diri');
-            $this->storeFotosByKomponen($raport, $request, 'foto_literasi_sains', 'literasi_sains');
-            $this->storeFotosByKomponen($raport, $request, 'foto_p5', 'p5');
+            $this->storeFotosByKomponen($raport, $request, 'foto_dasar_literasi_steam', 'dasar_literasi_steam');
+            $this->storeFotosByKomponen($raport, $request, 'foto_kokurikuler', 'kokurikuler');
 
             DB::commit();
 
@@ -429,16 +433,18 @@ class RaportController extends Controller
 
         $fotosAgama = $raport->fotos->where('komponen', 'agama');
         $fotosJatiDiri = $raport->fotos->where('komponen', 'jati_diri');
-        $fotosLiterasiSains = $raport->fotos->where('komponen', 'literasi_sains');
+        $fotosLiterasiSains = $raport->fotos->where('komponen', 'dasar_literasi_steam');
         $fotosP5 = $raport->fotos->where('komponen', 'p5');
 
+        $anak = $raport->anak;
         $data = compact(
             'raport',
             'fotosAgama',
             'fotosJatiDiri',
             'fotosLiterasiSains',
             'fotosP5',
-            'kepala_sekolah'
+            'kepala_sekolah',
+            'anak'
         );
 
         $pdf = Pdf::loadView('shared.raport.pdf_template', $data)

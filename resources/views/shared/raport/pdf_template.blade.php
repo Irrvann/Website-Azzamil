@@ -321,6 +321,54 @@
             padding: 6px 4px;
             border: 1px solid #bbb;
         }
+
+        /* ===== TTD TAMBAHAN (PUTIH + RAPI) ===== */
+        .ttd-bawah {
+            margin-top: 55px;
+            /* dari 25px jadi 55px (atau 70px) */
+            padding: 16px 22px;
+            background: #ffffff;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+
+        .ttd-bawah-date {
+            text-align: right;
+            padding-right: 80px;
+            /* ⬅️ geser ke kiri */
+            margin-bottom: 14px;
+        }
+
+        .ttd-bawah-row {
+            width: 100%;
+            display: table;
+            table-layout: fixed;
+        }
+
+        .ttd-bawah-col {
+            display: table-cell;
+            width: 50%;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .ttd-bawah-space {
+            height: 45px;
+        }
+
+        .ttd-bawah-nama {
+            display: inline-block;
+            min-width: 220px;
+            border-bottom: 1px dotted #000;
+            padding-bottom: 2px;
+            font-weight: bold;
+        }
+
+        .ttd-bawah-center {
+            text-align: center;
+            margin-top: 18px;
+        }
     </style>
 </head>
 
@@ -328,7 +376,8 @@
 
     {{-- ================== COVER (HALAMAN 1) ================== --}}
     <div class="cover-page">
-        <img src="{{ public_path('assets/media/background/bg-cover-raport-new.png') }}" alt="Cover Raport" class="cover-bg">
+        <img src="{{ public_path('assets/media/background/bg-cover-raport-new.png') }}" alt="Cover Raport"
+            class="cover-bg">
 
         <div class="cover-nama-bar cover-nama-bar-nama">
             <div class="cover-nama-label"><span>NAMA</span></div>
@@ -348,13 +397,14 @@
         $fotosAgama = $raport->fotos->where('komponen', 'agama');
         $fotosJatiDiri = $raport->fotos->where('komponen', 'jati_diri');
         $fotosMotorik = $raport->fotos->where('komponen', 'motorik');
-        $fotosLiterasi = $raport->fotos->where('komponen', 'literasi_sains');
-        $fotosP5 = $raport->fotos->where('komponen', 'p5');
+        $fotosDasarLiterasiSteam = $raport->fotos->where('komponen', 'dasar_literasi_steam');
+        $fotosKokurikuler = $raport->fotos->where('komponen', 'kokurikuler');
     @endphp
 
     {{-- ================== HALAMAN 2: HEADER + AGAMA + JATI DIRI (+ MOTORIK) ================== --}}
     <div class="page">
-        <img src="{{ public_path('assets/media/background/bg-raport-halaman-new.png') }}" class="page-bg" alt="Background">
+        <img src="{{ public_path('assets/media/background/bg-raport-halaman-new.png') }}" class="page-bg"
+            alt="Background">
 
         <div class="page-content">
 
@@ -365,12 +415,13 @@
 
                 <tr>
                     <td class="foto-wrapper" rowspan="8">
-                        @if (optional($raport->anak)->foto)
-                            <img src="{{ public_path('storage/' . $raport->anak->foto) }}"
-                                alt="Foto {{ $raport->anak->nama_anak }}" class="foto-anak">
+                        @if (!empty($anak->foto))
+                            <img src="{{ public_path('storage/' . ltrim($anak->foto, '/')) }}" alt="Foto Anak"
+                                class="foto-anak">
                         @else
                             <span style="font-size:10px;">(Tidak ada foto)</span>
                         @endif
+
                     </td>
                     <th class="bio-label">Nama Anak</th>
                     <td class="bio-value">{{ $raport->anak->nama_anak ?? '-' }}</td>
@@ -423,7 +474,7 @@
                     <th>Nilai Agama dan Budi Pekerti</th>
                 </tr>
                 <tr>
-                    <td>{!! nl2br(e($raport->nilai_agama ?? '')) !!}</td>
+                    <td>{!! nl2br(e($raport->nilai_agama_dan_budi_pekerti ?? '')) !!}</td>
                 </tr>
 
                 @if ($fotosAgama->count())
@@ -463,7 +514,7 @@
                 @endif
             </table>
 
-            @if (!empty($raport->nilai_motorik_kesehatan) || $fotosMotorik->count())
+            {{-- @if (!empty($raport->nilai_motorik_kesehatan) || $fotosMotorik->count())
                 <table class="penilaian-table">
                     <tr>
                         <th>Nilai Motorik &amp; Kesehatan</th>
@@ -486,7 +537,7 @@
                         </tr>
                     @endif
                 </table>
-            @endif
+            @endif --}}
 
         </div>
     </div>
@@ -495,24 +546,25 @@
 
     {{-- ================== HALAMAN 3: LITERASI + P5 ================== --}}
     <div class="page">
-        <img src="{{ public_path('assets/media/background/bg-raport-halaman-new.png') }}" class="page-bg" alt="Background">
+        <img src="{{ public_path('assets/media/background/bg-raport-halaman-new.png') }}" class="page-bg"
+            alt="Background">
 
         <div class="page-content">
 
             <table class="penilaian-table">
                 <tr>
-                    <th>Nilai Literasi Sains</th>
+                    <th>Nilai Dasar Literasi &amp; STEAM</th>
                 </tr>
                 <tr>
-                    <td>{!! nl2br(e($raport->nilai_literasi_sains ?? '')) !!}</td>
+                    <td>{!! nl2br(e($raport->nilai_dasar_literasi_steam ?? '')) !!}</td>
                 </tr>
 
-                @if ($fotosLiterasi->count())
+                @if ($fotosDasarLiterasiSteam->count())
                     <tr>
                         <td class="foto-kegiatan-wrapper">
                             <span class="foto-kegiatan-title">Dokumentasi Kegiatan:</span>
                             <div class="foto-grid">
-                                @foreach ($fotosLiterasi as $foto)
+                                @foreach ($fotosDasarLiterasiSteam as $foto)
                                     <img src="{{ public_path('storage/' . $foto->foto) }}"
                                         alt="Foto Kegiatan Literasi">
                                 @endforeach
@@ -524,18 +576,18 @@
 
             <table class="penilaian-table">
                 <tr>
-                    <th>Nilai P5</th>
+                    <th>Nilai Kokurikuler</th>
                 </tr>
                 <tr>
-                    <td>{!! nl2br(e($raport->nilai_p5 ?? '')) !!}</td>
+                    <td>{!! nl2br(e($raport->nilai_kokurikuler ?? '')) !!}</td>
                 </tr>
 
-                @if ($fotosP5->count())
+                @if ($fotosKokurikuler->count())
                     <tr>
                         <td class="foto-kegiatan-wrapper">
                             <span class="foto-kegiatan-title">Dokumentasi Kegiatan:</span>
                             <div class="foto-grid">
-                                @foreach ($fotosP5 as $foto)
+                                @foreach ($fotosKokurikuler as $foto)
                                     <img src="{{ public_path('storage/' . $foto->foto) }}" alt="Foto Kegiatan P5">
                                 @endforeach
                             </div>
@@ -551,7 +603,8 @@
 
     {{-- ================== HALAMAN 4: REFLEKSI + KEHADIRAN + TTD ================== --}}
     <div class="page">
-        <img src="{{ public_path('assets/media/background/bg-raport-halaman-new.png') }}" class="page-bg" alt="Background">
+        <img src="{{ public_path('assets/media/background/bg-raport-halaman-new.png') }}" class="page-bg"
+            alt="Background">
 
         <div class="page-content">
 
@@ -608,6 +661,58 @@
                     </tr>
                 </table>
             </div>
+
+            <div class="ttd-bawah no-split">
+
+                <!-- Tanggal kanan -->
+                <div class="ttd-bawah-date">
+                    Pekalongan, {{ now()->timezone('Asia/Jakarta')->format('d-m-Y') }}
+                </div>
+
+                <!-- Orang Tua & Guru -->
+                <div class="ttd-bawah-row">
+                    <div class="ttd-bawah-col">
+                        Mengetahui,<br>
+                        Orang Tua / Walimurid
+
+                        <div class="ttd-bawah-space"></div>
+
+                        <span class="ttd-bawah-nama">
+                            {{ optional($raport->anak->orangTua)->nama_ayah ?? '-' }}
+                            @if (!empty(optional($raport->anak->orangTua)->nama_ibu))
+                                &amp; {{ optional($raport->anak->orangTua)->nama_ibu }}
+                            @endif
+                        </span>
+                    </div>
+
+                    <div class="ttd-bawah-col">
+                        Mengetahui,<br>
+                        Guru Kelas
+
+                        <div class="ttd-bawah-space"></div>
+
+                        <span class="ttd-bawah-nama">
+                            {{ $raport->guru->nama_guru ?? '-' }}
+
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Kepala Sekolah -->
+                <div class="ttd-bawah-center">
+                    Mengetahui,<br>
+                    Kepala Sekolah {{ $raport->anak->sekolah->nama_sekolah ?? '-' }}
+
+
+                    <div class="ttd-bawah-space"></div>
+
+                    <span class="ttd-bawah-nama">
+                        {{ $kepala_sekolah->nama_guru ?? '-' }}
+                    </span>
+                </div>
+
+            </div>
+
 
 
 
