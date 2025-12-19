@@ -57,22 +57,72 @@ class AnakController extends Controller
         // ✅ BASE QUERY
         $query = Anak::with(['orangTua', 'sekolah']);
 
-        // ✅ FILTER KHUSUS GURU: hanya anak dari sekolah guru tersebut
+        // ✅ SORT + FILTER BERDASARKAN ROLE
+        if ($user->hasRole('guru')) {
+
+            $guru = $user->guru;
+
+            if (!$guru || !$guru->sekolahs_id) {
+                $query->whereRaw('1=0'); // hasil kosong aman
+            } else {
+                $query->where('sekolahs_id', $guru->sekolahs_id);
+            }
+
+            // Guru: nama anak A-Z
+            $query->orderBy('nama_anak', 'asc');
+
+        } else {
+            // Admin & Superadmin: sekolah A-Z lalu nama anak A-Z
+            // Pakai join biar bisa order by nama_sekolah
+            $query->leftJoin('sekolahs', 'sekolahs.id', '=', 'anaks.sekolahs_id')
+                ->select('anaks.*')
+                ->orderBy('sekolahs.nama_sekolah', 'asc')
+                ->orderBy('anaks.nama_anak', 'asc');
+        }
+
+        $query = Anak::query()->with(['orangTua', 'sekolah']);
+
+        $search = request('search');
+        $sekolahId = request('sekolahs_id');
+
+        // ✅ Search (semua role)
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_anak', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('nisn', 'like', "%{$search}%")
+                    ->orWhere('nipd', 'like', "%{$search}%");
+            });
+        }
+
         if ($user->hasRole('guru')) {
             $guru = $user->guru;
 
             if (!$guru || !$guru->sekolahs_id) {
-                // paginate kosong yang aman untuk view ->links()
-                $dataAnak = Anak::whereRaw('1=0')->paginate(10);
+                $query->whereRaw('1=0');
             } else {
-                $dataAnak = $query->where('sekolahs_id', $guru->sekolahs_id)->paginate(10);
+                // ✅ Guru wajib sesuai sekolahnya
+                $query->where('sekolahs_id', $guru->sekolahs_id);
             }
+
+            // ✅ Guru: nama anak A-Z
+            $query->orderBy('nama_anak', 'asc');
+
         } else {
-            $dataAnak = $query->paginate(10);
+            // ✅ Admin & Superadmin boleh filter sekolah dari dropdown
+            if (!empty($sekolahId)) {
+                $query->where('sekolahs_id', $sekolahId);
+            }
+
+            // ✅ Admin & Superadmin: sekolah A-Z lalu nama anak A-Z
+            $query->leftJoin('sekolahs', 'sekolahs.id', '=', 'anaks.sekolahs_id')
+                ->select('anaks.*')
+                ->orderBy('sekolahs.nama_sekolah', 'asc')
+                ->orderBy('anaks.nama_anak', 'asc');
         }
 
 
-        $dataAnak = $query->paginate(10);
+        $dataAnak = $query->paginate(10)->withQueryString();
 
         $dataOrangTua = OrangTua::orderBy('nama_ayah', 'asc')->orderBy('nama_ibu', 'asc')->get();
 

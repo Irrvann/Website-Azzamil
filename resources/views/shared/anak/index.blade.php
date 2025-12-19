@@ -35,20 +35,39 @@
                 <div class="card">
                     <!--begin::Card header-->
                     <div class="card-header border-0 pt-6">
-                        <!--begin::Card title-->
-                        <div class="card-title">
-                            <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <input type="text" data-anak-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13" placeholder="Cari Anak" />
+                        <form method="GET" action="{{ url()->current() }}">
+                            <div class="card-title d-flex align-items-center gap-3">
+                                <!-- Search -->
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <!--begin::Search-->
+                                    <div class="d-flex align-items-center position-relative my-1">
+                                        <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        <input type="text" name="search" value="{{ request('search') }}"
+                                            data-anak-table-filter="search"
+                                            class="form-control form-control-solid w-250px ps-13" placeholder="Cari Anak" />
+
+                                    </div>
+                                    <!--end::Search-->
+                                </div>
+
+                                <!-- Filter Sekolah -->
+                                <select name="sekolahs_id" class="form-select form-select-solid w-200px">
+                                    <option value="">Semua Sekolah</option>
+                                    @foreach ($dataSekolah as $sekolah)
+                                        <option value="{{ $sekolah->id }}" @selected(request('sekolahs_id') == $sekolah->id)>
+                                            {{ $sekolah->nama_sekolah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <button class="btn btn-primary">Filter</button>
+                                <a href="{{ url()->current() }}" class="btn btn-light">Reset</a>
                             </div>
-                            <!--end::Search-->
-                        </div>
-                        <!--begin::Card title-->
+                        </form>
+
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Toolbar-->
@@ -152,7 +171,8 @@
                                             </td> 
                                             <td>{{ $anak->tanggal_masuk ? \Carbon\Carbon::parse($anak->tanggal_masuk)->format('d-m-Y') : '-' }}  
                                             </td> --}}
-                                            <td>{{ $anak->orangTua->nama_ayah ?? '-' }} {{ $anak->orangTua->nama_ibu ?? '-' }}</td>
+                                            <td>{{ $anak->orangTua->nama_ayah ?? '-' }}
+                                                {{ $anak->orangTua->nama_ibu ?? '-' }}</td>
                                             <td>{{ $anak->sekolah->nama_sekolah ?? '-' }}</td>
                                             {{-- <td>
                                                 @php
@@ -169,7 +189,7 @@
                                                 {{ $guru->user->username ?? '-' }}
                                             </td> --}}
 
-                                            
+
 
                                             <td class="text-end">
 
@@ -227,7 +247,8 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-end mt-4">
-                                {{ $dataAnak->links() }}
+                                {{ $dataAnak->withQueryString()->links() }}
+
                             </div>
 
                         </div>
@@ -282,6 +303,26 @@
                     noDataRow.style.display = (visibleCount === 0) ? '' : 'none';
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form[method="GET"]');
+            if (!form) return;
+
+            const sekolah = form.querySelector('select[name="sekolahs_id"]');
+            const search = form.querySelector('input[name="search"]');
+
+            if (sekolah) sekolah.addEventListener('change', () => form.submit());
+
+            if (search) {
+                let t;
+                search.addEventListener('input', () => {
+                    clearTimeout(t);
+                    t = setTimeout(() => form.submit(), 500);
+                });
+            }
         });
     </script>
 @endsection
