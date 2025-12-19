@@ -88,7 +88,7 @@
                                         <th class="min-w-125px">NIPD</th>
                                         <th class="min-w-125px">Nama</th>
                                         {{-- <th class="min-w-125px">NO KK</th>
-                                        <th class="min-w-125px">NO Registrasi KK</th> --}}
+                                        <th class="min-w-125px">NO Registrasi AKTA</th> --}}
                                         {{-- <th class="min-w-125px">Tempat Lahir</th>
                                         <th class="min-w-125px">Tanggal Lahir</th>
                                         <th class="min-w-125px">Jenis Kelamin</th> --}}
@@ -120,7 +120,7 @@
                                             <td>{{ $anak->nipd ?? '-' }}</td>
                                             <td>{{ $anak->nama_anak ?? '-' }}</td>
                                             {{-- <td>{{ $anak->no_kk ?? '-' }}</td>
-                                            <td>{{ $anak->no_registrasi_kk ?? '-' }}</td> --}}
+                                            <td>{{ $anak->no_registrasi_akta ?? '-' }}</td> --}}
                                             {{-- <td>{{ $anak->tempat_lahir ?? '-' }}</td>
                                             <td>{{ $anak->tanggal_lahir ? \Carbon\Carbon::parse($anak->tanggal_lahir)->format('d-m-Y') : '-' }}
                                             </td>

@@ -154,16 +154,16 @@
                             @endif
                         </div>
 
-                        {{-- No Registrasi KK --}}
+                        {{-- No Registrasi Akta --}}
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">No Registrasi KK</label>
-                            <input type="text" name="no_registrasi_kk"
+                            <label class="fw-semibold fs-6 mb-2">No Registrasi Akta</label>
+                            <input type="text" name="no_registrasi_akta"
                                 class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="No Registrasi KK anak"
-                                value="{{ old('no_registrasi_kk', $anak->no_registrasi_kk) }}" />
+                                placeholder="No Registrasi Akta anak"
+                                value="{{ old('no_registrasi_akta', $anak->no_registrasi_akta) }}" />
 
                             @if (old('form_source') == 'edit_anak' && old('anak_id') == $anak->id)
-                                @error('no_registrasi_kk')
+                                @error('no_registrasi_akta')
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             @endif

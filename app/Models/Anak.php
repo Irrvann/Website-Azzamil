@@ -18,7 +18,7 @@ class Anak extends Model
         'nisn',
         'nipd',
         'no_kk',
-        'no_registrasi_kk',
+        'no_registrasi_akta',
         'nama_anak',
         'tempat_lahir',
         'tanggal_lahir',

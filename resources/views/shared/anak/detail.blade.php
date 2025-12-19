@@ -100,10 +100,10 @@
                             <span class="fw-bold fs-6 text-gray-800">{{ $anak->no_kk ?? '-' }}</span>
                         </div>
 
-                        {{-- No Registrasi KK --}}
+                        {{-- No Registrasi Akta --}}
                         <div class="d-flex flex-column mb-0">
-                            <span class="text-gray-600 fw-semibold fs-8 text-uppercase mb-1">No Registrasi KK</span>
-                            <span class="fw-bold fs-6 text-gray-800">{{ $anak->no_registrasi_kk ?? '-' }}</span>
+                            <span class="text-gray-600 fw-semibold fs-8 text-uppercase mb-1">No Registrasi Akta</span>
+                            <span class="fw-bold fs-6 text-gray-800">{{ $anak->no_registrasi_akta ?? '-' }}</span>
                         </div>
                     </div>
 
