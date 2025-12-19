@@ -141,8 +141,14 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Nilai Agama dan Budi Pekerti</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_agama_dan_budi_pekerti" placeholder="Type Nilai Agama">{{ old('nilai_agama_dan_budi_pekerti') }}</textarea>
+                            <textarea class="form-control form-control-solid js-limit-text" rows="3" name="nilai_agama_dan_budi_pekerti"
+                                placeholder="Type Nilai Agama" maxlength="500" data-max="500">{{ old('nilai_agama_dan_budi_pekerti') }}</textarea>
+
+                            <div class="d-flex justify-content-end mt-1">
+                                <small class="text-muted js-counter">0/500</small>
+                            </div>
                         </div>
+
 
                         {{-- FOTO NILAI AGAMA --}}
                         <div class="fv-row mb-7">
@@ -169,9 +175,14 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Nilai Jati Diri</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_jati_diri"
-                                placeholder="Type Nilai Jati Diri">{{ old('nilai_jati_diri') }}</textarea>
+                            <textarea class="form-control form-control-solid js-limit-text" rows="3" name="nilai_jati_diri"
+                                placeholder="Type Nilai Jati Diri" maxlength="500" data-max="500">{{ old('nilai_jati_diri') }}</textarea>
+
+                            <div class="d-flex justify-content-end mt-1">
+                                <small class="text-muted js-counter">0/500</small>
+                            </div>
                         </div>
+
 
                         {{-- FOTO JATI DIRI --}}
                         <div class="fv-row mb-7">
@@ -197,9 +208,14 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Nilai Dasar Literasi &amp; STEAM</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_dasar_literasi_steam"
-                                placeholder="Type Nilai Dasar Literasi &amp; STEAM">{{ old('nilai_dasar_literasi_steam') }}</textarea>
+                            <textarea class="form-control form-control-solid js-limit-text" rows="3" name="nilai_dasar_literasi_steam"
+                                placeholder="Type Nilai Dasar Literasi &amp; STEAM" maxlength="1097" data-max="1097">{{ old('nilai_dasar_literasi_steam') }}</textarea>
+
+                            <div class="d-flex justify-content-end mt-1">
+                                <small class="text-muted js-counter">0/1097</small>
+                            </div>
                         </div>
+
 
                         {{-- FOTO LITERASI & SAINS --}}
                         <div class="fv-row mb-7">
@@ -210,8 +226,8 @@
                                     class="form-control form-control-solid mb-3" multiple
                                     onchange="handleMultiImage(this, 'foto_dasar_literasi_steam')">
 
-                                <input type="file" id="store_foto_dasar_literasi_steam" name="foto_dasar_literasi_steam[]"
-                                    multiple style="display:none;">
+                                <input type="file" id="store_foto_dasar_literasi_steam"
+                                    name="foto_dasar_literasi_steam[]" multiple style="display:none;">
                             </div>
 
                             <small class="text-muted d-block">
@@ -224,16 +240,23 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Nilai Kokurikuler</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="nilai_kokurikuler" placeholder="Type Nilai Kokurikuler">{{ old('nilai_kokurikuler') }}</textarea>
+                            <textarea class="form-control form-control-solid js-limit-text" rows="3" name="nilai_kokurikuler"
+                                placeholder="Type Nilai Kokurikuler" maxlength="1097" data-max="1097">{{ old('nilai_kokurikuler') }}</textarea>
+
+                            <div class="d-flex justify-content-end mt-1">
+                                <small class="text-muted js-counter">0/1097</small>
+                            </div>
                         </div>
+
 
                         {{-- FOTO KOKURIKULER --}}
                         <div class="fv-row mb-7">
                             <label class="fw-semibold fs-6 mb-2">Foto Kegiatan Kokurikuler</label>
 
                             <div id="wrapper_foto_kokurikuler">
-                                <input type="file" id="input_foto_kokurikuler" class="form-control form-control-solid mb-3"
-                                    multiple onchange="handleMultiImage(this, 'foto_kokurikuler')">
+                                <input type="file" id="input_foto_kokurikuler"
+                                    class="form-control form-control-solid mb-3" multiple
+                                    onchange="handleMultiImage(this, 'foto_kokurikuler')">
 
                                 <input type="file" id="store_foto_kokurikuler" name="foto_kokurikuler[]" multiple
                                     style="display:none;">
@@ -248,15 +271,25 @@
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Refleksi Guru</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_guru"
-                                placeholder="Type Refleksi Guru">{{ old('refleksi_guru') }}</textarea>
+                            <textarea class="form-control form-control-solid js-limit-text" rows="3" name="refleksi_guru"
+                                placeholder="Type Refleksi Guru" maxlength="880" data-max="880">{{ old('refleksi_guru') }}</textarea>
+
+                            <div class="d-flex justify-content-end mt-1">
+                                <small class="text-muted js-counter">0/880</small>
+                            </div>
                         </div>
+
 
                         <div class="fv-row mb-7">
                             <label class="fs-6 fw-semibold mb-2">Refleksi Orang Tua</label>
-                            <textarea class="form-control form-control-solid" rows="3" name="refleksi_orang_tua"
-                                placeholder="Type Refleksi Orang Tua">{{ old('refleksi_orang_tua') }}</textarea>
+                            <textarea class="form-control form-control-solid js-limit-text" rows="3" name="refleksi_orang_tua"
+                                placeholder="Type Refleksi Orang Tua" maxlength="880" data-max="880">{{ old('refleksi_orang_tua') }}</textarea>
+
+                            <div class="d-flex justify-content-end mt-1">
+                                <small class="text-muted js-counter">0/880</small>
+                            </div>
                         </div>
+
 
                         {{-- Kehadiran --}}
                         <div class="fv-row mb-7">
@@ -529,5 +562,43 @@
         });
 
 
+    })();
+</script>
+
+<script>
+    (function() {
+        function updateCounter(textarea) {
+            const max = parseInt(textarea.dataset.max || textarea.getAttribute('maxlength') || '0', 10);
+
+            // jaga-jaga kalau paste/autofill kebablasan
+            if (max > 0 && textarea.value.length > max) {
+                textarea.value = textarea.value.slice(0, max);
+            }
+
+            const counterEl = textarea.closest('.fv-row')?.querySelector('.js-counter');
+            if (counterEl && max > 0) {
+                counterEl.textContent = `${textarea.value.length}/${max}`;
+            }
+        }
+
+        function bindCounters(root) {
+            root.querySelectorAll('textarea.js-limit-text').forEach((ta) => {
+                updateCounter(ta);
+                ta.addEventListener('input', () => updateCounter(ta));
+                ta.addEventListener('paste', () => setTimeout(() => updateCounter(ta), 0));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            bindCounters(document);
+
+            // biar aman kalau modal baru dibuka (old() / render ulang)
+            const modal = document.getElementById('modal_add_raport');
+            if (modal) {
+                modal.addEventListener('shown.bs.modal', function() {
+                    bindCounters(modal);
+                });
+            }
+        });
     })();
 </script>

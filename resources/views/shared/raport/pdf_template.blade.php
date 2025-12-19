@@ -617,7 +617,7 @@
                 </tr>
             </table>
 
-            <table class="penilaian-table refleksi-orangtua">
+            <table class="penilaian-table">
                 <tr>
                     <th>Refleksi Orang Tua</th>
                 </tr>
@@ -657,7 +657,8 @@
                         </td>
 
                         <td>{{ $raport->guru->nama_guru ?? '-' }}</td>
-                        <td>{{ $kepala_sekolah->nama_guru ?? '-' }}</td>
+                        {{-- <td>{{ $kepala_sekolah->nama_guru ?? '-' }}</td> --}}
+                        <td></td>
                     </tr>
                 </table>
             </div>
@@ -707,7 +708,7 @@
                     <div class="ttd-bawah-space"></div>
 
                     <span class="ttd-bawah-nama">
-                        {{ $kepala_sekolah->nama_guru ?? '-' }}
+                        
                     </span>
                 </div>
 
