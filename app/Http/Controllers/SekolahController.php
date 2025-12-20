@@ -86,7 +86,7 @@ class SekolahController extends Controller
                 'nama_sekolah.string' => 'Nama sekolah harus berupa teks.',
                 'nama_sekolah.max' => 'Nama sekolah maksimal 255 karakter.',
                 'jenis_sekolah.required' => 'Jenis sekolah wajib diisi.',
-                'jenis_sekolah.in' => 'Jenis sekolah harus berupa Negeri atau Swasta.',
+                'jenis_sekolah.in' => 'Jenis sekolah harus berupa TPA, KB, TK, atau TPA KB TK.',
             ]
         );
 
@@ -134,7 +134,7 @@ class SekolahController extends Controller
                 'nama_sekolah.string' => 'Nama sekolah harus berupa teks.',
                 'nama_sekolah.max' => 'Nama sekolah maksimal 255 karakter.',
                 'jenis_sekolah.required' => 'Jenis sekolah wajib diisi.',
-                'jenis_sekolah.in' => 'Jenis sekolah harus berupa Negeri atau Swasta.',
+                'jenis_sekolah.in' => 'Jenis sekolah harus berupa TPA, KB, TK, atau TPA KB TK.',
             ]
         );
 

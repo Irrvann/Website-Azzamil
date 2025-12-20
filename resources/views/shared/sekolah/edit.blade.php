@@ -55,6 +55,7 @@
                                 <option value="">Pilih Jenis Sekolah...</option>
                                 <option value="tpa" {{ old('jenis_sekolah', $sekolah->jenis_sekolah) == 'tpa' ? 'selected' : '' }}>TPA</option>
                                 <option value="kb" {{ old('jenis_sekolah', $sekolah->jenis_sekolah) == 'kb' ? 'selected' : '' }}>KB</option>
+                                <option value="tk" {{ old('jenis_sekolah', $sekolah->jenis_sekolah) == 'tk' ? 'selected' : '' }}>TK</option>
                                 <option value="tpa_kb_tk" {{ old('jenis_sekolah', $sekolah->jenis_sekolah) == 'tpa_kb_tk' ? 'selected' : '' }}>TPA KB TK</option>
                             </select>
                             @if (old('form_source') == 'edit_sekolah')
