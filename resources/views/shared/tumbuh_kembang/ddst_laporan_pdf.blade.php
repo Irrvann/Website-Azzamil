@@ -562,9 +562,9 @@
             <div class="left-metric">
                 <div class="bio-row">
                     <div class="bio-item-smt">
-                        BB : {{ $antropometri->berat_badan ?? '-' }} cm
+                        BB : {{ $antropometri->berat_badan ?? '-' }} kg
                         ({{ ucfirst($antropometri->status_bb) ?? '-' }})&nbsp; | &nbsp;
-                        TB : {{ $antropometri->tinggi_badan ?? '-' }} kg
+                        TB : {{ $antropometri->tinggi_badan ?? '-' }} cm
                         ({{ ucfirst($antropometri->status_tb) ?? '-' }})
                     </div>
 
@@ -574,8 +574,8 @@
             <div class="right-metric">
                 <div class="bio-row">
                     <div class="bio-item-smt">
-                        LK : {{ $antropometri->lingkar_kepala ?? '-' }} &nbsp; | &nbsp;
-                        LILA : {{ $antropometri->lingkar_lengan ?? '-' }}
+                        LK : {{ $antropometri->lingkar_kepala ?? '-' }} cm &nbsp; | &nbsp;
+                        LILA : {{ $antropometri->lingkar_lengan ?? '-' }} cm
                     </div>
                 </div>
             </div>

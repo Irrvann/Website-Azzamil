@@ -148,14 +148,21 @@
                                     @enderror
 
                                     {{-- Tanggal ukur --}}
-                                    <div class="mb-2 fw-semibold text-gray-600 mt-4">Tanggal Ukur <span
-                                            class="text-danger">*</span></div>
-                                    <input type="date" name="tanggal_ukur" class="form-control form-control-solid mb-4"
-                                        value="{{ old('tanggal_ukur', \Carbon\Carbon::parse($antropometri->tanggal_ukur)->format('Y-m-d')) }}">
+                                    <div class="mb-2 fw-semibold text-gray-600 mt-4">
+                                        Tanggal Ukur <span class="text-danger">*</span>
+                                    </div>
+
+                                    <input type="date" class="form-control form-control-solid mb-2"
+                                        value="{{ \Carbon\Carbon::parse($antropometri->tanggal_ukur)->format('Y-m-d') }}"
+                                        readonly>
+
+                                    <input type="hidden" name="tanggal_ukur"
+                                        value="{{ \Carbon\Carbon::parse($antropometri->tanggal_ukur)->format('Y-m-d') }}">
 
                                     @error('tanggal_ukur')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
+
 
 
                                     {{-- Berat badan --}}
@@ -413,7 +420,8 @@
                             </div>
 
                             <div class="mb-5">
-                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali Guru</label>
+                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali
+                                    Guru</label>
                                 <textarea name="profile_dan_karakter_yang_dikenali_guru" rows="3" class="form-control form-control-solid"
                                     placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter_yang_dikenali_guru', $ddstTest->profile_dan_karakter_yang_dikenali_guru ?? '') }}</textarea>
                                 @error('profile_dan_karakter_yang_dikenali_guru')
@@ -422,7 +430,8 @@
                             </div>
 
                             <div class="mb-5">
-                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali Orang Tua</label>
+                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali Orang
+                                    Tua</label>
                                 <textarea name="profile_dan_karakter_yang_dikenali_ortu" rows="3" class="form-control form-control-solid"
                                     placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter_yang_dikenali_ortu', $ddstTest->profile_dan_karakter_yang_dikenali_ortu ?? '') }}</textarea>
                                 @error('profile_dan_karakter_yang_dikenali_ortu')
