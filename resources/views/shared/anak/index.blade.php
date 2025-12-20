@@ -71,12 +71,14 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Toolbar-->
+                            @if(!auth()->user()->hasRole('orang_tua'))
                             <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#modal_add_anak">
                                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Anak</button>
                                 <!--end::Add user-->
                             </div>
+                            @endif
                             <!--begin::Modal - Add task-->
                             @include('shared.anak.create')
                             <!--end::Modal - Add task-->
@@ -209,6 +211,7 @@
                                                     </div>
 
                                                     <!--begin::Menu item-->
+                                                    @if(!auth()->user()->hasRole('orang_tua'))
                                                     <div class="menu-item px-3">
                                                         <a href="#" data-bs-toggle="modal"
                                                             data-bs-target="#modal_edit_anak_{{ $anak->id }}"
@@ -224,6 +227,7 @@
                                                         </a>
 
                                                     </div>
+                                                    @endif
                                                     <!--end::Menu item-->
                                                 </div>
                                                 <!--end::Menu-->

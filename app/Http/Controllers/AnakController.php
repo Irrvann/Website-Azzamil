@@ -31,6 +31,10 @@ class AnakController extends Controller
             return 'superadmin.anak.index';
         }
 
+        if ($user->hasRole('orang_tua')) {
+            return 'orang_tua.anak.index';
+        }
+
         abort(403, 'Role tidak dikenali');
     }
 
@@ -38,6 +42,7 @@ class AnakController extends Controller
     {
         $user = Auth::user();
 
+        // ✅ Route name berdasarkan role
         if ($user->hasRole('admin')) {
             $routeNameStore = 'admin.anak.store';
             $routeNameUpdate = 'admin.anak.update';
@@ -50,36 +55,16 @@ class AnakController extends Controller
             $routeNameStore = 'superadmin.anak.store';
             $routeNameUpdate = 'superadmin.anak.update';
             $routeNameDelete = 'superadmin.anak.destroy';
+        } elseif ($user->hasRole('orang_tua')) {
+            // Orang tua biasanya read-only (tidak ada store/update/delete)
+            $routeNameStore = null;
+            $routeNameUpdate = null;
+            $routeNameDelete = null;
         } else {
             abort(403, 'Role tidak dikenali');
         }
 
         // ✅ BASE QUERY
-        $query = Anak::with(['orangTua', 'sekolah']);
-
-        // ✅ SORT + FILTER BERDASARKAN ROLE
-        if ($user->hasRole('guru')) {
-
-            $guru = $user->guru;
-
-            if (!$guru || !$guru->sekolahs_id) {
-                $query->whereRaw('1=0'); // hasil kosong aman
-            } else {
-                $query->where('sekolahs_id', $guru->sekolahs_id);
-            }
-
-            // Guru: nama anak A-Z
-            $query->orderBy('nama_anak', 'asc');
-
-        } else {
-            // Admin & Superadmin: sekolah A-Z lalu nama anak A-Z
-            // Pakai join biar bisa order by nama_sekolah
-            $query->leftJoin('sekolahs', 'sekolahs.id', '=', 'anaks.sekolahs_id')
-                ->select('anaks.*')
-                ->orderBy('sekolahs.nama_sekolah', 'asc')
-                ->orderBy('anaks.nama_anak', 'asc');
-        }
-
         $query = Anak::query()->with(['orangTua', 'sekolah']);
 
         $search = request('search');
@@ -95,48 +80,85 @@ class AnakController extends Controller
             });
         }
 
-        if ($user->hasRole('guru')) {
+        // ✅ FILTER BERDASARKAN ROLE
+        if ($user->hasRole('orang_tua')) {
+
+            $orangTua = $user->orangTua; // relasi user->orangTua
+
+            if (!$orangTua) {
+                // kalau user belum terhubung ke orang_tua
+                $query->whereRaw('1=0');
+            } else {
+                // ✅ INI KUNCINYA: tampilkan hanya anak milik orang tua login
+                $query->where('orang_tuas_id', $orangTua->id);
+
+                if (!empty($sekolahId)) {
+                    $query->where('sekolahs_id', $sekolahId);
+                }
+            }
+
+            // sorting sederhana
+            $query->orderBy('nama_anak', 'asc');
+
+        } elseif ($user->hasRole('guru')) {
+
             $guru = $user->guru;
 
             if (!$guru || !$guru->sekolahs_id) {
                 $query->whereRaw('1=0');
             } else {
-                // ✅ Guru wajib sesuai sekolahnya
                 $query->where('sekolahs_id', $guru->sekolahs_id);
             }
 
-            // ✅ Guru: nama anak A-Z
             $query->orderBy('nama_anak', 'asc');
 
         } else {
-            // ✅ Admin & Superadmin boleh filter sekolah dari dropdown
+            // ✅ admin & superadmin
             if (!empty($sekolahId)) {
                 $query->where('sekolahs_id', $sekolahId);
             }
 
-            // ✅ Admin & Superadmin: sekolah A-Z lalu nama anak A-Z
+            // order sekolah A-Z lalu anak A-Z
             $query->leftJoin('sekolahs', 'sekolahs.id', '=', 'anaks.sekolahs_id')
                 ->select('anaks.*')
                 ->orderBy('sekolahs.nama_sekolah', 'asc')
                 ->orderBy('anaks.nama_anak', 'asc');
         }
 
-
         $dataAnak = $query->paginate(10)->withQueryString();
 
-        $dataOrangTua = OrangTua::orderBy('nama_ayah', 'asc')->orderBy('nama_ibu', 'asc')->get();
+        // ✅ data dropdown orang tua & sekolah
+        // Orang tua tidak butuh dropdown pilih orang tua
+        $dataOrangTua = $user->hasRole('orang_tua')
+            ? collect()
+            : OrangTua::orderBy('nama_ayah', 'asc')->orderBy('nama_ibu', 'asc')->get();
 
-        // ✅ dropdown sekolah:
-        // admin & super_admin bisa pilih semua
-        // guru hanya sekolahnya sendiri (atau kosongkan dropdown dan paksa dari backend)
         if ($user->hasRole('guru')) {
             $guru = $user->guru;
             $dataSekolah = Sekolah::when($guru?->sekolahs_id, fn($q) => $q->where('id', $guru->sekolahs_id))
                 ->orderBy('nama_sekolah', 'asc')
                 ->get();
+        } elseif ($user->hasRole('orang_tua')) {
+
+            $orangTua = $user->orangTua;
+
+            $dataSekolah = Sekolah::query()
+                ->when($orangTua, function ($q) use ($orangTua) {
+                    $q->whereIn(
+                        'id',
+                        Anak::where('orang_tuas_id', $orangTua->id)
+                            ->pluck('sekolahs_id')
+                            ->unique()
+                            ->toArray()
+                    );
+                })
+                ->orderBy('nama_sekolah', 'asc')
+                ->get();
+
         } else {
             $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();
         }
+
 
         return view('shared.anak.index', compact(
             'dataAnak',
@@ -147,6 +169,7 @@ class AnakController extends Controller
             'routeNameDelete'
         ));
     }
+
 
 
     /**

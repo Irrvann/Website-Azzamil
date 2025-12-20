@@ -34,6 +34,7 @@
                         Batal
                     </button>
 
+                    @if(!empty($routeNameDelete))
                     <form action="{{ route($routeNameDelete, $anak->id) }}" method="POST"
                         class="d-inline form-loading">
                         @csrf
@@ -42,6 +43,7 @@
                             Ya, hapus
                         </button>
                     </form>
+                    @endif
                 </div>
             </div>
             <!--end::Modal body-->

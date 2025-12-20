@@ -36,6 +36,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5 my-7">
                 <!--begin::Form-->
+                @if(!empty($routeNameUpdate))
                 <form enctype="multipart/form-data" id="modal_edit_anak_form_{{ $anak->id }}"
                     class="form form-loading" action="{{ route($routeNameUpdate, $anak->id) }}" method="POST">
                     @csrf
@@ -350,6 +351,7 @@
                     </div>
                     <!--end::Actions-->
                 </form>
+                @endif
                 <!--end::Form-->
             </div>
             <!--end::Modal body-->

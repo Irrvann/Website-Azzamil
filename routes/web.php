@@ -59,9 +59,9 @@ Route::middleware(['auth', 'role:super_admin'])
         // Modul tumbuh kembang = antropometri
         Route::resource('data-tumbuh-kembang', AntropometriController::class)
             ->names('data-tumbuh-kembang');
-        
+
         Route::delete('/antropometri/{antropometri}', [AntropometriController::class, 'destroy'])
-        ->name('antropometri.destroy');
+            ->name('antropometri.destroy');
 
         // Tambahan khusus: buat DDST dari satu data antropometri
         Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
@@ -115,7 +115,7 @@ Route::middleware(['auth', 'role:admin'])
             ->names('data-tumbuh-kembang');
 
         Route::delete('/antropometri/{antropometri}', [AntropometriController::class, 'destroy'])
-        ->name('antropometri.destroy');
+            ->name('antropometri.destroy');
 
         // Tambahan khusus: buat DDST dari satu data antropometri
         Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
@@ -190,6 +190,17 @@ Route::middleware(['auth', 'role:orang_tua'])
         Route::get('/dashboard', [OrangTuaController::class, 'dashboardOrangTua'])
             ->name('dashboard');
 
+        Route::resource('data-anak', AnakController::class)
+            ->names('anak');
+
+        Route::resource('data-tumbuh-kembang', AntropometriController::class)
+            ->names('data-tumbuh-kembang');
+
+        Route::resource('data-raport', RaportController::class)
+            ->names('raport');
+
+        Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
+            ->name('raport.cetak-pdf');
     });
 
 require __DIR__ . '/auth.php';
