@@ -37,7 +37,7 @@
                         <!--begin::Input group-->
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">NIK Ayah<span class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">NIK Ayah</label>
                             <input type="text" name="nik_ayah" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="NIK Ayah" value="{{ old('nik_ayah', $orangTua->nik_ayah) }}" />
                             @if (old('form_source') == 'edit_orangtua' && old('orangTua_id') == $orangTua->id)
@@ -48,8 +48,7 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Nama Ayah<span
-                                    class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">Nama Ayah</label>
                             <input type="text" name="nama_ayah" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="Nama Ayah" value="{{ old('nama_ayah', $orangTua->nama_ayah) }}" />
                             @if (old('form_source') == 'edit_orangtua' && old('orangTua_id') == $orangTua->id)
@@ -61,7 +60,7 @@
 
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">NIK Ibu<span class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">NIK Ibu</label>
                             <input type="text" name="nik_ibu" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="NIK Ibu" value="{{ old('nik_ibu', $orangTua->nik_ibu) }}" />
                             @if (old('form_source') == 'edit_orangtua' && old('orangTua_id') == $orangTua->id)
@@ -73,7 +72,7 @@
                         </div>
 
                         <div class="fv-row mb-7">
-                            <label class="fw-semibold fs-6 mb-2">Nama Ibu<span class="text-danger ms-1">*</span></label>
+                            <label class="fw-semibold fs-6 mb-2">Nama Ibu</label>
                             <input type="text" name="nama_ibu" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="Nama Ibu" value="{{ old('nama_ibu', $orangTua->nama_ibu) }}" />
                             @if (old('form_source') == 'edit_orangtua' && old('orangTua_id') == $orangTua->id)
