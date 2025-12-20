@@ -38,14 +38,23 @@
                         <!--begin::Card title-->
                         <div class="card-title">
                             <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <input type="text" data-orangtua-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13" placeholder="Cari Guru" />
-                            </div>
+                            <form method="GET" action="{{ url()->current() }}">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+
+                                    <input type="text" name="search" value="{{ request('search') }}"
+                                        class="form-control form-control-solid w-250px ps-13"
+                                        placeholder="Cari Orang Tua..." />
+
+                                    {{-- optional tombol clear --}}
+                                    @if (request('search'))
+                                        <a href="{{ url()->current() }}" class="btn btn-light ms-2">Reset</a>
+                                    @endif
+                                </div>
+                            </form>
+
                             <!--end::Search-->
                         </div>
                         <!--begin::Card title-->
@@ -121,10 +130,10 @@
                                                 @elseif ($status === 'non_aktif')
                                                     <span class="badge badge-light-danger">Tidak Aktif</span>
                                                 @endif
-                                            </td>     
+                                            </td>
                                             <td>{{ $orangTua->user->username ?? '-' }}</td>
-                                            
-                                                                       
+
+
 
                                             <td class="text-end">
 
@@ -236,6 +245,19 @@
                 if (noDataRow) {
                     noDataRow.style.display = (visibleCount === 0) ? '' : 'none';
                 }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inp = document.querySelector('input[name="search"]');
+            if (!inp) return;
+
+            let t;
+            inp.addEventListener('input', () => {
+                clearTimeout(t);
+                t = setTimeout(() => inp.form.submit(), 400); // debounce
             });
         });
     </script>

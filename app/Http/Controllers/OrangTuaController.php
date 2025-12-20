@@ -28,7 +28,7 @@ class OrangTuaController extends Controller
 
         abort(403, 'Role tidak dikenali');
     }
-    public function index()
+    public function index(Request $request)
     {
         //
         $user = Auth::user();
@@ -43,7 +43,26 @@ class OrangTuaController extends Controller
         } else {
             abort(403, 'Role tidak dikenali');
         }
-        $dataOrangtua = OrangTua::with('user')->paginate(10);
+        $search = $request->query('search'); // ambil dari ?search=
+
+        $dataOrangtua = OrangTua::with('user')
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('nik_ayah', 'like', "%{$search}%")
+                        ->orWhere('nama_ayah', 'like', "%{$search}%")
+                        ->orWhere('nik_ibu', 'like', "%{$search}%")
+                        ->orWhere('nama_ibu', 'like', "%{$search}%")
+                        ->orWhere('no_hp_ayah', 'like', "%{$search}%")
+                        ->orWhere('no_hp_ibu', 'like', "%{$search}%")
+                        ->orWhere('alamat', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($u) use ($search) {
+                            $u->where('username', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('shared.orangtua.index', compact('dataOrangtua', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
