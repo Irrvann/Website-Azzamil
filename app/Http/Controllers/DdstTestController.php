@@ -35,21 +35,52 @@ class DdstTestController extends Controller
             return 'superadmin.data-tumbuh-kembang.index';
         }
 
+        if ($user->hasRole('orang_tua')) {
+            return 'orang_tua.data-tumbuh-kembang.index';
+        }
+
         abort(403, 'Role tidak dikenali');
     }
+
+    private function authorizeOrangTuaByAntropometri(Antropometri $antropometri): void
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('orang_tua')) {
+            $orangTuaId = optional($user->orangTua)->id;
+
+            if (!$orangTuaId) {
+                abort(403, 'Akun orang tua belum terhubung.');
+            }
+
+            // antropometri -> anak -> orang_tuas_id
+            $antropometri->loadMissing('anak:id,orang_tuas_id');
+
+            if ((int) $antropometri->anak->orang_tuas_id !== (int) $orangTuaId) {
+                abort(403, 'Tidak boleh mengakses data anak ini.');
+            }
+        }
+    }
+
     public function createFromAntropometri($antropometriId)
     {
         $user = Auth::user();
+
         if ($user->hasRole('admin')) {
             $routeNameStore = 'admin.ddst.store_from_antropometri';
         } elseif ($user->hasRole('guru')) {
             $routeNameStore = 'guru.ddst.store_from_antropometri';
         } elseif ($user->hasRole('super_admin')) {
             $routeNameStore = 'superadmin.ddst.store_from_antropometri';
+        } elseif ($user->hasRole('orang_tua')) {
+            // ✅ read-only
+            $routeNameStore = null;
         } else {
             abort(403, 'Role tidak dikenali');
         }
+
         $antropometri = Antropometri::with('anak')->findOrFail($antropometriId);
+        $this->authorizeOrangTuaByAntropometri($antropometri);
         $anak = $antropometri->anak;
 
         // usia bulan (int)
@@ -138,6 +169,7 @@ class DdstTestController extends Controller
 
         $listReviewer = \App\Models\Reviewer::orderBy('nama')->get();
 
+        $isReadOnly = $user->hasRole('orang_tua');
 
         return view('shared.tumbuh_kembang.ddst_test', [
             'antropometri' => $antropometri,
@@ -149,6 +181,7 @@ class DdstTestController extends Controller
             'listGuru' => $listGuru,
             'listReviewer' => $listReviewer,
             'routeNameStore' => $routeNameStore,
+            'isReadOnly' => $isReadOnly,
         ]);
     }
 
@@ -302,6 +335,7 @@ class DdstTestController extends Controller
 
     public function cetakLaporan(Antropometri $antropometri)
     {
+        $this->authorizeOrangTuaByAntropometri($antropometri);
         // Eager load relasi yang benar
         $antropometri->load([
             'anak.sekolah',
@@ -357,6 +391,30 @@ class DdstTestController extends Controller
 
         // tampilkan di tab baru (inline)
         return $pdf->stream($filename);
+    }
+
+
+    public function updateProfile(Request $request, DdstTest $ddstTest)
+    {
+        // ✅ Validasi hanya field ini
+        $validated = $request->validate([
+            'profile_dan_karakter_yang_dikenali_ortu' => 'nullable|string',
+
+        ]);
+
+        // ✅ Security: pastikan ddstTest ini milik anak orang tua yg login
+        // Asumsi relasi: DdstTest -> antropometri -> anak -> orang_tuas_id
+        $orangTuaId = auth()->user()->orangTua->id ?? null;
+
+        $anakOrtuId = optional(optional(optional($ddstTest->antropometri)->anak))->orang_tuas_id;
+
+        if (!$orangTuaId || $anakOrtuId != $orangTuaId) {
+            abort(403, 'Tidak diizinkan mengedit DDST ini.');
+        }
+
+        $ddstTest->update($validated);
+
+        return back()->with('success', 'Profil & karakter dari orang tua berhasil diperbarui.');
     }
 
 

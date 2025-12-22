@@ -40,15 +40,19 @@
                         <!--begin::Card title-->
                         <div class="card-title">
                             <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <input type="text" data-antropometri-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13"
-                                    placeholder="Cari Anak / Tanggal" />
-                            </div>
+                            <form method="GET" action="{{ url()->current() }}">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+
+                                    <input type="text" name="search" value="{{ request('search') }}"
+                                        class="form-control form-control-solid w-250px ps-13"
+                                        placeholder="Cari Nama Anak / Tanggal" />
+                                </div>
+                            </form>
+
                             <!--end::Search-->
                         </div>
                         <!--end::Card title-->
@@ -56,12 +60,14 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modal_add_antropometri">
-                                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Antropometri</button>
-                                <!--end::Add user-->
-                            </div>
+                            @if (!auth()->user()->hasRole('orang_tua'))
+                                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modal_add_antropometri">
+                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Antropometri</button>
+                                    <!--end::Add user-->
+                                </div>
+                            @endif
                             <!--begin::Modal - Add task-->
                             @include('shared.tumbuh_kembang.create')
                             <!--end::Modal - Add task-->
@@ -109,6 +115,20 @@
 
                                             <td class="text-end">
                                                 <div class="btn-group">
+                                                    @php
+                                                        $ddstLatest = $antropometri->ddstTests
+                                                            ->sortByDesc('created_at')
+                                                            ->first();
+                                                    @endphp
+
+                                                    @if (auth()->user()->hasRole('orang_tua') && $ddstLatest)
+                                                        <button type="button" class="btn btn-sm btn-light-warning"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal_edit_ddst_ortu_{{ $ddstLatest->id }}">
+                                                            Edit
+                                                        </button>
+                                                    @endif
+
                                                     <a href="{{ route($routeDdstCreate, $antropometri->id) }}"
                                                         class="btn btn-sm btn-light-primary">
                                                         DDST
@@ -138,7 +158,13 @@
 
                                         </tr>
 
-                                        {{-- kalau kamu pakai modal delete, letakkan include di sini --}}
+                                        @if (auth()->user()->hasRole('orang_tua') && $ddstLatest)
+                                            @include('shared.tumbuh_kembang.edit_orang_tua', [
+                                                'ddstTest' => $ddstLatest,
+                                            ])
+                                        @endif
+
+
                                         @include('shared.tumbuh_kembang.delete')
                                     @endforeach
 
@@ -166,8 +192,21 @@
     <!--end::Content wrapper-->
 
     <!--end:::Main-->
-
     <script>
+        let timer;
+        const input = document.querySelector('input[name="search"]');
+
+        if (input) {
+            input.addEventListener('keyup', function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    this.closest('form').submit();
+                }, 500);
+            });
+        }
+    </script>
+
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.querySelector('[data-antropometri-table-filter="search"]');
             const table = document.getElementById('tabel_antropometri');
@@ -199,5 +238,5 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 @endsection

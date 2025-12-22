@@ -31,12 +31,17 @@ class AntropometriController extends Controller
             return 'superadmin.data-tumbuh-kembang.index';
         }
 
+        if ($user->hasRole('orang_tua')) {
+            return 'orang_tua.data-tumbuh-kembang.index';
+        }
+
         abort(403, 'Role tidak dikenali');
     }
     public function index()
     {
         //
         $user = Auth::user();
+
         if ($user->hasRole('admin')) {
             $routeNameStore = 'admin.data-tumbuh-kembang.store';
             $routeDdstCreate = 'admin.ddst.create_from_antropometri';
@@ -55,11 +60,24 @@ class AntropometriController extends Controller
             $routeDdstCetak = 'superadmin.ddst.cetak_laporan';
             $routeAjaxAnakBySekolah = 'superadmin.ajax.sekolah.anak';
             $routeAntropometriDestroy = 'superadmin.antropometri.destroy';
+        } elseif ($user->hasRole('orang_tua')) {
+            // ✅ orang tua read-only (biasanya tidak input/hapus)
+            $routeNameStore = null;
+            $routeDdstCreate = 'orang_tua.ddst.create_from_antropometri';
+            $routeDdstCetak = 'orang_tua.ddst.cetak_laporan'; // kalau kamu punya
+            $routeAjaxAnakBySekolah = null;
+            $routeAntropometriDestroy = null;
         } else {
             abort(403, 'Role tidak dikenali');
         }
 
+
         $guruSekolahId = $user->hasRole('guru') ? $user->guru?->sekolahs_id : null;
+
+        $orangTuaId = null;
+        if ($user->hasRole('orang_tua')) {
+            $orangTuaId = optional($user->orangTua)->id; // pastikan relasi ini ada
+        }
 
         // kalau guru belum punya sekolah, tampilkan kosong
         if ($user->hasRole('guru') && !$guruSekolahId) {
@@ -79,19 +97,100 @@ class AntropometriController extends Controller
             ));
         }
 
+        // Kalau orang_tua belum terhubung ke orang_tuas => kosongkan aman
+        if ($user->hasRole('orang_tua') && !$orangTuaId) {
+            $dataAntropometri = Antropometri::whereRaw('1=0')->paginate(10);
+            $dataAnak = collect();
+            $dataSekolah = collect();
+
+            return view('shared.tumbuh_kembang.index', compact(
+                'dataAntropometri',
+                'dataAnak',
+                'routeNameStore',
+                'routeDdstCreate',
+                'routeDdstCetak',
+                'dataSekolah',
+                'routeAjaxAnakBySekolah',
+                'routeAntropometriDestroy'
+            ));
+        }
+
+        $sekolahId = request('sekolahs_id');
+        $anakId = request('anaks_id');
+        $search = request('search');
+
+        $searchDate = null;
+        if (!empty($search)) {
+            // support input: 21-01-2005
+            try {
+                $searchDate = \Carbon\Carbon::createFromFormat('d-m-Y', $search)->format('Y-m-d');
+            } catch (\Exception $e) {
+                $searchDate = null; // bukan tanggal d-m-Y, berarti anggap keyword biasa (nama anak)
+            }
+        }
+
+
+
         $dataAntropometri = Antropometri::with(['anak.sekolah', 'ddstTests'])
+
+            // Filter by role guru: hanya sekolahnya
             ->when($user->hasRole('guru'), function ($q) use ($guruSekolahId) {
                 $q->whereHas('anak', fn($qa) => $qa->where('sekolahs_id', $guruSekolahId));
             })
+
+            // Filter by role orang tua: hanya anaknya
+            ->when($user->hasRole('orang_tua'), function ($q) use ($orangTuaId) {
+                $q->whereHas('anak', fn($qa) => $qa->where('orang_tuas_id', $orangTuaId));
+            })
+
+            // Filter sekolah dropdown (admin/superadmin boleh; orang tua juga boleh tapi tetap aman karena sudah terkunci orang_tuas_id)
+            ->when(!empty($sekolahId), function ($q) use ($sekolahId) {
+                $q->whereHas('anak', fn($qa) => $qa->where('sekolahs_id', $sekolahId));
+            })
+
+            // Filter anak dropdown (opsional)
+            ->when(!empty($anakId), function ($q) use ($anakId) {
+                $q->where('anaks_id', $anakId);
+            })
+
+            ->when(!empty($search), function ($q) use ($search, $searchDate) {
+                $q->where(function ($qq) use ($search, $searchDate) {
+
+                    // cari nama anak
+                    $qq->whereHas('anak', function ($qa) use ($search) {
+                        $qa->where('nama_anak', 'like', "%{$search}%");
+                    });
+
+                    // kalau inputnya valid tanggal d-m-Y, tambahkan filter tanggal_ukur
+                    if ($searchDate) {
+                        $qq->orWhereDate('tanggal_ukur', $searchDate);
+                    }
+                });
+            })
+
+
             ->latest('tanggal_ukur')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         // dropdown & list anak untuk modal tambah
-        $dataAnak = Anak::when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
+        $dataAnak = Anak::query()
+            ->when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
+            ->when($user->hasRole('orang_tua'), fn($q) => $q->where('orang_tuas_id', $orangTuaId))
+            ->when(!empty($sekolahId), fn($q) => $q->where('sekolahs_id', $sekolahId))
             ->orderBy('nama_anak')
             ->get();
 
-        $dataSekolah = Sekolah::when($user->hasRole('guru'), fn($q) => $q->where('id', $guruSekolahId))
+        $dataSekolah = Sekolah::query()
+            ->when($user->hasRole('guru'), fn($q) => $q->where('id', $guruSekolahId))
+            ->when($user->hasRole('orang_tua'), function ($q) use ($orangTuaId) {
+                $q->whereIn(
+                    'id',
+                    Anak::where('orang_tuas_id', $orangTuaId)
+                        ->pluck('sekolahs_id')
+                        ->unique()
+                );
+            })
             ->orderBy('nama_sekolah')
             ->get();
 

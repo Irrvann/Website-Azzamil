@@ -196,6 +196,15 @@ Route::middleware(['auth', 'role:orang_tua'])
         Route::resource('data-tumbuh-kembang', AntropometriController::class)
             ->names('data-tumbuh-kembang');
 
+        Route::put('/ddst-tests/{ddstTest}/profile', [DdstTestController::class, 'updateProfile'])
+            ->name('ddst_tests.update_profile');
+
+        Route::get('antropometri/{antropometri}/ddst', [DdstTestController::class, 'createFromAntropometri'])
+            ->name('ddst.create_from_antropometri');
+
+        Route::get('antropometri/{antropometri}/ddst/cetak', [DdstTestController::class, 'cetakLaporan'])
+            ->name('ddst.cetak_laporan');
+
         Route::resource('data-raport', RaportController::class)
             ->names('raport');
 

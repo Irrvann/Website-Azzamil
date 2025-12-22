@@ -40,8 +40,15 @@
             <div id="kt_app_content_container" class="app-container container-xxl">
 
                 {{-- FORM dibuka di sini supaya antropometri & DDST disimpan bareng --}}
-                <form action="{{ route($routeNameStore, $antropometri->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                @php
+                    $isReadOnly = auth()->user()->hasRole('orang_tua') || empty($routeNameStore);
+                @endphp
+
+                <form
+                    @if (!$isReadOnly) action="{{ route($routeNameStore, $antropometri->id) }}" method="POST" enctype="multipart/form-data" @endif>
+                    @if (!$isReadOnly)
+                        @csrf
+                    @endif
 
                     <input type="hidden" name="usia_bulan" value="{{ $usiaBulan }}">
 
@@ -98,7 +105,7 @@
 
                                         {{-- tampil terkunci --}}
                                         <select class="form-select form-select-solid" disabled>
-                                            <option value="{{ $guruLogin?->id }}">
+                                            <option value="{{ $guruLogin?->id }}" @disabled($isReadOnly)>
                                                 {{ $guruLogin?->nama_guru ?? 'Guru tidak ditemukan' }}
                                             </option>
                                         </select>
@@ -107,7 +114,7 @@
                                         <input type="hidden" name="gurus_id" value="{{ old('gurus_id', $guruLogin?->id) }}">
                                     @else
                                         <select name="gurus_id" class="form-select form-select-solid" data-control="select2"
-                                            data-placeholder="Pilih Guru..." required>
+                                            data-placeholder="Pilih Guru..." required @disabled($isReadOnly)>
                                             <option value=""></option>
                                             @foreach ($listGuru as $guru)
                                                 <option value="{{ $guru->id }}"
@@ -128,7 +135,7 @@
                                     </div>
 
                                     <select name="reviewers_id" class="form-select form-select-solid" data-control="select2"
-                                        data-placeholder="Pilih Reviewer..." required>
+                                        data-placeholder="Pilih Reviewer..." required @disabled($isReadOnly)>
                                         <option value=""></option>
                                         @foreach ($listReviewer as $reviewer)
                                             <option value="{{ $reviewer->id }}"
@@ -142,10 +149,6 @@
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
 
-
-                                    @error('reviewers_id')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
 
                                     {{-- Tanggal ukur --}}
                                     <div class="mb-2 fw-semibold text-gray-600 mt-4">
@@ -169,14 +172,16 @@
                                     <div class="mb-2 fw-semibold text-gray-600">Berat Badan (kg)</div>
                                     <input type="number" step="0.01" name="berat_badan"
                                         class="form-control form-control-solid mb-3" placeholder="Contoh: 15.2"
-                                        value="{{ old('berat_badan', $antropometri->berat_badan) }}">
+                                        value="{{ old('berat_badan', $antropometri->berat_badan) }}"
+                                        @disabled($isReadOnly)>
                                     @error('berat_badan')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
 
                                     {{-- Status BB --}}
                                     <div class="mb-2 fw-semibold text-gray-600">Status Berat Badan</div>
-                                    <select name="status_bb" class="form-select form-select-solid mb-3">
+                                    <select name="status_bb" class="form-select form-select-solid mb-3"
+                                        @disabled($isReadOnly)>
                                         <option value="">Pilih Berat Badan...</option>
                                         <option value="normal"
                                             {{ old('status_bb', $antropometri->status_bb) == 'normal' ? 'selected' : '' }}>
@@ -195,14 +200,16 @@
                                     <div class="mb-2 fw-semibold text-gray-600">Tinggi Badan (cm)</div>
                                     <input type="number" step="0.01" name="tinggi_badan"
                                         class="form-control form-control-solid mb-3" placeholder="Contoh: 95.6"
-                                        value="{{ old('tinggi_badan', $antropometri->tinggi_badan) }}">
+                                        value="{{ old('tinggi_badan', $antropometri->tinggi_badan) }}"
+                                        @disabled($isReadOnly)>
                                     @error('tinggi_badan')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
 
                                     {{-- Status BB --}}
                                     <div class="mb-2 fw-semibold text-gray-600">Status Tinggi Badan</div>
-                                    <select name="status_tb" class="form-select form-select-solid mb-3">
+                                    <select name="status_tb" class="form-select form-select-solid mb-3"
+                                        @disabled($isReadOnly)>
                                         <option value="">Pilih Tinggi Badan...</option>
                                         <option value="normal"
                                             {{ old('status_tb', $antropometri->status_tb) == 'normal' ? 'selected' : '' }}>
@@ -221,7 +228,8 @@
                                     <div class="mb-2 fw-semibold text-gray-600">Lingkar Kepala (cm)</div>
                                     <input type="number" step="0.01" name="lingkar_kepala"
                                         class="form-control form-control-solid" placeholder="Contoh: 46.3"
-                                        value="{{ old('lingkar_kepala', $antropometri->lingkar_kepala) }}">
+                                        value="{{ old('lingkar_kepala', $antropometri->lingkar_kepala) }}"
+                                        @disabled($isReadOnly)>
                                     @error('lingkar_kepala')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -230,14 +238,16 @@
                                     <div class="mb-2 fw-semibold text-gray-600">Lingkar Lengan (cm)</div>
                                     <input type="number" step="0.01" name="lingkar_lengan"
                                         class="form-control form-control-solid mb-3" placeholder="Contoh: 13.5"
-                                        value="{{ old('lingkar_lengan', $antropometri->lingkar_lengan) }}">
+                                        value="{{ old('lingkar_lengan', $antropometri->lingkar_lengan) }}"
+                                        @disabled($isReadOnly)>
                                     @error('lingkar_lengan')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
 
                                     {{-- Status gizi --}}
                                     <div class="mb-2 fw-semibold text-gray-600">Status Gizi</div>
-                                    <select name="status_gizi" class="form-select form-select-solid mb-3">
+                                    <select name="status_gizi" class="form-select form-select-solid mb-3"
+                                        @disabled($isReadOnly)>
                                         <option value="">Pilih Status Gizi...</option>
                                         <option value="normal"
                                             {{ old('status_gizi', $antropometri->status_gizi) == 'normal' ? 'selected' : '' }}>
@@ -316,10 +326,12 @@
                                                 <td>
                                                     {{ $item->nama_item }}
                                                     @if ($isFuture)
-                                                        <span class="badge badge-light-primary ms-2">Item ke depan</span>
+                                                        <span class="badge badge-light-primary ms-2">Item ke
+                                                            depan</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ ucfirst(str_replace('_', ' ', $item->kategori_perkembangan)) }}</td>
+                                                <td>{{ ucfirst(str_replace('_', ' ', $item->kategori_perkembangan)) }}
+                                                </td>
 
                                                 <td class="text-center">
                                                     <div class="d-flex justify-content-center gap-3">
@@ -328,7 +340,7 @@
                                                                 name="items[{{ $item->id }}][status]"
                                                                 value="tercapai"
                                                                 {{ $currentStatus == 'tercapai' ? 'checked' : '' }}
-                                                                required>
+                                                                required @disabled($isReadOnly)>
                                                             <span class="form-check-label">Tercapai</span>
                                                         </label>
 
@@ -337,7 +349,7 @@
                                                                 name="items[{{ $item->id }}][status]"
                                                                 value="belum_tercapai"
                                                                 {{ $currentStatus == 'belum_tercapai' ? 'checked' : '' }}
-                                                                required>
+                                                                required @disabled($isReadOnly)>
                                                             <span class="form-check-label">Belum Tercapai</span>
                                                         </label>
 
@@ -346,7 +358,7 @@
                                                                 name="items[{{ $item->id }}][status]"
                                                                 value="ragu_ragu"
                                                                 {{ $currentStatus == 'ragu_ragu' ? 'checked' : '' }}
-                                                                required>
+                                                                required @disabled($isReadOnly)>
                                                             <span class="form-check-label">Ragu-Ragu</span>
                                                         </label>
                                                     </div>
@@ -355,7 +367,8 @@
                                                 <td>
                                                     <input type="text" name="items[{{ $item->id }}][keterangan]"
                                                         class="form-control form-control-sm"
-                                                        placeholder="Catatan (opsional)" value="{{ $ket }}">
+                                                        placeholder="Catatan (opsional)" value="{{ $ket }}"
+                                                        @disabled($isReadOnly)>
                                                 </td>
                                             </tr>
                                         @empty
@@ -380,7 +393,8 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="fw-semibold text-gray-700 mb-1">Semester</label>
-                                        <select name="semester" class="form-select form-select-solid">
+                                        <select name="semester" class="form-select form-select-solid"
+                                            @disabled($isReadOnly)>
                                             <option value="">Pilih Semester...</option>
                                             <option value="1"
                                                 {{ old('semester', $ddstTest->semester ?? '') == '1' ? 'selected' : '' }}>
@@ -402,7 +416,8 @@
                                         <label class="fw-semibold text-gray-700 mb-1">Tahun Ajaran</label>
                                         <input type="text" name="tahun_ajaran" class="form-control form-control-solid"
                                             placeholder="Contoh: 2024/2025"
-                                            value="{{ old('tahun_ajaran', $ddstTest->tahun_ajaran ?? '') }}">
+                                            value="{{ old('tahun_ajaran', $ddstTest->tahun_ajaran ?? '') }}"
+                                            @disabled($isReadOnly)>
                                         @error('tahun_ajaran')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -413,7 +428,8 @@
                             <div class="mb-5">
                                 <label class="fw-semibold text-gray-700 mb-1">Interpretasi DDST</label>
                                 <textarea name="interpretasi_ddst" rows="3" class="form-control form-control-solid"
-                                    placeholder="Contoh: Perkembangan sesuai usia, perlu pemantauan pada aspek motorik halus...">{{ old('interpretasi_ddst', $ddstTest->interpretasi_ddst ?? '') }}</textarea>
+                                    placeholder="Contoh: Perkembangan sesuai usia, perlu pemantauan pada aspek motorik halus..."
+                                    @disabled($isReadOnly)>{{ old('interpretasi_ddst', $ddstTest->interpretasi_ddst ?? '') }}</textarea>
                                 @error('interpretasi_ddst')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -423,17 +439,18 @@
                                 <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali
                                     Guru</label>
                                 <textarea name="profile_dan_karakter_yang_dikenali_guru" rows="3" class="form-control form-control-solid"
-                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter_yang_dikenali_guru', $ddstTest->profile_dan_karakter_yang_dikenali_guru ?? '') }}</textarea>
+                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya..." @disabled($isReadOnly)>{{ old('profile_dan_karakter_yang_dikenali_guru', $ddstTest->profile_dan_karakter_yang_dikenali_guru ?? '') }}</textarea>
                                 @error('profile_dan_karakter_yang_dikenali_guru')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="mb-5">
-                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali Orang
+                                <label class="fw-semibold text-gray-700 mb-1">Profile dan Karakter Anak yang Dikenali
+                                    Orang
                                     Tua</label>
                                 <textarea name="profile_dan_karakter_yang_dikenali_ortu" rows="3" class="form-control form-control-solid"
-                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya...">{{ old('profile_dan_karakter_yang_dikenali_ortu', $ddstTest->profile_dan_karakter_yang_dikenali_ortu ?? '') }}</textarea>
+                                    placeholder="Contoh: Anak aktif, mudah bergaul, suka bermain dengan teman sebaya..." @disabled($isReadOnly)>{{ old('profile_dan_karakter_yang_dikenali_ortu', $ddstTest->profile_dan_karakter_yang_dikenali_ortu ?? '') }}</textarea>
                                 @error('profile_dan_karakter_yang_dikenali_ortu')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -442,7 +459,8 @@
                             <div class="mb-5">
                                 <label class="fw-semibold text-gray-700 mb-1">Saran / Rujukan</label>
                                 <textarea name="saran_rujukan" rows="3" class="form-control form-control-solid"
-                                    placeholder="Contoh: Pantau ulang 3 bulan lagi, anjurkan stimulasi di rumah, rujuk ke spesialis bila...">{{ old('saran_rujukan', $ddstTest->saran_rujukan ?? '') }}</textarea>
+                                    placeholder="Contoh: Pantau ulang 3 bulan lagi, anjurkan stimulasi di rumah, rujuk ke spesialis bila..."
+                                    @disabled($isReadOnly)>{{ old('saran_rujukan', $ddstTest->saran_rujukan ?? '') }}</textarea>
                                 @error('saran_rujukan')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -451,9 +469,14 @@
                             <div class="mb-5">
                                 <label class="fw-semibold text-gray-700 mb-1">Foto DDST</label>
 
-                                <input type="file" name="fotos[]" id="fotosInput"
-                                    class="form-control form-control-solid" accept="image/*" multiple>
-
+                                @if (!$isReadOnly)
+                                    <input type="file" name="fotos[]" id="fotosInput"
+                                        class="form-control form-control-solid" accept="image/*" multiple>
+                                @else
+                                    <div class="text-muted fst-italic">
+                                        Upload foto hanya bisa dilakukan oleh guru/admin.
+                                    </div>
+                                @endif
                                 <div class="form-text">
                                     Format: JPG/PNG/WebP. Bisa pilih banyak foto sekaligus.
                                 </div>
@@ -477,12 +500,14 @@
                                             @foreach ($ddstTest->fotos as $foto)
                                                 <div class="foto-card position-relative border rounded p-2"
                                                     data-existing-id="{{ $foto->id }}">
+                                                    @if(!$isReadOnly)
                                                     <button type="button"
                                                         class="btn btn-icon btn-sm btn-light-danger position-absolute"
                                                         style="top:-10px; right:-10px; width:28px; height:28px; border-radius:999px;"
                                                         data-action="remove-existing" data-id="{{ $foto->id }}">
                                                         ✕
                                                     </button>
+                                                    @endif
 
                                                     <img src="{{ asset('storage/' . $foto->foto) }}" style="height:110px"
                                                         class="rounded" alt="Foto DDST">
@@ -507,19 +532,26 @@
                             <a href="{{ url()->previous() }}" class="btn btn-light me-3">
                                 Batal
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <span class="indicator-label">Simpan Antropometri & Tes DDST</span>
-                                <span class="indicator-progress">
-                                    Mohon tunggu...
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                </span>
-                            </button>
+                            @if (!empty($routeNameStore))
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="indicator-label">Simpan Antropometri & Tes DDST</span>
+                                    <span class="indicator-progress">
+                                        Mohon tunggu...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                    </span>
+                                </button>
+                            @else
+                                <div class="alert alert-info">
+                                    Data ini hanya bisa dilihat. Silakan hubungi guru jika ada perubahan.
+                                </div>
+                            @endif
                         </div>
                         <!--end::Card footer-->
                     </div>
                     <!--end::Card: Item DDST-->
 
                 </form>
+
                 {{-- end form --}}
 
             </div>
