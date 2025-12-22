@@ -210,6 +210,9 @@ Route::middleware(['auth', 'role:orang_tua'])
 
         Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
             ->name('raport.cetak-pdf');
+        
+        Route::put('/raport/{id}/refleksi-ortu', [RaportController::class, 'updateRefleksiOrtu'])
+            ->name('raport.update-refleksi-ortu');
     });
 
 require __DIR__ . '/auth.php';

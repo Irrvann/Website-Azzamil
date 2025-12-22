@@ -36,6 +36,10 @@ class RaportController extends Controller
             return 'guru.raport.index';
         }
 
+        if ($user->hasRole('orang_tua')) {
+            return 'orang_tua.raport.index';
+        }
+
         abort(403, 'Role tidak dikenali');
     }
 
@@ -45,12 +49,14 @@ class RaportController extends Controller
     {
         //
         $user = Auth::user();
+
         if ($user->hasRole('admin')) {
             $routeNameStore = 'admin.raport.store';
             $routeNameUpdate = 'admin.raport.update';
             $routeNameDelete = 'admin.raport.destroy';
             $routeCetakPdf = 'admin.raport.cetak-pdf';
             $routeAnakGuru = 'admin.ajax.sekolah.anak-guru';
+
         } elseif ($user->hasRole('super_admin')) {
             $routeNameStore = 'superadmin.raport.store';
             $routeNameUpdate = 'superadmin.raport.update';
@@ -58,16 +64,25 @@ class RaportController extends Controller
             $routeCetakPdf = 'superadmin.raport.cetak-pdf';
             $routeAnakGuru = 'superadmin.ajax.sekolah.anak-guru';
 
-
-        } elseif ($user->hasRole(roles: 'guru')) {
+        } elseif ($user->hasRole('guru')) {
             $routeNameStore = 'guru.raport.store';
             $routeNameUpdate = 'guru.raport.update';
             $routeNameDelete = 'guru.raport.destroy';
             $routeCetakPdf = 'guru.raport.cetak-pdf';
             $routeAnakGuru = 'guru.ajax.sekolah.anak-guru';
+
+        } elseif ($user->hasRole('orang_tua')) {
+            // orang tua cuma lihat & cetak
+            $routeNameStore = null;
+            $routeNameUpdate = null;
+            $routeNameDelete = null;
+            $routeCetakPdf = 'orang_tua.raport.cetak-pdf';
+            $routeAnakGuru = null;
+
         } else {
             abort(403, 'Role tidak dikenali');
         }
+
 
 
         $user = Auth::user();
@@ -96,34 +111,46 @@ class RaportController extends Controller
 
         $dataRaports = Raport::with(['anak.sekolah', 'guru', 'fotos'])
             ->when($user->hasRole('guru'), function ($q) use ($guruSekolahId) {
-                $q->whereHas('anak', function ($qa) use ($guruSekolahId) {
-                    $qa->where('sekolahs_id', $guruSekolahId);
-                });
+                $q->whereHas('anak', fn($qa) => $qa->where('sekolahs_id', $guruSekolahId));
+            })
+            ->when($user->hasRole('orang_tua'), function ($q) use ($user) {
+                $orangTuaId = $user->orangTua?->id; // sesuaikan relasi user->orangTua
+                if (!$orangTuaId) {
+                    $q->whereRaw('1=0');
+                    return;
+                }
+
+                $q->whereHas('anak', fn($qa) => $qa->where('orang_tuas_id', $orangTuaId));
+                // kalau kolom kamu namanya berbeda, sesuaikan (mis. orang_tua_id / orangTua_id)
             })
             ->latest()
             ->paginate(10);
 
+        $dataSekolah = collect();
+        $dataAnak = collect();
+        $dataGuru = collect();
 
-        $dataSekolah = Sekolah::when(
-            $user->hasRole('guru'),
-            fn($q) => $q->where('id', $guruSekolahId)
-        )->orderBy('nama_sekolah')->get();
+        if ($user->hasAnyRole(['admin', 'super_admin', 'guru'])) {
+            $dataSekolah = Sekolah::when(
+                $user->hasRole('guru'),
+                fn($q) => $q->where('id', $guruSekolahId)
+            )->orderBy('nama_sekolah')->get();
 
-        $dataAnak = Anak::with([
-            'antropometris' => function ($q) {
-                $q->latest('tanggal_ukur')->limit(1);
-            }
-        ])
-            ->when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
-            ->orderBy('nama_anak')
-            ->get();
+            $dataAnak = Anak::with([
+                'antropometris' => function ($q) {
+                    $q->latest('tanggal_ukur')->limit(1);
+                }
+            ])
+                ->when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
+                ->orderBy('nama_anak')
+                ->get();
 
 
-        $dataGuru = Guru::when(
-            $user->hasRole('guru'),
-            fn($q) => $q->where('id', $user->guru?->id)
-        )->orderBy('nama_guru')->get();
-
+            $dataGuru = Guru::when(
+                $user->hasRole('guru'),
+                fn($q) => $q->where('id', $user->guru?->id)
+            )->orderBy('nama_guru')->get();
+        }
 
 
         return view('shared.raport.index', compact('dataRaports', 'dataSekolah', 'dataAnak', 'dataGuru', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete', 'routeCetakPdf', 'routeAnakGuru'));
@@ -434,7 +461,7 @@ class RaportController extends Controller
         $fotosAgama = $raport->fotos->where('komponen', 'agama');
         $fotosJatiDiri = $raport->fotos->where('komponen', 'jati_diri');
         $fotosLiterasiSains = $raport->fotos->where('komponen', 'dasar_literasi_steam');
-        $fotosP5 = $raport->fotos->where('komponen', 'p5');
+        $fotosP5 = $raport->fotos->where('komponen', 'kokurikuler');
 
         $anak = $raport->anak;
         $data = compact(
@@ -446,6 +473,20 @@ class RaportController extends Controller
             'kepala_sekolah',
             'anak'
         );
+
+        $user = Auth::user();
+
+        if ($user->hasRole('orang_tua')) {
+            $orangTuaId = $user->orangTua?->id;
+            if (!$orangTuaId)
+                abort(403);
+
+            // pastikan raport ini milik anaknya
+            if ((int) ($raport->anak->orang_tuas_id ?? 0) !== (int) $orangTuaId) {
+                abort(403, 'Tidak boleh mencetak raport anak lain');
+            }
+        }
+
 
         $pdf = Pdf::loadView('shared.raport.pdf_template', $data)
             ->setPaper('A4', 'portrait');
@@ -502,6 +543,38 @@ class RaportController extends Controller
             'guru' => $guru,
         ]);
     }
+
+
+    public function updateRefleksiOrtu(Request $request, $id)
+    {
+        $user = Auth::user();
+
+        abort_unless($user->hasRole('orang_tua'), 403);
+
+        $raport = Raport::with('anak')->findOrFail($id);
+
+        // ✅ pastikan raport ini milik anaknya
+        $orangTuaId = $user->orangTua?->id; // sesuaikan relasi user->orangTua
+        if (!$orangTuaId)
+            abort(403);
+
+        if ((int) ($raport->anak->orang_tuas_id ?? 0) !== (int) $orangTuaId) {
+            abort(403, 'Tidak boleh mengubah raport anak lain');
+        }
+
+        $validated = $request->validate([
+            'refleksi_orang_tua' => 'nullable|string|max:880',
+        ]);
+
+        $raport->update([
+            'refleksi_orang_tua' => $validated['refleksi_orang_tua'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('orang_tua.raport.index')
+            ->with('success', 'Refleksi orang tua berhasil diperbarui.');
+    }
+
 
 
 }

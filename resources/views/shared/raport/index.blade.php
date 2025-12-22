@@ -56,18 +56,19 @@
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Toolbar-->
-                            <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modal_add_raport">
-                                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Raport
-                                </button>
-                            </div>
+                            @hasanyrole('admin|super_admin|guru')
+                                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modal_add_raport">
+                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Raport
+                                    </button>
+                                </div>
 
-                            {{-- Modal Tambah Raport --}}
-                            {{-- Kalau modalnya kamu simpan di partial, pakai: --}}
-                            @include('shared.raport.create')
-                            {{-- Karena kamu tadi kirim HTML modal lengkap di chat, di sini tinggal tempel modal itu --}}
-
+                                {{-- Modal Tambah Raport --}}
+                                {{-- Kalau modalnya kamu simpan di partial, pakai: --}}
+                                @include('shared.raport.create')
+                                {{-- Karena kamu tadi kirim HTML modal lengkap di chat, di sini tinggal tempel modal itu --}}
+                            @endhasanyrole
                         </div>
                         <!--end::Card toolbar-->
                     </div>
@@ -121,12 +122,22 @@
                                                             class="menu-link px-3">Detail</a>
                                                     </div>
 
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#modal_edit_raport_{{ $raport->id }}"
-                                                            class="menu-link px-3">Edit</a>
-                                                    </div>
+                                                    @role('orang_tua')
+                                                        <div class="menu-item px-3">
+                                                            <a href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_edit_refleksi_ortu_{{ $raport->id }}"
+                                                                class="menu-link px-3">Edit Refleksi</a>
+                                                        </div>
+                                                    @endrole
+
+                                                    @hasanyrole('admin|super_admin|guru')
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_edit_raport_{{ $raport->id }}"
+                                                                class="menu-link px-3">Edit</a>
+                                                        </div>
+                                                    @endhasanyrole
 
                                                     <!--end::Menu item-->
                                                     <!--begin::Menu item-->
@@ -159,7 +170,13 @@
                                             @include('shared.raport.detail')
                                             <!--end::Modal - Detail task-->
                                             <!--begin::Modal - Edit task-->
-                                            @include('shared.raport.edit')
+                                            @role('orang_tua')
+                                                @include('shared.raport.edit_refleksi_ortu')
+                                            @endrole
+
+                                            @hasanyrole('admin|super_admin|guru')
+                                                @include('shared.raport.edit')
+                                            @endhasanyrole
                                             <!--end::Modal - Edit task-->
                                             <!--begin::Modal - Delete task-->
                                             @hasanyrole('admin|super_admin')
