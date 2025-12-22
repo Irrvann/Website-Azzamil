@@ -210,7 +210,8 @@
 
                                 {{-- input hidden yang berisi semua file baru --}}
                                 <input type="file" id="store_foto_agama_dan_budi_pekerti_edit_{{ $raport->id }}"
-                                    name="foto_agama_dan_budi_pekerti[]" multiple style="display:none;">
+                                    name="foto_agama[]" multiple style="display:none;">
+
                             </div>
 
                             <small class="text-muted d-block">
