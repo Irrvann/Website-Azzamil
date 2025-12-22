@@ -2,6 +2,18 @@
 
 @section('content')
     <!--begin::Main-->
+    <style>
+        @media (min-width: 768px) {
+            .w-md-250px {
+                width: 250px !important;
+            }
+
+            .w-md-200px {
+                width: 200px !important;
+            }
+        }
+    </style>
+
 
     <!--begin::Content wrapper-->
     <div class="d-flex flex-column flex-column-fluid">
@@ -35,26 +47,24 @@
                 <div class="card">
                     <!--begin::Card header-->
                     <div class="card-header border-0 pt-6">
-                        <form method="GET" action="{{ url()->current() }}">
-                            <div class="card-title d-flex align-items-center gap-3">
-                                <!-- Search -->
-                                <div class="d-flex align-items-center position-relative my-1">
-                                    <!--begin::Search-->
-                                    <div class="d-flex align-items-center position-relative my-1">
-                                        <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                        <input type="text" name="search" value="{{ request('search') }}"
-                                            data-anak-table-filter="search"
-                                            class="form-control form-control-solid w-250px ps-13" placeholder="Cari Anak" />
+                        <form method="GET" action="{{ url()->current() }}" class="w-100">
+                            <div
+                                class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-3 w-100">
 
-                                    </div>
-                                    <!--end::Search-->
+                                {{-- Search --}}
+                                <div class="position-relative flex-grow-1 flex-md-grow-0">
+                                    <i
+                                        class="ki-duotone ki-magnifier fs-3 position-absolute ms-5 top-50 translate-middle-y">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                    <input type="text" name="search" value="{{ request('search') }}"
+                                        data-anak-table-filter="search"
+                                        class="form-control form-control-solid ps-13 w-100 w-md-250px"
+                                        placeholder="Cari Anak" />
                                 </div>
 
-                                <!-- Filter Sekolah -->
-                                <select name="sekolahs_id" class="form-select form-select-solid w-200px">
+                                {{-- Filter Sekolah --}}
+                                <select name="sekolahs_id" class="form-select form-select-solid w-100 w-md-200px">
                                     <option value="">Semua Sekolah</option>
                                     @foreach ($dataSekolah as $sekolah)
                                         <option value="{{ $sekolah->id }}" @selected(request('sekolahs_id') == $sekolah->id)>
@@ -63,29 +73,31 @@
                                     @endforeach
                                 </select>
 
-                                <button class="btn btn-primary">Filter</button>
-                                <a href="{{ url()->current() }}" class="btn btn-light">Reset</a>
+                                {{-- Buttons --}}
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button class="btn btn-primary flex-grow-1 flex-md-grow-0">Filter</button>
+                                    <a href="{{ url()->current() }}"
+                                        class="btn btn-light flex-grow-1 flex-md-grow-0">Reset</a>
+                                </div>
+
                             </div>
                         </form>
 
-                        <!--begin::Card toolbar-->
-                        <div class="card-toolbar">
-                            <!--begin::Toolbar-->
-                            @if(!auth()->user()->hasRole('orang_tua'))
-                            <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modal_add_anak">
-                                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Anak</button>
-                                <!--end::Add user-->
-                            </div>
+                        {{-- Card toolbar kanan (Tambah Anak) --}}
+                        <div class="card-toolbar mt-4 mt-md-0">
+                            @if (!auth()->user()->hasRole('orang_tua'))
+                                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modal_add_anak">
+                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Anak
+                                    </button>
+                                </div>
                             @endif
-                            <!--begin::Modal - Add task-->
-                            @include('shared.anak.create')
-                            <!--end::Modal - Add task-->
 
+                            @include('shared.anak.create')
                         </div>
-                        <!--end::Card toolbar-->
                     </div>
+
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body py-4">
@@ -211,22 +223,22 @@
                                                     </div>
 
                                                     <!--begin::Menu item-->
-                                                    @if(!auth()->user()->hasRole('orang_tua'))
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#modal_edit_anak_{{ $anak->id }}"
-                                                            class="menu-link px-3">Edit</a>
-                                                    </div>
+                                                    @if (!auth()->user()->hasRole('orang_tua'))
+                                                        <div class="menu-item px-3">
+                                                            <a href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_edit_anak_{{ $anak->id }}"
+                                                                class="menu-link px-3">Edit</a>
+                                                        </div>
 
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3" data-bs-toggle="modal"
-                                                            data-bs-target="#modal_delete_anak_{{ $anak->id }}">
-                                                            Delete
-                                                        </a>
+                                                        <!--end::Menu item-->
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="#" class="menu-link px-3" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_delete_anak_{{ $anak->id }}">
+                                                                Delete
+                                                            </a>
 
-                                                    </div>
+                                                        </div>
                                                     @endif
                                                     <!--end::Menu item-->
                                                 </div>
