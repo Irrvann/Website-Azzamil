@@ -45,7 +45,7 @@
                 <p class="text-lg text-gray-600 leading-relaxed">
                     Azzamil School memberikan pendidikan berkualitas dengan menggabungkan kurikulum nasional dan
                     nilai-nilai karakter. Kami berkomitmen untuk mengembangkan potensi setiap siswa menjadi pribadi yang
-                    unggul dan berintegritas.
+                    unggul.
                 </p>
 
                 <!-- <div class="flex flex-col sm:flex-row gap-4 pt-4">
