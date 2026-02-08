@@ -3415,7 +3415,7 @@
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="#" class="menu-link px-5">Profile Saya</a>
+                            <a href="{{ route('orang_tua.profile') }}" class="menu-link px-5">Profile Saya</a>
                         </div>
                         <!--end::Menu item-->
 

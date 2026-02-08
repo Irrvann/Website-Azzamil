@@ -496,14 +496,14 @@ ROLE: ORANG TUA
                         </div>
 
                         {{-- Profil --}}
-                        <div class="menu-item menu-accordion {{ request()->is('orang_tua/profil*') ? 'here show' : '' }}">
-                            <a class="menu-link {{ request()->is('orang_tua/profil*') ? 'active' : '' }}" href="#">
+                        <div class="menu-item menu-accordion {{ request()->is('orang_tua/profile*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('orang_tua/profile*') ? 'active' : '' }}" href="/orang_tua/profile">
                                 <span class="menu-icon">
                                     <i class="ki-duotone ki-setting-2 fs-2">
                                         <span class="path1"></span><span class="path2"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">Profil</span>
+                                <span class="menu-title">Profile</span>
                             </a>
                         </div>
                     @endrole

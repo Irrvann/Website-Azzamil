@@ -30,7 +30,6 @@ class OrangTuaController extends Controller
     }
     public function index(Request $request)
     {
-        //
         $user = Auth::user();
         if ($user->hasRole('admin')) {
             $routeNameStore = 'admin.orang_tua.store';
@@ -43,7 +42,7 @@ class OrangTuaController extends Controller
         } else {
             abort(403, 'Role tidak dikenali');
         }
-        $search = $request->query('search'); // ambil dari ?search=
+        $search = $request->query('search');
 
         $dataOrangtua = OrangTua::with('user')
             ->when($search, function ($q) use ($search) {
@@ -84,7 +83,7 @@ class OrangTuaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
         $request->validate(
             [
                 'nik_ayah' => [
@@ -126,14 +125,12 @@ class OrangTuaController extends Controller
             ]
         );
 
-        // membuat user
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'status' => 'aktif',
         ]);
 
-        // Assign role
         $user->assignRole('orang_tua');
 
         OrangTua::create([
@@ -170,11 +167,10 @@ class OrangTuaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
         $orangTua = OrangTua::with('user')->findOrFail($id);
         $user = $orangTua->user;
 
-        // Validasi
         $request->validate(
             [
                 'username' => [
@@ -235,14 +231,11 @@ class OrangTuaController extends Controller
             ]
         );
 
-        // Data user (tabel users)
         $userData = [
             'username' => $request->username,
-            // kalau kamu nanti punya field status di form edit guru, bisa tambahkan di sini
             'status' => $request->status,
         ];
 
-        // Kalau password diisi, update password
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
         }
@@ -251,7 +244,6 @@ class OrangTuaController extends Controller
             $user->update($userData);
         }
 
-        // Update data orang tua (tabel orang_tuas)
         $orangTua->update([
             'nik_ayah' => $request->nik_ayah,
             'nama_ayah' => $request->nama_ayah,
@@ -267,17 +259,12 @@ class OrangTuaController extends Controller
             ->with('success', 'Data orang tua berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        //
+
         $orangTua = OrangTua::with('user')->findOrFail($id);
 
-        // Hapus user → karena FK cascade, record admins juga ikut kehapus
         if ($orangTua->user) {
-            // opsional, tapi bagus → bersihkan role dulu
             $orangTua->user->syncRoles([]);
             $orangTua->user->delete();
         }
@@ -286,4 +273,106 @@ class OrangTuaController extends Controller
             ->route($this->getOrangTuaIndexRouteName())
             ->with('success', 'Data orang tua & user berhasil dihapus.');
     }
+
+
+    public function profileOrangTua()
+    {
+        $user = auth()->user()->load('orangTua');
+        $orangTua = $user->orangTua;
+        return view('orang_tua.profile.index', compact('user', 'orangTua'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user()->load('orangTua');
+
+        $validated = $request->validate([
+            'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($user->id)],
+
+            'nik_ayah' => ['nullable', 'string', 'max:30'],
+            'nama_ayah' => ['nullable', 'string', 'max:100'],
+            'no_hp_ayah' => ['nullable', 'string', 'max:20'],
+
+            'nik_ibu' => ['nullable', 'string', 'max:30'],
+            'nama_ibu' => ['nullable', 'string', 'max:100'],
+            'no_hp_ibu' => ['nullable', 'string', 'max:20'],
+
+            'alamat' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user->update([
+            'username' => $validated['username'],
+        ]);
+
+        $user->orangTua()->updateOrCreate(
+            ['users_id' => $user->id],
+            [
+                'nik_ayah' => $validated['nik_ayah'] ?? null,
+                'nama_ayah' => $validated['nama_ayah'] ?? null,
+                'no_hp_ayah' => $validated['no_hp_ayah'] ?? null,
+
+                'nik_ibu' => $validated['nik_ibu'] ?? null,
+                'nama_ibu' => $validated['nama_ibu'] ?? null,
+                'no_hp_ibu' => $validated['no_hp_ibu'] ?? null,
+
+                'alamat' => $validated['alamat'] ?? null,
+            ]
+        );
+
+        return redirect()
+            ->route('orang_tua.profile')
+            ->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // validasi manual supaya bisa redirect manual versi kamu
+        if (!$request->filled('current_password')) {
+            return redirect()->route('orang_tua.profile')
+                ->with('error', 'Password lama wajib diisi.')
+                ->with('error_field', 'current_password');
+        }
+
+        if (!$request->filled('password')) {
+            return redirect()->route('orang_tua.profile')
+                ->with('error', 'Password baru wajib diisi.')
+                ->with('error_field', 'password');
+        }
+
+        if (strlen($request->password) < 8) {
+            return redirect()->route('orang_tua.profile')
+                ->with('error', 'Password baru minimal 8 karakter.')
+                ->with('error_field', 'password');
+        }
+
+        if (!$request->filled('password_confirmation')) {
+            return redirect()->route('orang_tua.profile')
+                ->with('error', 'Konfirmasi password wajib diisi.')
+                ->with('error_field', 'password_confirmation');
+        }
+
+        if ($request->password !== $request->password_confirmation) {
+            return redirect()->route('orang_tua.profile')
+                ->with('error', 'Konfirmasi password tidak sama.')
+                ->with('error_field', 'password_confirmation');
+        }
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->route('orang_tua.profile')
+                ->with('error', 'Password lama tidak sesuai.')
+                ->with('error_field', 'current_password');
+        }
+
+        $user->forceFill([
+            'password' => $request->password, // auto hash via casts hashed
+        ])->save();
+
+        return redirect()->route('orang_tua.profile')
+            ->with('success', 'Password berhasil diperbarui.');
+    }
+
+
+
 }

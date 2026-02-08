@@ -210,9 +210,16 @@ Route::middleware(['auth', 'role:orang_tua'])
 
         Route::get('raport/{id}/cetak-pdf', [RaportController::class, 'cetakPdf'])
             ->name('raport.cetak-pdf');
-        
+
         Route::put('/raport/{id}/refleksi-ortu', [RaportController::class, 'updateRefleksiOrtu'])
             ->name('raport.update-refleksi-ortu');
+
+        Route::get('/profile', [OrangTuaController::class, 'profileOrangTua'])
+            ->name('profile');
+
+        Route::put('/profile', [OrangTuaController::class, 'updateProfile'])->name('profile.update');
+
+        Route::put('/profile/password', [OrangTuaController::class, 'updatePassword'])->name('profile.password');
     });
 
 require __DIR__ . '/auth.php';
