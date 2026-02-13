@@ -9,13 +9,12 @@
                     <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
                         Dashboard Orang Tua
                     </h1>
-                    
+
                 </div>
 
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
                     <!-- Filter Anak (submit otomatis via GET) -->
-                    <form method="GET" action="{{ route('orang_tua.dashboard') }}"
-                        class="d-flex align-items-center gap-3">
+                    <form method="GET" action="{{ route('orang_tua.dashboard') }}" class="d-flex align-items-center gap-3">
                         <div class="d-flex align-items-center">
                             <label class="fs-7 fw-semibold text-gray-600 me-3 d-none d-md-inline">Pilih Anak</label>
                             <select name="anak_id" class="form-select form-select-sm w-250px" data-control="select2"
@@ -405,15 +404,23 @@
                                                     <span class="fw-bold text-gray-900">Kepala Sekolah</span>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
-                                                    <div class="d-flex justify-content-between">
+
+                                                    <div class="d-flex justify-content-between align-items-start">
                                                         <span class="text-gray-600 fw-semibold">Nama</span>
-                                                        <span class="text-gray-800 fw-bold">-</span>
+                                                        <span class="text-gray-800 fw-bold text-end ms-3">
+                                                            -
+                                                        </span>
                                                     </div>
-                                                    <div class="d-flex justify-content-between">
+
+                                                    <div class="d-flex justify-content-between align-items-start">
                                                         <span class="text-gray-600 fw-semibold">NIP</span>
-                                                        <span class="text-gray-800 fw-bold">-</span>
+                                                        <span class="text-gray-800 fw-bold text-end ms-3">
+                                                            -
+                                                        </span>
                                                     </div>
+
                                                 </div>
+
                                             </div>
                                         </div>
 
@@ -426,18 +433,20 @@
                                                     </i>
                                                     <span class="fw-bold text-gray-900">Guru / Wali Kelas</span>
                                                 </div>
-                                                <div class="d-flex flex-column gap-2">
-                                                    <div class="d-flex justify-content-between">
-                                                        <span class="text-gray-600 fw-semibold">Nama</span>
-                                                        <span
-                                                            class="text-gray-800 fw-bold">{{ $guruTerbaru->nama_guru ?? '-' }}</span>
-                                                    </div>
-                                                    <div class="d-flex justify-content-between">
-                                                        <span class="text-gray-600 fw-semibold">NIP</span>
-                                                        <span
-                                                            class="text-gray-800 fw-bold">{{ $guruTerbaru->nipa ?? '-' }}</span>
-                                                    </div>
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <span class="text-gray-600 fw-semibold">Nama</span>
+                                                    <span class="text-gray-800 fw-bold text-end ms-3">
+                                                        {{ $guruTerbaru->nama_guru ?? '-' }}
+                                                    </span>
                                                 </div>
+
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <span class="text-gray-600 fw-semibold">NIP</span>
+                                                    <span class="text-gray-800 fw-bold text-end ms-3">
+                                                        {{ $guruTerbaru->nipa ?? '-' }}
+                                                    </span>
+                                                </div>
+
                                             </div>
                                         </div>
 
