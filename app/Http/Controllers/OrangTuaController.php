@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\OrangTua;
 use App\Models\User;
+use App\Models\Anak;
+use App\Models\Raport;
+use App\Models\Antropometri;
+use App\Models\DdstTest;
+use App\Models\DdstTestItem;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+
 
 class OrangTuaController extends Controller
 {
@@ -66,9 +74,130 @@ class OrangTuaController extends Controller
         return view('shared.orangtua.index', compact('dataOrangtua', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
 
-    public function dashboardOrangTua()
+    public function dashboardOrangTua(Request $request)
     {
-        return view('orang_tua.dashboard.index');
+
+        $orangTuaId = optional(Auth::user())->orang_tuas_id ?? optional(Auth::user())->orangTua->id ?? null;
+
+        $anakList = Anak::query()
+            ->with('sekolah')
+            ->when($orangTuaId, fn($q) => $q->where('orang_tuas_id', $orangTuaId))
+            ->orderBy('nama_anak')
+            ->get();
+
+        $selectedAnakId = $request->get('anak_id') ?? optional($anakList->first())->id;
+        $anak = $selectedAnakId
+            ? Anak::with(['sekolah', 'orangTua'])->find($selectedAnakId)
+            : null;
+
+        $raportTerbaru = $anak
+            ? Raport::with(['guru', 'sekolah'])
+                ->where('anak_id', $anak->id)
+                ->orderByDesc('tahun_ajaran')
+                ->orderByDesc('semester')
+                ->latest('id')
+                ->first()
+            : null;
+
+        $antroTerbaru = $anak
+            ? Antropometri::where('anaks_id', $anak->id)->orderByDesc('tanggal_ukur')->first()
+            : null;
+
+       $ddstTestTerbaru = $anak
+            ? DdstTest::where('anaks_id', $anak->id)->orderByDesc('tanggal_test')->first()
+            : null;
+
+
+        $ddstRaguTotal = 0;
+        $ddstRaguPerDomain = collect();
+
+        if ($ddstTestTerbaru) {
+
+            $ddstRaguTotal = DdstTestItem::where('ddst_tests_id', $ddstTestTerbaru->id)
+                ->where('status', 'belum_tercapai') // ✅ FIX
+                ->count();
+
+            $ddstRaguPerDomain = DdstTestItem::query()
+                ->select('ddst_items.kategori_perkembangan', DB::raw('COUNT(*) as total'))
+                ->join('ddst_items', 'ddst_items.id', '=', 'ddst_test_items.ddst_items_id')
+                ->where('ddst_test_items.ddst_tests_id', $ddstTestTerbaru->id)
+                ->where('ddst_test_items.status', 'belum_tercapai') // ✅ FIX
+                ->groupBy('ddst_items.kategori_perkembangan')
+                ->orderBy('ddst_items.kategori_perkembangan')
+                ->get();
+        }
+
+        $kehadiran = [
+            'sakit' => (int) optional($raportTerbaru)->sakit,
+            'izin' => (int) optional($raportTerbaru)->izin,
+            'tanpa_keterangan' => (int) optional($raportTerbaru)->tanpa_keterangan,
+
+        ];
+
+        $refleksiGuru = optional($raportTerbaru)->refleksi_guru;
+
+
+        $antroSeries = collect();
+        if ($anak) {
+            $antroSeries = Antropometri::where('anaks_id', $anak->id)
+                ->orderBy('tanggal_ukur')
+                ->get()
+                ->map(function ($a) use ($anak) {
+                    $usiaBulan = null;
+                    if ($anak->tanggal_lahir && $a->tanggal_ukur) {
+                        $usiaBulan = (int) Carbon::parse($anak->tanggal_lahir)->diffInMonths(Carbon::parse($a->tanggal_ukur));
+                    }
+
+                    return [
+                        'tanggal' => optional($a->tanggal_ukur)->format('Y-m-d'),
+                        'usia_bulan' => $usiaBulan,
+                        'berat_badan' => (float) $a->berat_badan,
+                        'tinggi_badan' => (float) $a->tinggi_badan,
+                        'status_gizi' => $a->status_gizi,
+                        'status_bb' => $a->status_bb,
+                        'status_tb' => $a->status_tb,
+                    ];
+                });
+        }
+
+        $delayBulanan = collect();
+        if ($anak) {
+            $delayBulanan = DdstTestItem::query()
+                ->select(
+                    DB::raw("DATE_FORMAT(ddst_tests.tanggal_test, '%Y-%m') as ym"),
+                    DB::raw('COUNT(ddst_test_items.id) as total')
+                )
+                ->join('ddst_tests', 'ddst_tests.id', '=', 'ddst_test_items.ddst_tests_id')
+                ->where('ddst_tests.anaks_id', $anak->id)
+                ->where('ddst_test_items.status', 'belum_tercapai')
+                ->groupBy('ym')
+                ->orderBy('ym')
+                ->get()
+                ->map(fn($r) => ['ym' => $r->ym, 'total' => (int) $r->total]);
+        }
+
+        return view('orang_tua.dashboard.index', [
+            'anakList' => $anakList,
+            'anak' => $anak,
+            'selectedAnakId' => $selectedAnakId,
+
+            'raportTerbaru' => $raportTerbaru,
+            'guruTerbaru' => optional($raportTerbaru)->guru,
+            'sekolahTerbaru' => optional($raportTerbaru)->sekolah,
+
+            'antroTerbaru' => $antroTerbaru,
+
+            'ddstTerbaru' => $ddstTestTerbaru,
+            'ddstRaguTotal' => $ddstRaguTotal,
+            'ddstRaguPerDomain' => $ddstRaguPerDomain,
+
+            'kehadiran' => $kehadiran,
+            'refleksiGuru' => $refleksiGuru,
+
+            'antroSeries' => $antroSeries,
+            'delayBulanan' => $delayBulanan,
+        ]);
+        
     }
     /**
      * Show the form for creating a new resource.
