@@ -1,7 +1,7 @@
 <!--begin::Header-->
 <div id="kt_app_header" class="app-header" data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}"
     data-kt-sticky-name="app-header-minimize" data-kt-sticky-offset="{default: '200px', lg: '0'}"
-    data-kt-sticky-animation="false" style="background-color:#0D0E12;">
+    data-kt-sticky-animation="false">
 
 
 

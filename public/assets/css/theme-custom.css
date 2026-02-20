@@ -1,0 +1,417 @@
+/* ============================================================
+   Azzamil School – Adaptive Light/Dark Theme
+   Sidebar & Header otomatis ikut mode light / dark
+   Mode dikendalikan oleh data-bs-theme di tag <html>
+   ============================================================ */
+
+/* ——————————————————————————————
+   SHARED: Variabel Warna Tetap (Gold Accent)
+—————————————————————————————— */
+:root {
+    --az-gold-600: #b8892a;
+    --az-gold-500: #d4a843;
+    --az-gold-400: #e8c06a;
+    --az-gold-300: #f0d08e;
+    --az-gold-100: #fdf6e3;
+
+    --az-transition: background-color 0.25s ease, color 0.2s ease, border-color 0.25s ease;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE  (data-bs-theme="dark")
+   Semua area: Deep Navy Blue + Gold Accent
+══════════════════════════════════════════════════════════════ */
+[data-bs-theme="dark"] {
+    /* Navy palette */
+    --az-navy-950: #050d1a;
+    --az-navy-900: #0a1628;
+    --az-navy-800: #0f1f3d;
+    --az-navy-700: #162b52;
+    --az-navy-600: #1d3768;
+
+    /* Background konten utama */
+    --az-body-bg: #0d1b2e;
+    --az-card-bg: #0f2040;
+    --az-card-border: #1d3768;
+    --az-input-bg: #0a1830;
+    --az-input-border: #1d3768;
+    --az-table-stripe: rgba(22, 43, 82, 0.5);
+
+    /* Sidebar */
+    --az-sidebar-bg: #0a1628;
+    --az-sidebar-logo-bg: #050d1a;
+    --az-sidebar-border: #162b52;
+    --az-sidebar-text: #b8c8e8;
+    --az-sidebar-text-dim: #5a7299;
+    --az-sidebar-hover-bg: #162b52;
+    --az-sidebar-active-bg: #0f1f3d;
+    --az-sidebar-active-border: var(--az-gold-500);
+
+    /* Header */
+    --az-header-bg: #050d1a;
+    --az-header-border: #162b52;
+    --az-header-title: var(--az-gold-300);
+    --az-header-icon: #4a6490;
+    --az-header-icon-hover-bg: #0f1f3d;
+}
+
+/* Body & root background – navy */
+[data-bs-theme="dark"] body,
+[data-bs-theme="dark"] .app-root,
+[data-bs-theme="dark"] #kt_app_root {
+    background-color: var(--az-body-bg) !important;
+}
+
+/* Area konten utama */
+[data-bs-theme="dark"] #kt_app_main,
+[data-bs-theme="dark"] .app-main,
+[data-bs-theme="dark"] #kt_app_content,
+[data-bs-theme="dark"] .app-content,
+[data-bs-theme="dark"] #kt_app_content_container {
+    background-color: var(--az-body-bg) !important;
+}
+
+/* Toolbar */
+[data-bs-theme="dark"] #kt_app_toolbar,
+[data-bs-theme="dark"] .app-toolbar {
+    background-color: var(--az-body-bg) !important;
+    border-bottom-color: var(--az-card-border) !important;
+}
+
+/* Card & Panel */
+[data-bs-theme="dark"] .card {
+    background-color: var(--az-card-bg) !important;
+    border-color: var(--az-card-border) !important;
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: rgba(10, 24, 48, 0.7) !important;
+    border-bottom-color: var(--az-card-border) !important;
+}
+
+[data-bs-theme="dark"] .card-footer {
+    background-color: rgba(10, 24, 48, 0.5) !important;
+    border-top-color: var(--az-card-border) !important;
+}
+
+/* Form inputs */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: var(--az-input-bg) !important;
+    border-color: var(--az-input-border) !important;
+    color: #c8d8f0 !important;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: #5a7299 !important;
+}
+
+/* Table */
+[data-bs-theme="dark"] .table {
+    color: #b8c8e8 !important;
+    border-color: var(--az-card-border) !important;
+}
+
+[data-bs-theme="dark"] .table thead th,
+[data-bs-theme="dark"] .table th {
+    border-color: var(--az-card-border) !important;
+    color: #d8e8ff !important;
+    background-color: rgba(10, 24, 48, 0.5) !important;
+}
+
+[data-bs-theme="dark"] .table tbody tr td {
+    border-color: rgba(22, 43, 82, 0.5) !important;
+}
+
+[data-bs-theme="dark"] .table-striped>tbody>tr:nth-of-type(odd)>* {
+    background-color: rgba(22, 43, 82, 0.3) !important;
+}
+
+/* Modal */
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--az-card-bg) !important;
+    border-color: var(--az-card-border) !important;
+}
+
+[data-bs-theme="dark"] .modal-header {
+    border-bottom-color: var(--az-card-border) !important;
+}
+
+[data-bs-theme="dark"] .modal-footer {
+    border-top-color: var(--az-card-border) !important;
+}
+
+/* Dropdown */
+[data-bs-theme="dark"] .dropdown-menu {
+    background-color: var(--az-card-bg) !important;
+    border-color: var(--az-card-border) !important;
+}
+
+[data-bs-theme="dark"] .dropdown-item:hover,
+[data-bs-theme="dark"] .dropdown-item:focus {
+    background-color: var(--az-navy-700) !important;
+    color: var(--az-gold-300) !important;
+}
+
+/* Separator */
+[data-bs-theme="dark"] .separator {
+    border-color: var(--az-card-border) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   LIGHT MODE  (data-bs-theme="light")
+   Sidebar & Header: Putih bersih + Gold Accent
+══════════════════════════════════════════════════════════════ */
+[data-bs-theme="light"] {
+    --az-sidebar-bg: #ffffff;
+    --az-sidebar-logo-bg: #f8f9fc;
+    --az-sidebar-border: #e5e9f2;
+    --az-sidebar-text: #3d4f6e;
+    --az-sidebar-text-dim: #8fa3c8;
+    --az-sidebar-hover-bg: #f0f4fb;
+    --az-sidebar-active-bg: #eef3ff;
+    --az-sidebar-active-border: var(--az-gold-500);
+
+    --az-header-bg: #ffffff;
+    --az-header-border: #e5e9f2;
+    --az-header-title: #1e2b45;
+    --az-header-icon: #8fa3c8;
+    --az-header-icon-hover-bg: #f0f4fb;
+}
+
+
+/* ——————————————————————————————
+   SIDEBAR – Struktur Utama
+—————————————————————————————— */
+
+.app-sidebar {
+    background-color: var(--az-sidebar-bg) !important;
+    border-right: 1px solid var(--az-sidebar-border) !important;
+    transition: var(--az-transition);
+}
+
+.app-sidebar-logo {
+    background-color: var(--az-sidebar-logo-bg) !important;
+    border-bottom: 1px solid var(--az-sidebar-border) !important;
+    transition: var(--az-transition);
+}
+
+.app-sidebar-logo-text {
+    color: var(--az-gold-400) !important;
+    letter-spacing: 0.03em;
+}
+
+[data-bs-theme="light"] .app-sidebar-logo-text {
+    color: var(--az-gold-600) !important;
+}
+
+.app-sidebar-toggle {
+    background-color: var(--az-sidebar-logo-bg) !important;
+    border-color: var(--az-sidebar-border) !important;
+    color: var(--az-sidebar-text-dim) !important;
+    transition: var(--az-transition);
+}
+
+.app-sidebar-toggle:hover {
+    background-color: var(--az-gold-500) !important;
+    color: #ffffff !important;
+    border-color: var(--az-gold-500) !important;
+}
+
+
+/* ——————————————————————————————
+   SIDEBAR MENU
+—————————————————————————————— */
+
+.app-sidebar .menu-heading {
+    color: var(--az-sidebar-text-dim) !important;
+    letter-spacing: 0.08em;
+    font-size: 0.68rem !important;
+}
+
+.app-sidebar .menu-title {
+    color: var(--az-sidebar-text) !important;
+    transition: color 0.15s ease;
+}
+
+.app-sidebar .menu-icon i,
+.app-sidebar .menu-icon .svg-icon {
+    color: var(--az-sidebar-text-dim) !important;
+    transition: color 0.15s ease;
+}
+
+.app-sidebar .menu-item .menu-link:not(.active):hover {
+    background-color: var(--az-sidebar-hover-bg) !important;
+    border-radius: 8px;
+}
+
+.app-sidebar .menu-item .menu-link:not(.active):hover .menu-title {
+    color: var(--az-gold-500) !important;
+}
+
+.app-sidebar .menu-item .menu-link:not(.active):hover .menu-icon i,
+.app-sidebar .menu-item .menu-link:not(.active):hover .menu-icon .svg-icon {
+    color: var(--az-gold-400) !important;
+}
+
+.app-sidebar .menu-item .menu-link.active {
+    background-color: var(--az-sidebar-active-bg) !important;
+    border-radius: 8px !important;
+    border-left: 3px solid var(--az-sidebar-active-border) !important;
+}
+
+.app-sidebar .menu-item .menu-link.active .menu-title {
+    color: var(--az-gold-500) !important;
+    font-weight: 600 !important;
+}
+
+[data-bs-theme="light"] .app-sidebar .menu-item .menu-link.active .menu-title {
+    color: var(--az-gold-600) !important;
+}
+
+.app-sidebar .menu-item .menu-link.active .menu-icon i,
+.app-sidebar .menu-item .menu-link.active .menu-icon .svg-icon {
+    color: var(--az-gold-500) !important;
+}
+
+
+/* ——————————————————————————————
+   HEADER
+—————————————————————————————— */
+
+#kt_app_header {
+    background-color: var(--az-header-bg) !important;
+    border-bottom: 1px solid var(--az-header-border) !important;
+    transition: var(--az-transition);
+}
+
+[data-bs-theme="dark"] #kt_app_header {
+    box-shadow: 0 1px 12px rgba(5, 13, 26, 0.6) !important;
+}
+
+[data-bs-theme="light"] #kt_app_header {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06) !important;
+}
+
+#kt_app_header .menu-title {
+    color: var(--az-header-title) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+}
+
+#kt_app_header .btn-icon {
+    color: var(--az-header-icon) !important;
+    transition: var(--az-transition);
+}
+
+#kt_app_header .btn-icon:hover,
+#kt_app_header .btn-active-color-primary:hover {
+    background-color: var(--az-header-icon-hover-bg) !important;
+    color: var(--az-gold-500) !important;
+}
+
+
+/* ——————————————————————————————
+   TOMBOL PRIMARY (Warm Gold – semua mode)
+—————————————————————————————— */
+
+.btn-primary,
+.btn.btn-primary {
+    background-color: var(--az-gold-500) !important;
+    border-color: var(--az-gold-500) !important;
+    color: #1a2744 !important;
+    font-weight: 600 !important;
+}
+
+.btn-primary:hover,
+.btn.btn-primary:hover {
+    background-color: var(--az-gold-400) !important;
+    border-color: var(--az-gold-400) !important;
+    color: #1a2744 !important;
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--az-gold-600) !important;
+    border-color: var(--az-gold-600) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(212, 168, 67, 0.3) !important;
+}
+
+.btn-light-primary {
+    background-color: var(--az-gold-100) !important;
+    color: var(--az-gold-600) !important;
+}
+
+.btn-light-primary:hover {
+    background-color: var(--az-gold-500) !important;
+    color: #1a2744 !important;
+}
+
+
+/* ——————————————————————————————
+   WARNA PRIMER GLOBAL
+—————————————————————————————— */
+
+.text-primary {
+    color: var(--az-gold-500) !important;
+}
+
+a.text-primary:hover {
+    color: var(--az-gold-400) !important;
+}
+
+.bg-primary {
+    background-color: var(--az-gold-500) !important;
+}
+
+.border-primary {
+    border-color: var(--az-gold-500) !important;
+}
+
+.nav-line-tabs .nav-link.active,
+.nav-line-tabs .nav-link:hover {
+    color: var(--az-gold-500) !important;
+    border-bottom-color: var(--az-gold-500) !important;
+}
+
+.text-active-primary.active,
+.text-active-primary:hover {
+    color: var(--az-gold-500) !important;
+}
+
+
+/* ——————————————————————————————
+   BADGE & FORM FOCUS
+—————————————————————————————— */
+
+.badge-primary,
+.badge.badge-primary {
+    background-color: var(--az-gold-500) !important;
+    color: #1a2744 !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--az-gold-400) !important;
+    box-shadow: 0 0 0 0.2rem rgba(212, 168, 67, 0.18) !important;
+}
+
+
+/* ——————————————————————————————
+   SPINNER / SWEETALERT
+—————————————————————————————— */
+
+.spinner-border.text-primary {
+    color: var(--az-gold-500) !important;
+}
+
+.text-primary.fs-6 {
+    color: var(--az-gold-400) !important;
+}
+
+.colored-toast.swal2-icon-success {
+    border-left: 4px solid var(--az-gold-500) !important;
+}

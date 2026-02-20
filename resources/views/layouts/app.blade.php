@@ -41,6 +41,9 @@ License: For each use you must have a valid license purchased only from above li
     <link href="{{ asset('/template_admin/demo1/assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet"
         type="text/css" />
     <link href="{{ asset('/template_admin/demo1/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <!--begin::Custom Teal Theme Override-->
+    <link href="{{ asset('/assets/css/theme-custom.css') }}" rel="stylesheet" type="text/css" />
+    <!--end::Custom Teal Theme Override-->
 
     <!--end::Global Stylesheets Bundle-->
     <script>
