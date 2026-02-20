@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    Azzamil School – Adaptive Light/Dark Theme
    Sidebar & Header otomatis ikut mode light / dark
    Mode dikendalikan oleh data-bs-theme di tag <html>
@@ -414,4 +414,222 @@ a.text-primary:hover {
 
 .colored-toast.swal2-icon-success {
     border-left: 4px solid var(--az-gold-500) !important;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   TABLE â€“ Elegant Styling (table-field-colored)
+   Berlaku untuk semua tabel di seluruh halaman logged-in
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Variabel tabel per mode
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+[data-bs-theme="dark"] {
+    --az-tbl-head-bg:     #091423;
+    --az-tbl-head-text:   #d4a843;
+    --az-tbl-head-border: #162b52;
+    --az-tbl-row-bg:      transparent;
+    --az-tbl-row-hover:   rgba(22, 43, 82, 0.45);
+    --az-tbl-row-stripe:  rgba(15, 31, 61, 0.6);
+    --az-tbl-border:      rgba(22, 43, 82, 0.7);
+    --az-tbl-text:        #b8c8e8;
+    --az-tbl-text-muted:  #5a7299;
+}
+
+[data-bs-theme="light"] {
+    --az-tbl-head-bg:     #f4f6fb;
+    --az-tbl-head-text:   #b8892a;
+    --az-tbl-head-border: #dce3f0;
+    --az-tbl-row-bg:      #ffffff;
+    --az-tbl-row-hover:   #fdf6e3;
+    --az-tbl-row-stripe:  #f9f7f0;
+    --az-tbl-border:      #e5e9f4;
+    --az-tbl-text:        #3d4f6e;
+    --az-tbl-text-muted:  #8fa3c8;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Wrapper scroll horizontal
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table-responsive {
+    overflow-x: auto !important;
+    border: 1px solid var(--az-tbl-head-border);
+    border-radius: 10px;
+}
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Base table
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table-field-colored {
+    width: 100%;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    font-size: 0.875rem;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   THEAD â€“ header elegan dengan gold text
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table-field-colored thead tr {
+    background-color: var(--az-tbl-head-bg) !important;
+}
+
+.table-field-colored thead th {
+    background-color: var(--az-tbl-head-bg) !important;
+    color: var(--az-tbl-head-text) !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.25rem !important;
+    border-bottom: 2px solid var(--az-tbl-head-border) !important;
+    border-top: none !important;
+    white-space: nowrap;
+}
+
+/* Baris pertama thead â€” sudut melengkung */
+.table-field-colored thead th:first-child {
+    border-radius: 8px 0 0 0;
+}
+.table-field-colored thead th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   TBODY â€“ baris data
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+
+.table-field-colored tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table-field-colored tbody tr td {
+    background-color: var(--az-tbl-row-bg) !important;
+    color: var(--az-tbl-text) !important;
+    padding: 0.85rem 1.25rem !important;
+    border-bottom: 1px solid var(--az-tbl-border) !important;
+    vertical-align: middle;
+}
+
+/* Hover baris */
+.table-field-colored tbody tr:hover td {
+    background-color: var(--az-tbl-row-hover) !important;
+}
+
+/* Baris terakhir â€“ hapus border bawah */
+.table-field-colored tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Baris dashed (table-row-dashed) â€” lebih subtle
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table.table-row-dashed tbody tr td {
+    border-bottom-style: dashed !important;
+    border-bottom-color: var(--az-tbl-border) !important;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Teks muted di tbody
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table-field-colored .text-muted,
+.table-field-colored .text-gray-500,
+.table-field-colored .text-gray-600 {
+    color: var(--az-tbl-text-muted) !important;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Kolom aksi (text-end) â€” Actions button
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table-field-colored td .btn-light {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+}
+
+[data-bs-theme="dark"] .table-field-colored td .btn-light {
+    background-color: #162b52 !important;
+    border-color: #1d3768 !important;
+    color: #b8c8e8 !important;
+}
+
+[data-bs-theme="dark"] .table-field-colored td .btn-light:hover,
+[data-bs-theme="dark"] .table-field-colored td .btn-active-light-primary:hover {
+    background-color: var(--az-gold-500) !important;
+    color: #1a2744 !important;
+    border-color: var(--az-gold-500) !important;
+}
+
+[data-bs-theme="light"] .table-field-colored td .btn-light {
+    background-color: #f0f4fb !important;
+    border-color: #dce3f0 !important;
+    color: #3d4f6e !important;
+}
+
+[data-bs-theme="light"] .table-field-colored td .btn-light:hover {
+    background-color: var(--az-gold-500) !important;
+    color: #1a2744 !important;
+    border-color: var(--az-gold-500) !important;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Badge di dalam tabel
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+[data-bs-theme="dark"] .table-field-colored .badge-light-success {
+    background-color: rgba(39, 174, 96, 0.15) !important;
+    color: #5edfa5 !important;
+}
+
+[data-bs-theme="dark"] .table-field-colored .badge-light-danger {
+    background-color: rgba(231, 76, 60, 0.15) !important;
+    color: #f28b82 !important;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   "Tidak ada data" baris kosong
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.table-field-colored #row-no-data td {
+    color: var(--az-tbl-text-muted) !important;
+    font-style: italic;
+    padding: 2rem 1.25rem !important;
+}
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   Notifikasi SweetAlert â€“ styling
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+.colored-toast {
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+}
+
+.colored-toast.swal2-title {
+    color: white !important;
+    font-size: 14px;
+}
+
+
+/* â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+   TABEL â€“ Garis Tepi (Border)
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€” */
+
+/* Border luar tabel */
+/* Border luar tabel sudah dipindah ke .table-responsive di atas */
+/* .table-field-colored {
+    border: 1px solid var(--az-tbl-head-border) !important;
+    border-radius: 10px;
+} */
+
+/* Border antar kolom (vertikal) di header */
+.table-field-colored thead th {
+    border-right: 1px solid var(--az-tbl-head-border) !important;
+}
+.table-field-colored thead th:last-child {
+    border-right: none !important;
+}
+
+/* Border antar kolom (vertikal) di data baris */
+.table-field-colored tbody td {
+    border-right: 1px solid var(--az-tbl-border) !important;
+}
+.table-field-colored tbody td:last-child {
+    border-right: none !important;
 }
