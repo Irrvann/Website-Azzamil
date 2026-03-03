@@ -10,13 +10,10 @@
         <!--begin::Menu-->
         <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
             <li class="menu-item">
-                <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+                <a href="" target="_blank" class="menu-link px-2">Made With Webku.id</a>
             </li>
             <li class="menu-item">
-                <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://1.envato.market/Vm7VRE" target="_blank" class="menu-link px-2">Purchase</a>
+                <a href="" target="_blank" class="menu-link px-2">Instagram</a>
             </li>
         </ul>
         <!--end::Menu-->

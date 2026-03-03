@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anak;
+use App\Models\Antropometri;
+use App\Models\DdstTest;
+use App\Models\DdstTestItem;
 use App\Models\Guru;
+use App\Models\Raport;
 use App\Models\Sekolah;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -55,10 +61,169 @@ class GuruController extends Controller
         return view('shared.guru.index', compact('dataGuru', 'dataSekolah', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete'));
     }
 
-    public function dashboardGuru()
+    public function dashboardGuru(Request $request)
     {
-        //
-        return view('guru.dashboard.index');
+        $guru = Guru::where('users_id', auth()->id())->firstOrFail();
+        $sekolahId = $guru->sekolahs_id;
+
+        $anakIds = Anak::where('sekolahs_id', $sekolahId)->pluck('id');
+        $totalAnak = $anakIds->count();
+
+        $periode = $request->get('periode', now()->format('Y-m'));
+        try {
+            $start = Carbon::createFromFormat('Y-m', $periode)->startOfMonth();
+        } catch (\Throwable $e) {
+            $start = now()->startOfMonth();
+            $periode = $start->format('Y-m');
+        }
+        $end = (clone $start)->endOfMonth();
+        $bulanLabel = $start->translatedFormat('F Y');
+
+        $semester = $request->get('semester');
+        $tahunAjaran = $request->get('tahun_ajaran');
+
+        if (!$semester || !$tahunAjaran) {
+            $latestRaport = Raport::where('guru_id', $guru->id)->orderByDesc('id')->first();
+            $semester = $semester ?: ($latestRaport->semester ?? 'Genap');
+            $tahunAjaran = $tahunAjaran ?: ($latestRaport->tahun_ajaran ?? now()->year . '/' . (now()->year + 1));
+        }
+
+        $anakSudahInputAntro = Antropometri::whereIn('anaks_id', $anakIds)
+            ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()])
+            ->distinct('anaks_id')
+            ->count('anaks_id');
+
+        $tkBelumSelesai = max($totalAnak - $anakSudahInputAntro, 0);
+        $tkProgress = $totalAnak > 0 ? round((($totalAnak - $tkBelumSelesai) / $totalAnak) * 100) : 0;
+
+        $giziGrouped = Antropometri::selectRaw("COALESCE(NULLIF(status_gizi,''),'Tidak diisi') AS label, COUNT(*) AS jumlah")
+            ->whereIn('anaks_id', $anakIds)
+            ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()])
+            ->groupBy('label')
+            ->orderByDesc('jumlah')
+            ->get();
+
+        $giziChart = $giziGrouped->map(fn($r) => ['label' => $r->label, 'value' => (int)$r->jumlah])->values()->all();
+
+        $giziTidakNormal = Antropometri::whereIn('anaks_id', $anakIds)
+            ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()])
+            ->whereNotNull('status_gizi')
+            ->where('status_gizi', '!=', '')
+            ->where('status_gizi', '!=', 'Normal')
+            ->count();
+
+        $ddstGrouped = DdstTestItem::selectRaw("status AS label, COUNT(*) AS jumlah")
+            ->whereIn('status', ['tercapai', 'ragu_ragu', 'belum_tercapai'])
+            ->whereHas('ddstTest', function ($q) use ($guru, $start, $end) {
+                $q->where('gurus_id', $guru->id)
+                    ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()]);
+            })
+            ->groupBy('label')
+            ->orderByDesc('jumlah')
+            ->get();
+
+        $latestTestIds = DdstTest::query()
+            ->selectRaw('MAX(id) as id')
+            ->where('gurus_id', $guru->id)
+            ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()])
+            ->groupBy('anaks_id');
+
+
+        $perTestAgg = DdstTestItem::query()
+            ->selectRaw("
+        ddst_tests_id,
+        MAX(CASE WHEN status = 'belum_tercapai' THEN 1 ELSE 0 END) as has_belum,
+        MAX(CASE WHEN status = 'ragu_ragu' THEN 1 ELSE 0 END) as has_ragu
+    ")
+            ->whereIn('ddst_tests_id', $latestTestIds)
+            ->groupBy('ddst_tests_id')
+            ->get();
+
+        $jumlahBelum = 0;
+        $jumlahRagu  = 0;
+        $jumlahTercapai = 0;
+
+        foreach ($perTestAgg as $row) {
+            if ((int)$row->has_belum === 1) {
+                $jumlahBelum++;
+            } elseif ((int)$row->has_ragu === 1) {
+                $jumlahRagu++;
+            } else {
+                $jumlahTercapai++;
+            }
+        }
+
+        $ddstChart = [
+            ['label' => 'Tercapai', 'value' => $jumlahTercapai],
+            ['label' => 'Ragu-ragu', 'value' => $jumlahRagu],
+            ['label' => 'Belum tercapai', 'value' => $jumlahBelum],
+        ];
+
+        $ddstPerluEvaluasi = DdstTest::where('gurus_id', $guru->id)
+            ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()])
+            ->whereHas('items', function ($q) {
+                $q->whereIn('status', ['belum_tercapai', 'ragu_ragu']);
+            })
+            ->distinct('anaks_id')
+            ->count('anaks_id');
+
+        $anakSudahAdaRaport = Raport::where('guru_id', $guru->id)
+            ->where('sekolah_id', $sekolahId)
+            ->where('semester', $semester)
+            ->where('tahun_ajaran', $tahunAjaran)
+            ->distinct('anak_id')
+            ->count('anak_id');
+
+        $raportBelumSelesai = max($totalAnak - $anakSudahAdaRaport, 0);
+
+        // =========================
+        // CATATAN ADMIN (ganti deadline)
+        // =========================
+        // $catatan = CatatanAdmin::query()
+        //     ->where('sekolahs_id', $sekolahId)
+        //     ->where('is_active', true)
+        //     ->where(function ($q) use ($guru) {
+        //         $q->whereNull('gurus_id')
+        //             ->orWhere('gurus_id', $guru->id);
+        //     })
+        //     ->where(function ($q) {
+        //         $q->whereNull('publish_at')
+        //             ->orWhere('publish_at', '<=', now());
+        //     })
+        //     ->orderByDesc('publish_at')
+        //     ->orderByDesc('id')
+        //     ->first();
+
+        // $catatanJudul = $catatan?->judul ?? 'Tidak ada catatan';
+        // $catatanIsi = $catatan?->isi ?? 'Belum ada informasi dari admin.';
+        // $catatanTanggal = $catatan?->publish_at
+        //     ? $catatan->publish_at->translatedFormat('d M Y H:i')
+        //     : ($catatan?->created_at?->translatedFormat('d M Y H:i') ?? '-');
+
+        $badgeClass = function ($v) {
+            if ($v >= 10) return 'badge-light-danger';
+            if ($v >= 5) return 'badge-light-warning';
+            return 'badge-light-success';
+        };
+
+        return view('guru.dashboard.index', compact(
+            'bulanLabel',
+            'periode',
+            'totalAnak',
+            'tkBelumSelesai',
+            'tkProgress',
+            'giziTidakNormal',
+            'ddstPerluEvaluasi',
+            'raportBelumSelesai',
+            'giziChart',
+            'ddstChart',
+            'badgeClass',
+            'semester',
+            'tahunAjaran',
+            // 'catatanJudul',
+            // 'catatanIsi',
+            // 'catatanTanggal'
+        ));
     }
 
     /**
