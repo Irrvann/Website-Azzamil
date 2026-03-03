@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Anak;
+use App\Models\Antropometri;
 use App\Models\Daerah;
+use App\Models\DdstTest;
+use App\Models\Guru;
+use App\Models\OrangTua;
+use App\Models\Raport;
+use App\Models\Sekolah;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,13 +29,182 @@ class AdminController extends Controller
         // mengambil data admin dengan relasi, dan paginate
         $dataAdmin = Admin::with(['user'])->paginate(10);
 
-        return view('superadmin.admin.index', compact('dataAdmin', ));
+        return view('superadmin.admin.index', compact('dataAdmin',));
     }
 
-    public function dashboardAdmin()
+
+    public function dashboardAdmin(Request $request)
     {
-        //
-        return view('admin.dashboard.index');
+        $periode = $request->get('periode', now()->format('Y-m'));
+        try {
+            $start = Carbon::createFromFormat('Y-m', $periode)->startOfMonth();
+        } catch (\Throwable $e) {
+            $start = now()->startOfMonth();
+            $periode = $start->format('Y-m');
+        }
+        $end = (clone $start)->endOfMonth();
+        $periodeLabel = $start->translatedFormat('F Y');
+
+
+        $totalSekolah = Sekolah::count();
+        $totalGuru = Guru::count();
+        $totalOrangTua = OrangTua::count();
+        $totalAnak = Anak::count();
+
+        $anakSudahAntro = Antropometri::query()
+            ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()])
+            ->distinct('anaks_id')
+            ->count('anaks_id');
+
+        $anakSudahDdst = DdstTest::query()
+            ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()])
+            ->distinct('anaks_id')
+            ->count('anaks_id');
+
+        $anakSelesaiTk = Anak::query()
+            ->whereIn('id', function ($q) use ($start, $end) {
+                $q->select('anaks_id')
+                    ->from('antropometris')
+                    ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()]);
+            })
+            ->whereIn('id', function ($q) use ($start, $end) {
+                $q->select('anaks_id')
+                    ->from('ddst_tests')
+                    ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()]);
+            })
+            ->distinct('id')
+            ->count('id');
+
+        $tkBelumSelesai = max($totalAnak - $anakSelesaiTk, 0);
+        $tkSelesai = $anakSelesaiTk;
+        $tkProgress = $totalAnak > 0 ? round(($tkSelesai / $totalAnak) * 100) : 0;
+
+        $latestAntroIds = Antropometri::query()
+            ->selectRaw('MAX(id) as id')
+            ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()])
+            ->groupBy('anaks_id');
+
+        $giziGrouped = Antropometri::query()
+            ->selectRaw("COALESCE(NULLIF(status_gizi,''),'Tidak diisi') AS label, COUNT(*) AS jumlah")
+            ->whereIn('id', $latestAntroIds)
+            ->groupBy('label')
+            ->orderByDesc('jumlah')
+            ->get();
+
+        $giziChart = $giziGrouped
+            ->map(fn($r) => ['label' => $r->label, 'value' => (int) $r->jumlah])
+            ->values()
+            ->all();
+
+        $giziTidakNormal = Antropometri::query()
+            ->whereIn('id', $latestAntroIds)
+            ->whereNotNull('status_gizi')
+            ->where('status_gizi', '!=', '')
+            ->where('status_gizi', '!=', 'Normal')
+            ->count();
+
+
+        $ddstPerluEvaluasi = DdstTest::query()
+            ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()])
+            ->where(function ($q) {
+                $q->whereIn('hasil_akhir', ['Meragukan', 'Penyimpangan'])
+                    ->orWhereHas('items', function ($qq) {
+                        $qq->whereIn('status', ['belum_tercapai', 'ragu_ragu']);
+                    });
+            })
+            ->distinct('anaks_id')
+            ->count('anaks_id');
+
+        $anakSudahAdaRaport = Raport::query()
+            ->whereBetween('created_at', [$start->toDateTimeString(), $end->toDateTimeString()])
+            ->distinct('anak_id')
+            ->count('anak_id');
+
+        $raportBelumSelesai = max($totalAnak - $anakSudahAdaRaport, 0);
+
+        $anakPerSekolah = Sekolah::query()
+            ->withCount('anaks')
+            ->orderByDesc('anaks_count')
+            ->get()
+            ->map(fn($s) => ['sekolah' => $s->nama_sekolah, 'total' => (int) $s->anaks_count])
+            ->values()
+            ->all();
+
+        $monitorSekolah = [];
+        $sekolahs = Sekolah::select('id', 'nama_sekolah')->get();
+
+        foreach ($sekolahs as $s) {
+            $anakIdsSekolah = Anak::where('sekolahs_id', $s->id)->pluck('id');
+            $total = $anakIdsSekolah->count();
+
+            if ($total === 0) {
+                $monitorSekolah[] = ['nama' => $s->nama_sekolah, 'anak' => 0, 'tk' => 0, 'raport' => 0];
+                continue;
+            }
+
+            $selesaiTkSekolah = Anak::query()
+                ->whereIn('id', $anakIdsSekolah)
+                ->whereIn('id', function ($q) use ($start, $end) {
+                    $q->select('anaks_id')
+                        ->from('antropometris')
+                        ->whereBetween('tanggal_ukur', [$start->toDateString(), $end->toDateString()]);
+                })
+                ->whereIn('id', function ($q) use ($start, $end) {
+                    $q->select('anaks_id')
+                        ->from('ddst_tests')
+                        ->whereBetween('tanggal_test', [$start->toDateString(), $end->toDateString()]);
+                })
+                ->distinct('id')
+                ->count('id');
+
+            $raportSekolah = Raport::query()
+                ->where('sekolah_id', $s->id)
+                ->whereBetween('created_at', [$start->toDateTimeString(), $end->toDateTimeString()])
+                ->distinct('anak_id')
+                ->count('anak_id');
+
+            $tkPct = (int) round(($selesaiTkSekolah / $total) * 100);
+            $raportPct = (int) round(($raportSekolah / $total) * 100);
+
+            $monitorSekolah[] = [
+                'nama' => $s->nama_sekolah,
+                'anak' => $total,
+                'tk' => $tkPct,
+                'raport' => $raportPct,
+            ];
+        }
+
+        $statusSekolah = function (int $tk, int $raport) {
+            if ($tk >= 80 && $raport >= 60) return ['label' => 'Aktif', 'class' => 'badge-light-success'];
+            if ($tk >= 60 || $raport >= 40) return ['label' => 'Perlu Monitoring', 'class' => 'badge-light-warning'];
+            return ['label' => 'Tertinggal', 'class' => 'badge-light-danger'];
+        };
+
+        $badgeClass = function ($v) {
+            if ($v >= 150) return 'badge-light-danger';
+            if ($v >= 80) return 'badge-light-warning';
+            return 'badge-light-success';
+        };
+
+        return view('admin.dashboard.index', compact(
+            'periodeLabel',
+            'periode',
+            'totalSekolah',
+            'totalGuru',
+            'totalOrangTua',
+            'totalAnak',
+            'tkBelumSelesai',
+            'tkSelesai',
+            'tkProgress',
+            'ddstPerluEvaluasi',
+            'giziTidakNormal',
+            'raportBelumSelesai',
+            'giziChart',
+            'anakPerSekolah',
+            'monitorSekolah',
+            'statusSekolah',
+            'badgeClass'
+        ));
     }
 
     /**
@@ -267,5 +443,4 @@ class AdminController extends Controller
             ->route('superadmin.admin.index')
             ->with('success', 'Data admin & user berhasil dihapus.');
     }
-
 }
