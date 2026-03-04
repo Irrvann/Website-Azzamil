@@ -1,1424 +1,535 @@
 @extends('layouts.app')
+
 @section('content')
     <!--begin::Main-->
-        <!--begin::Content wrapper-->
-        <div class="d-flex flex-column flex-column-fluid">
-            <!--begin::Toolbar-->
-            <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-                <!--begin::Toolbar container-->
-                <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                    <!--begin::Page title-->
-                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                        <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
-                            Dashboard Superadmin</h1>
-                        <!--end::Title-->
-                        <!--begin::Breadcrumb-->
-                        <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                            <!--begin::Item-->
-                            <li class="breadcrumb-item text-muted">
-                                <a href="index.html" class="text-muted text-hover-primary">Home</a>
-                            </li>
-                            <!--end::Item-->
-                            <!--begin::Item-->
-                            <li class="breadcrumb-item">
-                                <span class="bullet bg-gray-500 w-5px h-2px"></span>
-                            </li>
-                            <!--end::Item-->
-                            <!--begin::Item-->
-                            <li class="breadcrumb-item text-muted">Dashboards</li>
-                            <!--end::Item-->
-                        </ul>
-                        <!--end::Breadcrumb-->
-                    </div>
-                    <!--end::Page title-->
-                    <!--begin::Actions-->
-                    <div class="d-flex align-items-center gap-2 gap-lg-3">
-                        <!--begin::Daterangepicker(defined in src/js/layout/app.js)-->
-                        <div data-kt-daterangepicker="true" data-kt-daterangepicker-opens="left"
-                            class="btn btn-sm fw-bold btn-secondary d-flex align-items-center px-4">
-                            <!--begin::Display range-->
-                            <div class="text-gray-600 fw-bold">Loading date range...</div>
-                            <!--end::Display range-->
-                            <i class="ki-duotone ki-calendar-8 fs-2 ms-2 me-0">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                <span class="path3"></span>
-                                <span class="path4"></span>
-                                <span class="path5"></span>
-                                <span class="path6"></span>
-                            </i>
-                        </div>
-                        <!--end::Daterangepicker-->
-                        <!--begin::Secondary button-->
-                        <!--end::Secondary button-->
-                        <!--begin::Primary button-->
-                        <a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#kt_modal_new_target">Add Target</a>
-                        <!--end::Primary button-->
-                    </div>
-                    <!--end::Actions-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Toolbar-->
+        <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+            <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
+                <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                    <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">
+                        Dashboard Superadmin
+                    </h1>
                 </div>
-                <!--end::Toolbar container-->
-            </div>
-            <!--end::Toolbar-->
-            <!--begin::Content-->
-            <div id="kt_app_content" class="app-content flex-column-fluid">
-                <!--begin::Content container-->
-                <div id="kt_app_content_container" class="app-container container-xxl">
-                    <!--begin::Row-->
-                    <div class="row gy-5 gx-xl-10">
-                        <!--begin::Col-->
-                        <div class="col-sm-6 col-xl-2 mb-xl-10">
-                            <!--begin::Card widget 2-->
-                            <div class="card h-lg-100">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                    <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="ki-duotone ki-compass fs-2hx text-gray-600">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column my-7">
-                                        <!--begin::Number-->
-                                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">327</span>
-                                        <!--end::Number-->
-                                        <!--begin::Follower-->
-                                        <div class="m-0">
-                                            <span class="fw-semibold fs-6 text-gray-500">Projects</span>
-                                        </div>
-                                        <!--end::Follower-->
-                                    </div>
-                                    <!--end::Section-->
-                                    <!--begin::Badge-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>2.1%</span>
-                                    <!--end::Badge-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Card widget 2-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-sm-6 col-xl-2 mb-xl-10">
-                            <!--begin::Card widget 2-->
-                            <div class="card h-lg-100">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                    <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="ki-duotone ki-chart-simple fs-2hx text-gray-600">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                            <span class="path4"></span>
-                                        </i>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column my-7">
-                                        <!--begin::Number-->
-                                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">27,5M</span>
-                                        <!--end::Number-->
-                                        <!--begin::Follower-->
-                                        <div class="m-0">
-                                            <span class="fw-semibold fs-6 text-gray-500">Stock Qty</span>
-                                        </div>
-                                        <!--end::Follower-->
-                                    </div>
-                                    <!--end::Section-->
-                                    <!--begin::Badge-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>2.1%</span>
-                                    <!--end::Badge-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Card widget 2-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-sm-6 col-xl-2 mb-xl-10">
-                            <!--begin::Card widget 2-->
-                            <div class="card h-lg-100">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                    <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="ki-duotone ki-abstract-39 fs-2hx text-gray-600">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column my-7">
-                                        <!--begin::Number-->
-                                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">149M</span>
-                                        <!--end::Number-->
-                                        <!--begin::Follower-->
-                                        <div class="m-0">
-                                            <span class="fw-semibold fs-6 text-gray-500">Stock Value</span>
-                                        </div>
-                                        <!--end::Follower-->
-                                    </div>
-                                    <!--end::Section-->
-                                    <!--begin::Badge-->
-                                    <span class="badge badge-light-danger fs-base">
-                                        <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>0.47%</span>
-                                    <!--end::Badge-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Card widget 2-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-sm-6 col-xl-2 mb-xl-10">
-                            <!--begin::Card widget 2-->
-                            <div class="card h-lg-100">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                    <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="ki-duotone ki-map fs-2hx text-gray-600">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                        </i>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column my-7">
-                                        <!--begin::Number-->
-                                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">89M</span>
-                                        <!--end::Number-->
-                                        <!--begin::Follower-->
-                                        <div class="m-0">
-                                            <span class="fw-semibold fs-6 text-gray-500">C APEX</span>
-                                        </div>
-                                        <!--end::Follower-->
-                                    </div>
-                                    <!--end::Section-->
-                                    <!--begin::Badge-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>2.1%</span>
-                                    <!--end::Badge-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Card widget 2-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-sm-6 col-xl-2 mb-5 mb-xl-10">
-                            <!--begin::Card widget 2-->
-                            <div class="card h-lg-100">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                    <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="ki-duotone ki-abstract-35 fs-2hx text-gray-600">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column my-7">
-                                        <!--begin::Number-->
-                                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">72.4%</span>
-                                        <!--end::Number-->
-                                        <!--begin::Follower-->
-                                        <div class="m-0">
-                                            <span class="fw-semibold fs-6 text-gray-500">OPEX</span>
-                                        </div>
-                                        <!--end::Follower-->
-                                    </div>
-                                    <!--end::Section-->
-                                    <!--begin::Badge-->
-                                    <span class="badge badge-light-danger fs-base">
-                                        <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>0.647%</span>
-                                    <!--end::Badge-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Card widget 2-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-sm-6 col-xl-2 mb-5 mb-xl-10">
-                            <!--begin::Card widget 2-->
-                            <div class="card h-lg-100">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex justify-content-between align-items-start flex-column">
-                                    <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="ki-duotone ki-abstract-26 fs-2hx text-gray-600">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column my-7">
-                                        <!--begin::Number-->
-                                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">106M</span>
-                                        <!--end::Number-->
-                                        <!--begin::Follower-->
-                                        <div class="m-0">
-                                            <span class="fw-semibold fs-6 text-gray-500">Saving</span>
-                                        </div>
-                                        <!--end::Follower-->
-                                    </div>
-                                    <!--end::Section-->
-                                    <!--begin::Badge-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>2.1%</span>
-                                    <!--end::Badge-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Card widget 2-->
-                        </div>
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Row-->
-                    <!--begin::Row-->
-                    <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-                        <!--begin::Col-->
-                        <div class="col-xl-4">
-                            <!--begin::Chart widget 19-->
-                            <div class="card card-flush h-100 mb-5 mb-xl-10">
-                                <!--begin::Header-->
-                                <div class="card-header pt-7">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title align-items-start flex-column">
-                                        <span class="card-label fw-bold text-gray-900">Leading Companies</span>
-                                        <span class="text-gray-500 pt-2 fw-semibold fs-6">8k social visitors</span>
-                                    </h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Nav-->
-                                        <ul class="nav" id="kt_chart_widget_19_tabs">
-                                            <li class="nav-item">
-                                                <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light active fw-bold px-4 me-1"
-                                                    data-bs-toggle="tab" id="kt_chart_widget_19_tab_1"
-                                                    href="#kt_chart_widget_19_tab_content_1">2024</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light fw-bold px-4"
-                                                    data-bs-toggle="tab" id="kt_chart_widget_19_tab_2"
-                                                    href="#kt_chart_widget_19_tab_content_2">Month</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-0">
-                                    <!--begin::Tab Content (ishlamayabdi)-->
-                                    <div class="tab-content">
-                                        <!--begin::Tap pane-->
-                                        <div class="tab-pane fade show active" id="kt_chart_widget_19_tab_content_1">
-                                            <!--begin::Chart container-->
-                                            <div id="kt_charts_widget_19_chart_1" class="w-100 h-400px mb-13 mt-n4"></div>
-                                            <!--end::Chart container-->
-                                            <!--begin::Items-->
-                                            <div class="m-0">
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/atica.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Abstergo
-                                                                Ltd.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Community</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">579</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>2.6%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/telegram-2.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Binford
-                                                                Ltd.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social
-                                                                Media</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">2,588</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-danger fs-base">
-                                                                <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>0.4%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/balloon.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Barone
-                                                                LLC.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Messanger</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">794</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>0.2%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/kickstarter.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Abstergo
-                                                                Ltd.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Video
-                                                                Channel</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">1,578</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>4.1%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/vimeo.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Biffco
-                                                                Enterprises</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social
-                                                                Network</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">3,458</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>8.3%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/plurk.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Big
-                                                                Kahuna Burger</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social
-                                                                Network</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">2,047</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>1.9%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                            </div>
-                                            <!--end::Items-->
-                                        </div>
-                                        <!--end::Tap pane-->
-                                        <!--begin::Tap pane-->
-                                        <div class="tab-pane fade" id="kt_chart_widget_19_tab_content_2">
-                                            <!--begin::Chart container-->
-                                            <div id="kt_charts_widget_19_chart_2" class="w-100 h-400px mb-13 mt-n4"></div>
-                                            <!--end::Chart container-->
-                                            <!--begin::Items-->
-                                            <div class="m-0">
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/atica.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Abstergo
-                                                                Ltd.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Community</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">579</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>2.6%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/telegram-2.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Binford
-                                                                Ltd.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social
-                                                                Media</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">2,588</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-danger fs-base">
-                                                                <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>0.4%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/balloon.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Barone
-                                                                LLC.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Messanger</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">794</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>0.2%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/kickstarter.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Abstergo
-                                                                Ltd.</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Video
-                                                                Channel</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">1,578</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>4.1%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/vimeo.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Biffco
-                                                                Enterprises</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social
-                                                                Network</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">3,458</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>8.3%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                                <!--begin::Separator-->
-                                                <div class="separator separator-dashed my-4"></div>
-                                                <!--end::Separator-->
-                                                <!--begin::Item-->
-                                                <div class="d-flex flex-stack">
-                                                    <!--begin::Section-->
-                                                    <div class="d-flex align-items-center me-5">
-                                                        <!--begin::Flag-->
-                                                        <img src="/template_admin/demo1/assets/media/svg/brand-logos/plurk.svg"
-                                                            class="me-4 w-30px" style="border-radius: 4px"
-                                                            alt="" />
-                                                        <!--end::Flag-->
-                                                        <!--begin::Content-->
-                                                        <div class="me-5">
-                                                            <!--begin::Title-->
-                                                            <a href="#"
-                                                                class="text-gray-800 fw-bold text-hover-primary fs-6">Big
-                                                                Kahuna Burger</a>
-                                                            <!--end::Title-->
-                                                            <!--begin::Desc-->
-                                                            <span
-                                                                class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social
-                                                                Network</span>
-                                                            <!--end::Desc-->
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <!--end::Section-->
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Number-->
-                                                        <span class="text-gray-800 fw-bold fs-4 me-3">2,047</span>
-                                                        <!--end::Number-->
-                                                        <!--begin::Info-->
-                                                        <div class="m-0">
-                                                            <!--begin::Label-->
-                                                            <span class="badge badge-light-success fs-base">
-                                                                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                                                    <span class="path1"></span>
-                                                                    <span class="path2"></span>
-                                                                </i>1.9%</span>
-                                                            <!--end::Label-->
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </div>
-                                                <!--end::Item-->
-                                            </div>
-                                            <!--end::Items-->
-                                        </div>
-                                        <!--end::Tap pane-->
-                                    </div>
-                                    <!--end::Tab Content-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Chart widget 19-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xl-8 mb-xl-10">
-                            <!--begin::Chart widget 38-->
-                            <div class="card card-flush h-xl-50 mb-5 mb-xl-10">
-                                <!--begin::Header-->
-                                <div class="card-header pt-7">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title align-items-start flex-column">
-                                        <span class="card-label fw-bold text-gray-800">LOI Issued by Departments</span>
-                                        <span class="text-gray-500 mt-1 fw-semibold fs-6">Counted in Millions</span>
-                                    </h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Daterangepicker(defined in src/js/layout/app.js)-->
-                                        <div data-kt-daterangepicker="true" data-kt-daterangepicker-opens="left"
-                                            class="btn btn-sm btn-light d-flex align-items-center px-4">
-                                            <!--begin::Display range-->
-                                            <div class="text-gray-600 fw-bold">Loading date range...</div>
-                                            <!--end::Display range-->
-                                            <i class="ki-duotone ki-calendar-8 text-gray-500 lh-0 fs-2 ms-2 me-0">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                                <span class="path5"></span>
-                                                <span class="path6"></span>
-                                            </i>
-                                        </div>
-                                        <!--end::Daterangepicker-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body d-flex align-items-end px-0 pt-3 pb-5">
-                                    <!--begin::Chart-->
-                                    <div id="kt_charts_widget_38_chart" class="h-325px w-100 min-h-auto ps-4 pe-6"></div>
-                                    <!--end::Chart-->
-                                </div>
-                                <!--end: Card Body-->
-                            </div>
-                            <!--end::Chart widget 38-->
-                            <!--begin::Chart widget 20-->
-                            <div class="card card-flush h-xl-50">
-                                <!--begin::Header-->
-                                <div class="card-header py-5">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title fw-bold text-gray-800">Monthly Targets</h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Daterangepicker(defined in src/js/layout/app.js)-->
-                                        <div data-kt-daterangepicker="true" data-kt-daterangepicker-opens="left"
-                                            class="btn btn-sm btn-light d-flex align-items-center px-4">
-                                            <!--begin::Display range-->
-                                            <div class="text-gray-600 fw-bold">Loading date range...</div>
-                                            <!--end::Display range-->
-                                            <i class="ki-duotone ki-calendar-8 text-gray-500 lh-0 fs-2 ms-2 me-0">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                                <span class="path5"></span>
-                                                <span class="path6"></span>
-                                            </i>
-                                        </div>
-                                        <!--end::Daterangepicker-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Card body-->
-                                <div class="card-body d-flex justify-content-between flex-column pb-0 px-0 pt-1">
-                                    <!--begin::Items-->
-                                    <div class="d-flex flex-wrap d-grid gap-5 px-9 mb-5">
-                                        <!--begin::Item-->
-                                        <div class="me-md-2">
-                                            <!--begin::Statistics-->
-                                            <div class="d-flex mb-2">
-                                                <span class="fs-4 fw-semibold text-gray-500 me-1">$</span>
-                                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">12,706</span>
-                                            </div>
-                                            <!--end::Statistics-->
-                                            <!--begin::Description-->
-                                            <span class="fs-6 fw-semibold text-gray-500">Targets for April</span>
-                                            <!--end::Description-->
-                                        </div>
-                                        <!--end::Item-->
-                                        <!--begin::Item-->
-                                        <div
-                                            class="border-start-dashed border-end-dashed border-start border-end border-gray-300 px-5 ps-md-10 pe-md-7 me-md-5">
-                                            <!--begin::Statistics-->
-                                            <div class="d-flex mb-2">
-                                                <span class="fs-4 fw-semibold text-gray-500 me-1">$</span>
-                                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">8,035</span>
-                                            </div>
-                                            <!--end::Statistics-->
-                                            <!--begin::Description-->
-                                            <span class="fs-6 fw-semibold text-gray-500">Actual for April</span>
-                                            <!--end::Description-->
-                                        </div>
-                                        <!--end::Item-->
-                                        <!--begin::Item-->
-                                        <div class="m-0">
-                                            <!--begin::Statistics-->
-                                            <div class="d-flex align-items-center mb-2">
-                                                <!--begin::Currency-->
-                                                <span class="fs-4 fw-semibold text-gray-500 align-self-start me-1">$</span>
-                                                <!--end::Currency-->
-                                                <!--begin::Value-->
-                                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">4,684</span>
-                                                <!--end::Value-->
-                                                <!--begin::Label-->
-                                                <span class="badge badge-light-success fs-base">
-                                                    <i
-                                                        class="ki-duotone ki-black-up fs-7 text-success ms-n1"></i>4.5%</span>
-                                                <!--end::Label-->
-                                            </div>
-                                            <!--end::Statistics-->
-                                            <!--begin::Description-->
-                                            <span class="fs-6 fw-semibold text-gray-500">GAP</span>
-                                            <!--end::Description-->
-                                        </div>
-                                        <!--end::Item-->
-                                    </div>
-                                    <!--end::Items-->
-                                    <!--begin::Chart-->
-                                    <div id="kt_charts_widget_20" class="min-h-auto ps-4 pe-6"
-                                        data-kt-chart-info="Revenue" style="height: 300px"></div>
-                                    <!--end::Chart-->
-                                </div>
-                                <!--end::Card body-->
-                            </div>
-                            <!--end::Chart widget 20-->
-                        </div>
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Row-->
-                    <!--begin::Row-->
-                    {{-- <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-                        <!--begin::Col-->
-                        <div class="col-xxl-4">
-                            <!--begin::Engage widget 1-->
-                            <div class="card h-md-100" dir="ltr">
-                                <!--begin::Body-->
-                                <div class="card-body d-flex flex-column flex-center">
-                                    <!--begin::Heading-->
-                                    <div class="mb-2">
-                                        <!--begin::Title-->
-                                        <h1 class="fw-semibold text-gray-800 text-center lh-lg">Try out our
-                                            <br />new
-                                            <span class="fw-bolder">Invoice Manager</span>
-                                        </h1>
-                                        <!--end::Title-->
-                                        <!--begin::Illustration-->
-                                        <div class="py-10 text-center">
-                                            <img src="/template_admin/demo1/assets/media/svg/illustrations/easy/2.svg"
-                                                class="theme-light-show w-200px" alt="" />
-                                            <img src="/template_admin/demo1/assets/media/svg/illustrations/easy/2-dark.svg"
-                                                class="theme-dark-show w-200px" alt="" />
-                                        </div>
-                                        <!--end::Illustration-->
-                                    </div>
-                                    <!--end::Heading-->
-                                    <!--begin::Links-->
-                                    <div class="text-center mb-1">
-                                        <!--begin::Link-->
-                                        <a class="btn btn-sm btn-primary me-2" data-bs-target="#kt_modal_new_address"
-                                            data-bs-toggle="modal">Try Now</a>
-                                        <!--end::Link-->
-                                        <!--begin::Link-->
-                                        <a class="btn btn-sm btn-light" href="apps/user-management/users/view.html">Learn
-                                            More</a>
-                                        <!--end::Link-->
-                                    </div>
-                                    <!--end::Links-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Engage widget 1-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xxl-8">
-                            <!--begin::Chart widget 23-->
-                            <div class="card card-flush overflow-hidden h-md-100">
-                                <!--begin::Header-->
-                                <div class="card-header py-5">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title align-items-start flex-column">
-                                        <span class="card-label fw-bold text-gray-900">Some Chart with AmCharts</span>
-                                        <span class="text-gray-500 mt-1 fw-semibold fs-6">83 countries in service</span>
-                                    </h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Menu-->
-                                        <button
-                                            class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                            data-kt-menu-overflow="true">
-                                            <i class="ki-duotone ki-dots-square fs-1">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                            </i>
-                                        </button>
-                                        <!--begin::Menu 2-->
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
-                                            data-kt-menu="true">
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
-                                                    Actions</div>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator mb-3 opacity-75"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3">New Ticket</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3">New Customer</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3" data-kt-menu-trigger="hover"
-                                                data-kt-menu-placement="right-start">
-                                                <!--begin::Menu item-->
-                                                <a href="#" class="menu-link px-3">
-                                                    <span class="menu-title">New Group</span>
-                                                    <span class="menu-arrow"></span>
-                                                </a>
-                                                <!--end::Menu item-->
-                                                <!--begin::Menu sub-->
-                                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3">Admin Group</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3">Staff Group</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3">Member Group</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                </div>
-                                                <!--end::Menu sub-->
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3">New Contact</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator mt-3 opacity-75"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <div class="menu-content px-3 py-3">
-                                                    <a class="btn btn-primary btn-sm px-4" href="#">Generate
-                                                        Reports</a>
-                                                </div>
-                                            </div>
-                                            <!--end::Menu item-->
-                                        </div>
-                                        <!--end::Menu 2-->
-                                        <!--end::Menu-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Card body-->
-                                <div class="card-body pt-4">
-                                    <!--begin::Chart-->
-                                    <div id="kt_charts_widget_23" class="h-400px w-100"></div>
-                                    <!--end::Chart-->
-                                </div>
-                                <!--end::Card body-->
-                            </div>
-                            <!--end::Chart widget 23-->
-                        </div>
-                        <!--end::Col-->
-                    </div> --}}
-                    <!--end::Row-->
-                    <!--begin::Row-->
-                    {{-- <div class="row g-5 g-xl-10">
-                        <!--begin::Col-->
-                        <div class="col-xxl-4">
-                            <!--begin::Chart widget 25-->
-                            <div class="card card-flush h-md-100">
-                                <!--begin::Header-->
-                                <div class="card-header pt-7">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title align-items-start flex-column">
-                                        <span class="card-label fw-bold text-gray-900">Warephase stats</span>
-                                        <span class="text-gray-500 pt-2 fw-semibold fs-6">8k social visitors</span>
-                                    </h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Nav-->
-                                        <ul class="nav" id="kt_chart_widget_19_tabs">
-                                            <li class="nav-item">
-                                                <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light fw-bold px-4 me-1"
-                                                    data-bs-toggle="tab" id="kt_chart_widget_25_tab_1"
-                                                    href="#kt_chart_widget_25_tab_content_1">2024</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light active fw-bold px-4"
-                                                    data-bs-toggle="tab" id="kt_chart_widget_25_tab_2"
-                                                    href="#kt_chart_widget_25_tab_content_2">Month</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-0">
-                                    <!--begin::Tab Content (ishlamayabdi)-->
-                                    <div class="tab-content">
-                                        <!--begin::Tap pane-->
-                                        <div class="tab-pane fade" id="kt_chart_widget_25_tab_content_1">
-                                            <!--begin::Chart-->
-                                            <div id="kt_charts_widget_25_chart_1" class="w-100 h-400px"></div>
-                                            <!--end::Chart-->
-                                        </div>
-                                        <!--end::Tap pane-->
-                                        <!--begin::Tap pane-->
-                                        <div class="tab-pane fade active show" id="kt_chart_widget_25_tab_content_2">
-                                            <!--begin::Chart-->
-                                            <div id="kt_charts_widget_25_chart_2" class="w-100 h-400px"></div>
-                                            <!--end::Chart-->
-                                        </div>
-                                        <!--end::Tap pane-->
-                                    </div>
-                                    <!--end::Tab Content-->
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Chart widget 25-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xxl-8">
-                            <!--begin::Chart widget 24-->
-                            <div class="card card-flush overflow-hidden h-md-100">
-                                <!--begin::Header-->
-                                <div class="card-header py-5">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title align-items-start flex-column">
-                                        <span class="card-label fw-bold text-gray-900">Human Resources</span>
-                                        <span class="text-gray-500 mt-1 fw-semibold fs-6">Reports by states and
-                                            ganders</span>
-                                    </h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Menu-->
-                                        <button
-                                            class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                            data-kt-menu-overflow="true">
-                                            <i class="ki-duotone ki-dots-square fs-1">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                            </i>
-                                        </button>
-                                        <!--begin::Menu 2-->
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px"
-                                            data-kt-menu="true">
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <div class="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Quick
-                                                    Actions</div>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator mb-3 opacity-75"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3">New Ticket</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3">New Customer</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3" data-kt-menu-trigger="hover"
-                                                data-kt-menu-placement="right-start">
-                                                <!--begin::Menu item-->
-                                                <a href="#" class="menu-link px-3">
-                                                    <span class="menu-title">New Group</span>
-                                                    <span class="menu-arrow"></span>
-                                                </a>
-                                                <!--end::Menu item-->
-                                                <!--begin::Menu sub-->
-                                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3">Admin Group</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3">Staff Group</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3">Member Group</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                </div>
-                                                <!--end::Menu sub-->
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3">New Contact</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator mt-3 opacity-75"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <div class="menu-content px-3 py-3">
-                                                    <a class="btn btn-primary btn-sm px-4" href="#">Generate
-                                                        Reports</a>
-                                                </div>
-                                            </div>
-                                            <!--end::Menu item-->
-                                        </div>
-                                        <!--end::Menu 2-->
-                                        <!--end::Menu-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Card body-->
-                                <div class="card-body pt-0">
-                                    <!--begin::Chart-->
-                                    <div id="kt_charts_widget_24" class="min-h-auto" style="height: 400px"></div>
-                                    <!--end::Chart-->
-                                </div>
-                                <!--end::Card body-->
-                            </div>
-                            <!--end::Chart widget 24-->
-                        </div>
-                        <!--end::Col-->
-                    </div> --}}
-                    <!--end::Row-->
+
+                <div class="d-flex align-items-center gap-2 gap-lg-3">
+                    <form method="GET" action="{{ route('superadmin.dashboard') }}"
+                        class="d-flex align-items-center gap-2">
+                        <input type="month" name="periode" class="form-control form-control-sm"
+                            value="{{ $periode ?? now()->format('Y-m') }}" style="width: 160px;" />
+                        <button class="btn btn-sm fw-bold btn-secondary">Terapkan</button>
+                    </form>
                 </div>
-                <!--end::Content container-->
             </div>
-            <!--end::Content-->
         </div>
-        <!--end::Content wrapper-->
-        <!--begin::Footer-->
-        
-        <!--end::Footer-->
-    <!--end:::Main-->
+        <!--end::Toolbar-->
+
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-xxl">
+
+                <div class="row gy-5 gx-xl-10 mb-5 mb-xl-10">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-map fs-2hx text-gray-600">
+                                        <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+                                    </i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalDaerah }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Daerah</span>
+                                </div>
+                                <a href="/superadmin/data-daerah" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-user fs-2hx text-gray-600">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalAdmin }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Admin</span>
+                                </div>
+                                <a href="/superadmin/data-admin" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-verify fs-2hx text-gray-600">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalReviewer }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Reviewer</span>
+                                </div>
+                                <a href="/superadmin/data-reviewer" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-home fs-2hx text-gray-600"></i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalSekolah }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Sekolah</span>
+                                </div>
+                                <a href="/superadmin/data-sekolah" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row gy-5 gx-xl-10 mb-5 mb-xl-10">
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-teacher fs-2hx text-gray-600">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalGuru }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Guru</span>
+                                </div>
+                                <a href="/superadmin/data-guru" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-people fs-2hx text-gray-600">
+                                        <span class="path1"></span><span class="path2"></span>
+                                    </i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalOrangTua }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Orang Tua</span>
+                                </div>
+                                <a href="/superadmin/data-orang-tua" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card h-lg-100">
+                            <div class="card-body d-flex justify-content-between align-items-start flex-column">
+                                <div class="m-0">
+                                    <i class="ki-duotone ki-emoji-happy fs-2hx text-gray-600">
+                                        <span class="path1"></span><span class="path2"></span><span
+                                            class="path3"></span>
+                                    </i>
+                                </div>
+                                <div class="d-flex flex-column my-7">
+                                    <span class="fw-semibold fs-3x text-gray-800">{{ $totalAnak }}</span>
+                                    <span class="fw-semibold fs-6 text-gray-500">Anak</span>
+                                </div>
+                                <a href="/superadmin/data-anak" class="badge badge-light-primary">Kelola</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+                    <div class="col-xl-6">
+                        <div class="card h-100">
+                            <div class="card-body p-6">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="symbol symbol-40px symbol-circle bg-light-info">
+                                            <i class="ki-duotone ki-chart-line-up fs-2 text-info">
+                                                <span class="path1"></span><span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-gray-900">Progress Tumbuh Kembang (Global)</span>
+                                            <span class="text-muted fs-8">Periode {{ $periodeLabel }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge badge-light-info">{{ $tkProgress }}%</span>
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge badge-light-success">Selesai: {{ $tkSelesai }}</span>
+                                    <span class="badge badge-light-warning">Belum: {{ $tkBelum }}</span>
+                                    <span class="badge badge-light">Total: {{ $totalAnak }}</span>
+                                </div>
+
+                                <div class="progress h-6px bg-light mb-4">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ $tkProgress }}%"
+                                        aria-valuenow="{{ $tkProgress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+
+                                <a href="/superadmin/data-tumbuh-kembang" class="btn btn-sm btn-light-info w-100">
+                                    Ke Data Tumbuh Kembang
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card h-100">
+                            <div class="card-body p-6">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="symbol symbol-40px symbol-circle bg-light-danger">
+                                            <i class="ki-duotone ki-document fs-2 text-danger">
+                                                <span class="path1"></span><span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-gray-900">Progress Raport (Global)</span>
+                                            <span class="text-muted fs-8">Periode {{ $periodeLabel }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge badge-light-danger">{{ $raportProgress }}%</span>
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge badge-light-success">Selesai: {{ $raportSelesai }}</span>
+                                    <span class="badge badge-light-warning">Belum: {{ $raportBelum }}</span>
+                                    <span class="badge badge-light">Total: {{ $totalAnak }}</span>
+                                </div>
+
+                                <div class="progress h-6px bg-light mb-4">
+                                    <div class="progress-bar bg-danger" role="progressbar"
+                                        style="width: {{ $raportProgress }}%" aria-valuenow="{{ $raportProgress }}"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+
+                                <a href="/superadmin/data-raport" class="btn btn-sm btn-light-danger w-100">
+                                    Ke Data Raport
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+                    <div class="col-xl-6">
+                        <div class="card h-100">
+                            <div class="card-body p-6">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="symbol symbol-40px symbol-circle bg-light-warning">
+                                            <i class="ki-duotone ki-shield-tick fs-2 text-warning">
+                                                <span class="path1"></span><span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-gray-900">DDST Perlu Evaluasi</span>
+                                            <span class="text-muted fs-8">Global alert</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge badge-light-warning">Prioritas</span>
+                                </div>
+
+                                <div class="fs-2hx fw-bold text-gray-900 lh-1">{{ $ddstPerluEvaluasi }}</div>
+                                <div class="text-gray-500 fs-8 mt-1">Anak perlu tindak lanjut</div>
+
+                                <div class="separator separator-dashed my-4"></div>
+
+                                <a href="/superadmin/data-tumbuh-kembang" class="btn btn-sm btn-light-warning w-100">
+                                    Lihat Detail DDST
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card h-100">
+                            <div class="card-body p-6">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="symbol symbol-40px symbol-circle bg-light-success">
+                                            <i class="ki-duotone ki-heart fs-2 text-success">
+                                                <span class="path1"></span><span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-gray-900">Status Gizi Tidak Normal</span>
+                                            <span class="text-muted fs-8">Global alert</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge badge-light-success">Monitoring</span>
+                                </div>
+
+                                <div class="fs-2hx fw-bold text-gray-900 lh-1">{{ $giziTidakNormal }}</div>
+                                <div class="text-gray-500 fs-8 mt-1">Anak butuh perhatian</div>
+
+                                <div class="separator separator-dashed my-4"></div>
+
+                                <a href="/superadmin/data-tumbuh-kembang" class="btn btn-sm btn-light-success w-100">
+                                    Lihat Antropometri
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+                    <div class="col-xl-6">
+                        <div class="card card-flush h-100">
+                            <div class="card-header pt-7">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bold text-gray-900">Jumlah Anak per Daerah</span>
+                                    <span class="text-gray-500 pt-2 fw-semibold fs-6">Top daerah berdasarkan jumlah
+                                        anak</span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <span class="badge badge-light-primary">Periode: {{ $periodeLabel }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div id="kt_chart_anak_per_daerah" class="w-100 h-350px"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card card-flush h-100">
+                            <div class="card-header pt-7">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bold text-gray-900">Distribusi Status Gizi (Global)</span>
+                                    <span class="text-gray-500 pt-2 fw-semibold fs-6">Ringkasan antropometri</span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <span class="badge badge-light-success">Total: {{ $totalAnak }} anak</span>
+                                </div>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div id="kt_chart_gizi_global" class="w-100 h-350px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+
+                    <div class="col-xl-12">
+                        <div class="card card-flush h-100">
+                            <div class="card-header pt-7">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bold text-gray-900">Tren Pertumbuhan Sistem</span>
+                                    <span class="text-gray-500 pt-2 fw-semibold fs-6">Anak & sekolah per bulan</span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <span class="badge badge-light-dark">6 bulan terakhir</span>
+                                </div>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div id="kt_chart_tren_sistem" class="w-100 h-350px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-5 g-xl-10">
+                    <div class="col-12">
+                        <div class="card card-flush">
+                            <div class="card-header pt-7">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bold text-gray-900">Monitoring Performa Daerah</span>
+                                    <span class="text-gray-500 pt-2 fw-semibold fs-6">
+                                        TK = Tumbuh Kembang, Raport = kelengkapan raport
+                                    </span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <a href="/superadmin/data-daerah" class="btn btn-sm btn-light-primary">
+                                        Kelola Daerah
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table align-middle table-row-dashed fs-6 gy-5">
+                                        <thead>
+                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                <th>Daerah</th>
+                                                <th class="text-end">Sekolah</th>
+                                                <th class="text-end">Anak</th>
+                                                <th class="text-end">Tumbuh Kembang (%)</th>
+                                                <th class="text-end">Raport (%)</th>
+                                                <th class="text-end">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 fw-semibold">
+                                            @forelse ($monitorDaerah as $row)
+                                                @php $st = $badgeStatus((int) $row['tk'], (int) $row['raport']); @endphp
+                                                <tr>
+                                                    <td class="text-gray-800 fw-bold">{{ $row['daerah'] }}</td>
+                                                    <td class="text-end">{{ $row['sekolah'] }}</td>
+                                                    <td class="text-end">{{ $row['anak'] }}</td>
+                                                    <td class="text-end">
+                                                        <span class="badge badge-light-info">{{ $row['tk'] }}%</span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span
+                                                            class="badge badge-light-danger">{{ $row['raport'] }}%</span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span
+                                                            class="badge {{ $st['class'] }}">{{ $st['label'] }}</span>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center text-gray-500 py-10">
+                                                        Belum ada data daerah.
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Main-->
+
+    @push('scripts')
+        <script>
+            (function() {
+                if (typeof ApexCharts === "undefined") {
+                    console.warn("ApexCharts belum ter-load.");
+                    return;
+                }
+
+                const anakPerDaerahLabels = @json(array_column($anakPerDaerah, 'label'));
+                const anakPerDaerahSeries = @json(array_column($anakPerDaerah, 'value'));
+
+                const giziLabels = @json(array_column($giziChart, 'label'));
+                const giziSeries = @json(array_column($giziChart, 'value'));
+
+                const trenBulan = @json($trenBulan);
+                const trenAnak = @json($trenAnak);
+                const trenSekolah = @json($trenSekolah);
+
+                const elAnak = document.querySelector('#kt_chart_anak_per_daerah');
+                if (elAnak) {
+                    const chartAnak = new ApexCharts(elAnak, {
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        series: [{
+                            name: 'Jumlah Anak',
+                            data: anakPerDaerahSeries
+                        }],
+                        xaxis: {
+                            categories: anakPerDaerahLabels
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 8,
+                                columnWidth: '55%'
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: (v) => `${v} anak`
+                            }
+                        }
+                    });
+                    chartAnak.render();
+                }
+
+                const elGizi = document.querySelector('#kt_chart_gizi_global');
+                if (elGizi) {
+                    const chartGizi = new ApexCharts(elGizi, {
+                        chart: {
+                            type: 'donut',
+                            height: 350,
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        series: giziSeries,
+                        labels: giziLabels,
+                        legend: {
+                            position: 'bottom'
+                        },
+                        dataLabels: {
+                            enabled: true
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: (v) => `${v} anak`
+                            }
+                        }
+                    });
+                    chartGizi.render();
+                }
+
+
+                const elTren = document.querySelector('#kt_chart_tren_sistem');
+                if (elTren) {
+                    const chartTren = new ApexCharts(elTren, {
+                        chart: {
+                            type: 'line',
+                            height: 350,
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        series: [{
+                            name: 'Total Anak',
+                            data: trenAnak
+                        }, {
+                            name: 'Total Sekolah',
+                            data: trenSekolah
+                        }],
+                        xaxis: {
+                            categories: trenBulan
+                        },
+                        stroke: {
+                            width: 3
+                        },
+                        markers: {
+                            size: 4
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: (v) => `${v}`
+                            }
+                        }
+                    });
+                    chartTren.render();
+                }
+            })();
+        </script>
+    @endpush
 @endsection
