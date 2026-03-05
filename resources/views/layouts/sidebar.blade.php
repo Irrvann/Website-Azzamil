@@ -416,8 +416,8 @@ ROLE: GURU
                         </div>
 
                         {{-- Profil --}}
-                        <div class="menu-item menu-accordion {{ request()->is('guru/profil*') ? 'here show' : '' }}">
-                            <a class="menu-link {{ request()->is('guru/profil*') ? 'active' : '' }}" href="#">
+                        <div class="menu-item menu-accordion {{ request()->is('guru/profile*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('guru/profile*') ? 'active' : '' }}" href="/guru/profile">
                                 <span class="menu-icon">
                                     <i class="ki-duotone ki-setting-2 fs-2">
                                         <span class="path1"></span><span class="path2"></span>

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class GuruController extends Controller
 {
@@ -506,5 +507,129 @@ class GuruController extends Controller
         return redirect()
             ->route($this->getGuruIndexRouteName())
             ->with('success', 'Data guru & user berhasil dihapus.');
+    }
+
+    public function profileGuru()
+    {
+        $user = auth()->user()->load(['guru.sekolah']);
+        $guru = $user->guru;
+
+        return view('guru.profile.index', compact('user', 'guru'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user()->load('guru');
+        $guru = $user->guru;
+        $guruId = $guru?->id;
+
+        $validated = $request->validate([
+            'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($user->id)],
+            'email' => ['nullable', 'email', 'max:100', Rule::unique('gurus', 'email')->ignore($guruId)],
+
+            'nik' => ['nullable', 'string', 'max:30'],
+            'nipa' => ['nullable', 'string', 'max:30'],
+            'nama_guru' => ['nullable', 'string', 'max:100'],
+            'tempat_lahir' => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'jenis_kelamin' => ['nullable', Rule::in(['L', 'P'])],
+            'alamat' => ['nullable', 'string', 'max:255'],
+            'no_hp' => ['nullable', 'string', 'max:20'],
+            'pend_terakhir' => ['nullable', Rule::in(['smp', 'smk', 'sma', 'd3', 's1', 's2', 's3'])],
+            'jurusan' => ['nullable', 'string', 'max:100'],
+            'tanggal_masuk' => ['nullable', 'date'],
+
+            'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'foto_remove' => ['nullable', 'in:0,1'],
+        ]);
+
+        $user->update([
+            'username' => $validated['username'],
+        ]);
+
+        $defaultFotoPath = 'assets/media/foto/blank.png';
+        $currentFoto = $guru?->foto;
+        $fotoPath = $currentFoto ?: $defaultFotoPath;
+
+        if (($request->input('foto_remove') ?? '0') === '1') {
+            if ($currentFoto && Str::startsWith($currentFoto, 'foto_guru/')) {
+                Storage::disk('public')->delete($currentFoto);
+            }
+            $fotoPath = $defaultFotoPath;
+        } elseif ($request->hasFile('foto')) {
+            if ($currentFoto && Str::startsWith($currentFoto, 'foto_guru/')) {
+                Storage::disk('public')->delete($currentFoto);
+            }
+            $fotoPath = $request->file('foto')->store('foto_guru', 'public');
+        }
+
+        $user->guru()->updateOrCreate(
+            ['users_id' => $user->id],
+            [
+                'nik' => $validated['nik'] ?? null,
+                'nipa' => $validated['nipa'] ?? null,
+                'nama_guru' => $validated['nama_guru'] ?? null,
+                'tempat_lahir' => $validated['tempat_lahir'] ?? null,
+                'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+                'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
+                'alamat' => $validated['alamat'] ?? null,
+                'email' => $validated['email'] ?? null,
+                'no_hp' => $validated['no_hp'] ?? null,
+                'pend_terakhir' => $validated['pend_terakhir'] ?? null,
+                'jurusan' => $validated['jurusan'] ?? null,
+                'tanggal_masuk' => $validated['tanggal_masuk'] ?? null,
+                'foto' => $fotoPath,
+            ]
+        );
+
+        return redirect()->route('guru.profile')->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        if (!$request->filled('current_password')) {
+            return redirect()->route('guru.profile')
+                ->with('error', 'Password lama wajib diisi.')
+                ->with('error_field', 'current_password');
+        }
+
+        if (!$request->filled('password')) {
+            return redirect()->route('guru.profile')
+                ->with('error', 'Password baru wajib diisi.')
+                ->with('error_field', 'password');
+        }
+
+        if (strlen($request->password) < 8) {
+            return redirect()->route('guru.profile')
+                ->with('error', 'Password baru minimal 8 karakter.')
+                ->with('error_field', 'password');
+        }
+
+        if (!$request->filled('password_confirmation')) {
+            return redirect()->route('guru.profile')
+                ->with('error', 'Konfirmasi password wajib diisi.')
+                ->with('error_field', 'password_confirmation');
+        }
+
+        if ($request->password !== $request->password_confirmation) {
+            return redirect()->route('guru.profile')
+                ->with('error', 'Konfirmasi password tidak sama.')
+                ->with('error_field', 'password_confirmation');
+        }
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->route('guru.profile')
+                ->with('error', 'Password lama tidak sesuai.')
+                ->with('error_field', 'current_password');
+        }
+
+        $user->forceFill([
+            'password' => $request->password,
+        ])->save();
+
+        return redirect()->route('guru.profile')
+            ->with('success', 'Password berhasil diperbarui.');
     }
 }

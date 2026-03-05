@@ -3372,6 +3372,28 @@
                 <!--begin::User menu-->
                 @php
                     $user = Auth::user();
+                    $profileRoute = null;
+
+                    if (method_exists($user, 'hasRole')) {
+                        if ($user->hasRole('guru')) {
+                            $profileRoute = 'guru.profile';
+                        } elseif ($user->hasRole('orang_tua')) {
+                            $profileRoute = 'orang_tua.profile';
+                        }
+                    }
+
+                    if (!$profileRoute) {
+                        if (!empty($user->guru)) {
+                            $profileRoute = 'guru.profile';
+                        } elseif (!empty($user->orangTua)) {
+                            $profileRoute = 'orang_tua.profile';
+                        }
+                    }
+
+                    $profileUrl =
+                        $profileRoute && \Illuminate\Support\Facades\Route::has($profileRoute)
+                            ? route($profileRoute)
+                            : '#';
                 @endphp
                 <div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
                     <!--begin::Menu wrapper-->
@@ -3415,7 +3437,7 @@
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="{{ route('orang_tua.profile') }}" class="menu-link px-5">Profile Saya</a>
+                            <a href="{{ $profileUrl }}" class="menu-link px-5">Profile Saya</a>
                         </div>
                         <!--end::Menu item-->
 

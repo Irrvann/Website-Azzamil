@@ -109,7 +109,7 @@ Route::middleware(['auth', 'role:admin'])
             ->names('anak');
 
         // Tumbuh Kembang
-    
+
         // Modul tumbuh kembang = antropometri
         Route::resource('data-tumbuh-kembang', AntropometriController::class)
             ->names('data-tumbuh-kembang');
@@ -179,7 +179,9 @@ Route::middleware(['auth', 'role:guru'])
         Route::get('/ajax/sekolah/{sekolah}/anak', [AntropometriController::class, 'ajaxAnakBySekolah'])
             ->name('ajax.sekolah.anak');
 
-
+        Route::get('/profile', [GuruController::class, 'profileGuru'])->name('profile');
+        Route::put('/profile', [GuruController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/profile/password', [GuruController::class, 'updatePassword'])->name('profile.password');
     });
 
 
