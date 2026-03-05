@@ -140,6 +140,12 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/ajax/sekolah/{sekolah}/anak', [AntropometriController::class, 'ajaxAnakBySekolah'])
             ->name('ajax.sekolah.anak');
+
+        Route::get('/profile', [AdminController::class, 'profileAdmin'])->name('profile');
+
+        Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
+
+        Route::put('/profile/password', [AdminController::class, 'updatePassword'])->name('profile.password');
     });
 
 Route::middleware(['auth', 'role:guru'])

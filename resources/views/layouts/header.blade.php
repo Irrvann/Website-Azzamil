@@ -3387,6 +3387,8 @@
                             $profileRoute = 'guru.profile';
                         } elseif (!empty($user->orangTua)) {
                             $profileRoute = 'orang_tua.profile';
+                        } elseif (!empty($user->admin)) {
+                            $profileRoute = 'admin.profile';
                         }
                     }
 

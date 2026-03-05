@@ -338,9 +338,8 @@ ROLE: ADMIN
                             </a>
                         </div>
 
-                        {{-- Profil (kalau belum ada route, biarkan #) --}}
-                        <div class="menu-item menu-accordion {{ request()->is('admin/profil*') ? 'here show' : '' }}">
-                            <a class="menu-link {{ request()->is('admin/profil*') ? 'active' : '' }}" href="#">
+                        <div class="menu-item menu-accordion {{ request()->is('admin/profile*') ? 'here show' : '' }}">
+                            <a class="menu-link {{ request()->is('admin/profile*') ? 'active' : '' }}" href="/admin/profile">
                                 <span class="menu-icon">
                                     <i class="ki-duotone ki-setting-2 fs-2">
                                         <span class="path1"></span><span class="path2"></span>

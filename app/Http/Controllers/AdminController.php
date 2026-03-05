@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -442,5 +443,123 @@ class AdminController extends Controller
         return redirect()
             ->route('superadmin.admin.index')
             ->with('success', 'Data admin & user berhasil dihapus.');
+    }
+
+    public function profileAdmin()
+    {
+        $user = auth()->user()->load('admin');
+        $admin = $user->admin;
+
+        return view('admin.profile.index', compact('user', 'admin'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user()->load('admin');
+        $admin = $user->admin;
+        $adminId = $admin?->id;
+
+        $validated = $request->validate([
+            'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($user->id)],
+            'email' => ['nullable', 'email', 'max:100', Rule::unique('admins', 'email')->ignore($adminId)],
+
+            'nik' => ['nullable', 'string', 'max:30'],
+            'nipa' => ['nullable', 'string', 'max:30'],
+            'nama' => ['nullable', 'string', 'max:100'],
+            'tempat_lahir' => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'jenis_kelamin' => ['nullable', Rule::in(['L', 'P'])],
+            'alamat' => ['nullable', 'string', 'max:255'],
+            'no_hp' => ['nullable', 'string', 'max:20'],
+
+            'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'foto_remove' => ['nullable', 'in:0,1'],
+        ]);
+
+        $user->update([
+            'username' => $validated['username'],
+        ]);
+
+        $defaultFotoPath = 'assets/media/foto/blank.png';
+        $currentFoto = $admin?->foto;
+        $fotoPath = $currentFoto ?: $defaultFotoPath;
+
+        if (($request->input('foto_remove') ?? '0') === '1') {
+            if ($currentFoto && Str::startsWith($currentFoto, 'foto_admin/')) {
+                Storage::disk('public')->delete($currentFoto);
+            }
+            $fotoPath = $defaultFotoPath;
+        } elseif ($request->hasFile('foto')) {
+            if ($currentFoto && Str::startsWith($currentFoto, 'foto_admin/')) {
+                Storage::disk('public')->delete($currentFoto);
+            }
+            $fotoPath = $request->file('foto')->store('foto_admin', 'public');
+        }
+
+        $user->admin()->updateOrCreate(
+            ['users_id' => $user->id],
+            [
+                'nik' => $validated['nik'] ?? null,
+                'nipa' => $validated['nipa'] ?? null,
+                'nama' => $validated['nama'] ?? null,
+                'tempat_lahir' => $validated['tempat_lahir'] ?? null,
+                'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+                'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
+                'alamat' => $validated['alamat'] ?? null,
+                'email' => $validated['email'] ?? null,
+                'no_hp' => $validated['no_hp'] ?? null,
+                'foto' => $fotoPath,
+            ]
+        );
+
+        return redirect()->route('admin.profile')->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        if (!$request->filled('current_password')) {
+            return redirect()->route('admin.profile')
+                ->with('error', 'Password lama wajib diisi.')
+                ->with('error_field', 'current_password');
+        }
+
+        if (!$request->filled('password')) {
+            return redirect()->route('admin.profile')
+                ->with('error', 'Password baru wajib diisi.')
+                ->with('error_field', 'password');
+        }
+
+        if (strlen($request->password) < 8) {
+            return redirect()->route('admin.profile')
+                ->with('error', 'Password baru minimal 8 karakter.')
+                ->with('error_field', 'password');
+        }
+
+        if (!$request->filled('password_confirmation')) {
+            return redirect()->route('admin.profile')
+                ->with('error', 'Konfirmasi password wajib diisi.')
+                ->with('error_field', 'password_confirmation');
+        }
+
+        if ($request->password !== $request->password_confirmation) {
+            return redirect()->route('admin.profile')
+                ->with('error', 'Konfirmasi password tidak sama.')
+                ->with('error_field', 'password_confirmation');
+        }
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->route('admin.profile')
+                ->with('error', 'Password lama tidak sesuai.')
+                ->with('error_field', 'current_password');
+        }
+
+        $user->forceFill([
+            'password' => $request->password,
+        ])->save();
+
+        return redirect()->route('admin.profile')
+            ->with('success', 'Password berhasil diperbarui.');
     }
 }
