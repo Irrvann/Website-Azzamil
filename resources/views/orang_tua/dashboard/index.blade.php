@@ -109,7 +109,9 @@
                                             'gizi_kurang' => 'Gizi Kurang',
                                             'gizi_berlebih' => 'Gizi Berlebih',
                                         ];
-                                        $labelGizi = $statusMap[$antroTerbaru->status_gizi] ?? '-';
+                                        $labelGizi = $antroTerbaru
+                                            ? $statusMap[$antroTerbaru->status_gizi] ?? '-'
+                                            : '-';
                                     @endphp
 
                                     <!-- header -->
@@ -145,20 +147,24 @@
                                     <div class="row g-3 mb-6">
                                         <div class="col-6">
                                             <div class="text-gray-500 fs-8">BB/U</div>
-                                            <div class="fw-bold text-gray-900">{{ $antroTerbaru->status_bb ?? '-' }}</div>
+                                            <div class="fw-bold text-gray-900">
+                                                {{ optional($antroTerbaru)->status_bb ?? '-' }}</div>
                                         </div>
                                         <div class="col-6">
                                             <div class="text-gray-500 fs-8">TB/U</div>
-                                            <div class="fw-bold text-gray-900">{{ $antroTerbaru->status_tb ?? '-' }}</div>
+                                            <div class="fw-bold text-gray-900">
+                                                {{ optional($antroTerbaru)->status_tb ?? '-' }}</div>
                                         </div>
                                         <div class="col-6">
                                             <div class="text-gray-500 fs-8">BB (kg)</div>
-                                            <div class="fw-bold text-gray-900">{{ $antroTerbaru->berat_badan ?? '-' }}
+                                            <div class="fw-bold text-gray-900">
+                                                {{ optional($antroTerbaru)->berat_badan ?? '-' }}
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="text-gray-500 fs-8">TB (cm)</div>
-                                            <div class="fw-bold text-gray-900">{{ $antroTerbaru->tinggi_badan ?? '-' }}
+                                            <div class="fw-bold text-gray-900">
+                                                {{ optional($antroTerbaru)->tinggi_badan ?? '-' }}
                                             </div>
                                         </div>
                                     </div>
@@ -468,7 +474,7 @@
                                     </h3>
                                     <div class="card-toolbar">
                                         <span class="badge badge-light-success">Status:
-                                            {{ $antroTerbaru->status_bb ?? '-' }}</span>
+                                            {{ optional($antroTerbaru)->status_bb ?? '-' }}</span>
                                     </div>
                                 </div>
                                 <div class="card-body pt-0">
@@ -486,7 +492,7 @@
                                     </h3>
                                     <div class="card-toolbar">
                                         <span class="badge badge-light-success">Status:
-                                            {{ $antroTerbaru->status_tb ?? '-' }}</span>
+                                            {{ optional($antroTerbaru)->status_tb ?? '-' }}</span>
                                     </div>
                                 </div>
                                 <div class="card-body pt-0">

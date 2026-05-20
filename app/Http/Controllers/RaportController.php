@@ -94,12 +94,17 @@ class RaportController extends Controller
             // kalau guru belum punya sekolah → tampilkan kosong
             if (!$guruSekolahId) {
                 $dataRaports = Raport::whereRaw('1=0')->paginate(10);
+                $dataSekolah = collect();
+                $dataAnak = collect();
+                $dataGuru = collect();
+                $dataTahunAjaran = collect();
 
                 return view('shared.raport.index', compact(
                     'dataRaports',
                     'dataSekolah',
                     'dataAnak',
                     'dataGuru',
+                    'dataTahunAjaran',
                     'routeNameStore',
                     'routeNameUpdate',
                     'routeNameDelete',
@@ -108,6 +113,13 @@ class RaportController extends Controller
                 ));
             }
         }
+
+        // Get filter parameters
+        $sekolahId = request('sekolahs_id');
+        $anakId = request('anaks_id');
+        $guruId = request('gurus_id');
+        $semester = request('semester');
+        $tahunAjaran = request('tahun_ajaran');
 
         $dataRaports = Raport::with(['anak.sekolah', 'guru', 'fotos'])
             ->when($user->hasRole('guru'), function ($q) use ($guruSekolahId) {
@@ -123,18 +135,42 @@ class RaportController extends Controller
                 $q->whereHas('anak', fn($qa) => $qa->where('orang_tuas_id', $orangTuaId));
                 // kalau kolom kamu namanya berbeda, sesuaikan (mis. orang_tua_id / orangTua_id)
             })
+            // Filter sekolah
+            ->when(!empty($sekolahId), function ($q) use ($sekolahId) {
+                $q->whereHas('anak', fn($qa) => $qa->where('sekolahs_id', $sekolahId));
+            })
+            // Filter anak
+            ->when(!empty($anakId), function ($q) use ($anakId) {
+                $q->where('anak_id', $anakId);
+            })
+            // Filter guru
+            ->when(!empty($guruId), function ($q) use ($guruId) {
+                $q->where('guru_id', $guruId);
+            })
+            // Filter semester
+            ->when(!empty($semester), function ($q) use ($semester) {
+                $q->where('semester', $semester);
+            })
+            // Filter tahun ajaran
+            ->when(!empty($tahunAjaran), function ($q) use ($tahunAjaran) {
+                $q->where('tahun_ajaran', $tahunAjaran);
+            })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         $dataSekolah = collect();
         $dataAnak = collect();
         $dataGuru = collect();
+        $dataTahunAjaran = collect();
 
         if ($user->hasAnyRole(['admin', 'super_admin', 'guru'])) {
             $dataSekolah = Sekolah::when(
                 $user->hasRole('guru'),
                 fn($q) => $q->where('id', $guruSekolahId)
-            )->orderBy('nama_sekolah')->get();
+            )
+            ->when(!empty($sekolahId), fn($q) => $q->orWhere('id', $sekolahId))
+            ->orderBy('nama_sekolah')->get();
 
             $dataAnak = Anak::with([
                 'antropometris' => function ($q) {
@@ -142,18 +178,42 @@ class RaportController extends Controller
                 }
             ])
                 ->when($user->hasRole('guru'), fn($q) => $q->where('sekolahs_id', $guruSekolahId))
+                ->when(!empty($sekolahId) && !$user->hasRole('guru'), fn($q) => $q->orWhere('sekolahs_id', $sekolahId))
                 ->orderBy('nama_anak')
                 ->get();
-
 
             $dataGuru = Guru::when(
                 $user->hasRole('guru'),
                 fn($q) => $q->where('id', $user->guru?->id)
-            )->orderBy('nama_guru')->get();
+            )
+            ->when(!empty($guruId), fn($q) => $q->orWhere('id', $guruId))
+            ->orderBy('nama_guru')->get();
+
+            // Get available tahun ajaran from raports
+            $dataTahunAjaran = Raport::select('tahun_ajaran')
+                ->distinct()
+                ->orderByDesc('tahun_ajaran')
+                ->pluck('tahun_ajaran');
+        } elseif ($user->hasRole('orang_tua')) {
+            // Orang tua bisa lihat dropdown untuk filter
+            $orangTuaId = $user->orangTua?->id;
+            if ($orangTuaId) {
+                $dataSekolah = Sekolah::whereIn(
+                    'id',
+                    Anak::where('orang_tuas_id', $orangTuaId)->pluck('sekolahs_id')->unique()
+                )->orderBy('nama_sekolah')->get();
+
+                $dataAnak = Anak::where('orang_tuas_id', $orangTuaId)->orderBy('nama_anak')->get();
+
+                $dataTahunAjaran = Raport::whereHas('anak', fn($q) => $q->where('orang_tuas_id', $orangTuaId))
+                    ->select('tahun_ajaran')
+                    ->distinct()
+                    ->orderByDesc('tahun_ajaran')
+                    ->pluck('tahun_ajaran');
+            }
         }
 
-
-        return view('shared.raport.index', compact('dataRaports', 'dataSekolah', 'dataAnak', 'dataGuru', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete', 'routeCetakPdf', 'routeAnakGuru'));
+        return view('shared.raport.index', compact('dataRaports', 'dataSekolah', 'dataAnak', 'dataGuru', 'dataTahunAjaran', 'routeNameStore', 'routeNameUpdate', 'routeNameDelete', 'routeCetakPdf', 'routeAnakGuru'));
     }
 
     /**

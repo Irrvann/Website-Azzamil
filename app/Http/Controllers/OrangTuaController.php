@@ -51,6 +51,7 @@ class OrangTuaController extends Controller
             abort(403, 'Role tidak dikenali');
         }
         $search = $request->query('search');
+        $status = $request->query('status');
 
         $dataOrangtua = OrangTua::with('user')
             ->when($search, function ($q) use ($search) {
@@ -67,6 +68,7 @@ class OrangTuaController extends Controller
                         });
                 });
             })
+            ->when($status, fn($q) => $q->whereHas('user', fn($qu) => $qu->where('status', $status)))
             ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();

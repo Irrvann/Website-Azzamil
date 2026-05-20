@@ -24,7 +24,7 @@ class SuperadminController extends Controller
 
     public function index(Request $request)
     {
-        $periode = $request->get('periode', now()->format('Y-m'));
+        $periode = $request->query('periode', now()->format('Y-m'));
         try {
             $start = Carbon::createFromFormat('Y-m', $periode)->startOfMonth();
         } catch (\Throwable $e) {

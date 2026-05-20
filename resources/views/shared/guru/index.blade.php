@@ -37,16 +37,48 @@
                     <div class="card-header border-0 pt-6">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <input type="text" data-guru-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13" placeholder="Cari Guru" />
-                            </div>
-                            <!--end::Search-->
+                            <form method="GET" action="{{ url()->current() }}"
+                                class="d-flex gap-3 align-items-end flex-wrap">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                    <input type="text" name="search" value="{{ request('search') }}"
+                                        class="form-control form-control-solid w-250px ps-13" placeholder="Cari Guru" />
+                                </div>
+
+                                <div>
+                                    <label class="form-label fw-bold mb-2">Sekolah</label>
+                                    <select name="sekolahs_id" class="form-select form-select-sm" data-control="select2"
+                                        data-placeholder="Semua Sekolah">
+                                        <option value=""></option>
+                                        @foreach ($dataSekolah as $sekolah)
+                                            <option value="{{ $sekolah->id }}"
+                                                {{ request('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
+                                                {{ $sekolah->nama_sekolah }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="form-label fw-bold mb-2">Status</label>
+                                    <select name="status" class="form-select form-select-sm" data-control="select2"
+                                        data-placeholder="Semua Status">
+                                        <option value=""></option>
+                                        <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif
+                                        </option>
+                                        <option value="non_aktif" {{ request('status') == 'non_aktif' ? 'selected' : '' }}>
+                                            Tidak Aktif</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+                                    <a href="{{ url()->current() }}" class="btn btn-sm btn-secondary">Reset</a>
+                                </div>
+                            </form>
                         </div>
                         <!--begin::Card title-->
                         <!--begin::Card toolbar-->
@@ -160,7 +192,7 @@
                                                 {{ $guru->user->username ?? '-' }}
                                             </td>
 
-                                            
+
 
                                             <td class="text-end">
 

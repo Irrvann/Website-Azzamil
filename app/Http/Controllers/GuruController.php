@@ -39,7 +39,7 @@ class GuruController extends Controller
         abort(403, 'Role tidak dikenali');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         //
         $user = Auth::user();
@@ -54,7 +54,28 @@ class GuruController extends Controller
         } else {
             abort(403, 'Role tidak dikenali');
         }
-        $dataGuru = Guru::with(['sekolah', 'user'])->paginate(10);
+        $search = $request->query('search');
+        $sekolahId = $request->query('sekolahs_id');
+        $status = $request->query('status');
+
+        $dataGuru = Guru::with(['sekolah', 'user'])
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('nik', 'like', "%{$search}%")
+                        ->orWhere('nipa', 'like', "%{$search}%")
+                        ->orWhere('nama_guru', 'like', "%{$search}%")
+                        ->orWhere('jabatan', 'like', "%{$search}%")
+                        ->orWhere('alamat', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($u) use ($search) {
+                            $u->where('username', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when($sekolahId, fn($q) => $q->where('sekolahs_id', $sekolahId))
+            ->when($status, fn($q) => $q->whereHas('user', fn($qu) => $qu->where('status', $status)))
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
 
         // Data daerah untuk form tambah/edit
         $dataSekolah = Sekolah::orderBy('nama_sekolah', 'asc')->get();

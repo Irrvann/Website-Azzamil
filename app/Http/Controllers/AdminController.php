@@ -36,7 +36,7 @@ class AdminController extends Controller
 
     public function dashboardAdmin(Request $request)
     {
-        $periode = $request->get('periode', now()->format('Y-m'));
+        $periode = $request->query('periode', now()->format('Y-m'));
         try {
             $start = Carbon::createFromFormat('Y-m', $periode)->startOfMonth();
         } catch (\Throwable $e) {

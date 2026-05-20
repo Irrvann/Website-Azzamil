@@ -15,13 +15,13 @@
 
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
                     <!-- Filter Periode (REAL) -->
-                    <form class="d-flex align-items-center gap-3" method="GET" action="{{ url('/guru/dashboard') }}">
+                    <form class="d-flex align-items-center gap-2" method="GET" action="{{ route('guru.dashboard') }}">
                         <div class="d-flex align-items-center">
                             <label class="fs-7 fw-semibold text-gray-600 me-3 d-none d-md-inline">Periode</label>
 
                             {{-- input month mengirim format YYYY-MM --}}
                             <input type="month" name="periode" value="{{ $periode ?? now()->format('Y-m') }}"
-                                class="form-control form-control-sm w-250px" onchange="this.form.submit()">
+                                class="form-control form-control-sm" style="width: 160px;">
                         </div>
 
                         {{-- jaga query semester/tahun_ajaran agar tidak hilang --}}
@@ -31,6 +31,8 @@
                         @if (!empty($tahunAjaran))
                             <input type="hidden" name="tahun_ajaran" value="{{ $tahunAjaran }}">
                         @endif
+
+                        <button type="submit" class="btn btn-sm fw-bold btn-secondary">Terapkan</button>
                     </form>
                 </div>
 

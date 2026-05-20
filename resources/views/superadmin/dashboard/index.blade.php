@@ -13,11 +13,10 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <form method="GET" action="{{ route('superadmin.dashboard') }}"
-                        class="d-flex align-items-center gap-2">
+                    <form method="GET" action="{{ route('superadmin.dashboard') }}" class="d-flex align-items-center gap-2">
                         <input type="month" name="periode" class="form-control form-control-sm"
                             value="{{ $periode ?? now()->format('Y-m') }}" style="width: 160px;" />
-                        <button class="btn btn-sm fw-bold btn-secondary">Terapkan</button>
+                        <button type="submit" class="btn btn-sm fw-bold btn-secondary">Terapkan</button>
                     </form>
                 </div>
             </div>

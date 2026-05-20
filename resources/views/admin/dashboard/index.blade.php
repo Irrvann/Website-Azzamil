@@ -28,7 +28,7 @@
                     <form method="GET" action="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-2">
                         <input type="month" name="periode" class="form-control form-control-sm"
                             value="{{ $periode ?? now()->format('Y-m') }}" style="width: 160px;" />
-                        <button class="btn btn-sm fw-bold btn-secondary">Terapkan</button>
+                        <button type="submit" class="btn btn-sm fw-bold btn-secondary">Terapkan</button>
                     </form>
                 </div>
             </div>
@@ -139,13 +139,15 @@
                                             <span class="text-muted fs-8">Progress input DDST & Antropometri</span>
                                         </div>
                                     </div>
-                                    <span class="badge {{ $badgeClass($tkBelumSelesai) }}">Belum: {{ $tkBelumSelesai }}</span>
+                                    <span class="badge {{ $badgeClass($tkBelumSelesai) }}">Belum:
+                                        {{ $tkBelumSelesai }}</span>
                                 </div>
 
                                 <div class="d-flex align-items-end justify-content-between mb-2">
                                     <div>
                                         <div class="fs-2hx fw-bold text-gray-900 lh-1">{{ $tkProgress }}%</div>
-                                        <div class="text-gray-500 fs-8 mt-1">Sudah: {{ $tkSelesai }} / {{ $totalAnak }}</div>
+                                        <div class="text-gray-500 fs-8 mt-1">Sudah: {{ $tkSelesai }} /
+                                            {{ $totalAnak }}</div>
                                     </div>
                                 </div>
 
@@ -278,10 +280,12 @@
                                                         <span class="badge badge-light-info">{{ $s['tk'] }}%</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <span class="badge badge-light-primary">{{ $s['raport'] }}%</span>
+                                                        <span
+                                                            class="badge badge-light-primary">{{ $s['raport'] }}%</span>
                                                     </td>
                                                     <td class="text-end">
-                                                        <span class="badge {{ $st['class'] }}">{{ $st['label'] }}</span>
+                                                        <span
+                                                            class="badge {{ $st['class'] }}">{{ $st['label'] }}</span>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -293,7 +297,8 @@
 
                                 <div class="d-flex gap-3">
                                     <a href="/admin/data-sekolah" class="btn btn-sm btn-light w-50">Kelola Sekolah</a>
-                                    <a href="/admin/data-tumbuh-kembang" class="btn btn-sm btn-primary w-50">Lihat Detail</a>
+                                    <a href="/admin/data-tumbuh-kembang" class="btn btn-sm btn-primary w-50">Lihat
+                                        Detail</a>
                                 </div>
                             </div>
                         </div>
@@ -329,7 +334,7 @@
                         </div>
                     </div>
 
-                    
+
                 </div>
 
             </div>
@@ -344,7 +349,7 @@
                 const giziSeries = @json(array_column($giziChart ?? [], 'value'));
                 const giziLabels = @json(array_column($giziChart ?? [], 'label'));
 
-                
+
 
                 const anakSekolahCats = @json(array_column($anakPerSekolah ?? [], 'sekolah'));
                 const anakSekolahVals = @json(array_column($anakPerSekolah ?? [], 'total'));
@@ -352,11 +357,23 @@
                 const elGizi = document.querySelector('#kt_chart_admin_gizi');
                 if (elGizi) {
                     new ApexCharts(elGizi, {
-                        chart: { type: 'donut', height: 300, toolbar: { show: false } },
+                        chart: {
+                            type: 'donut',
+                            height: 300,
+                            toolbar: {
+                                show: false
+                            }
+                        },
                         series: giziSeries,
                         labels: giziLabels,
-                        legend: { position: 'bottom' },
-                        tooltip: { y: { formatter: (v) => `${v} anak` } }
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: (v) => `${v} anak`
+                            }
+                        }
                     }).render();
                 }
 
@@ -364,12 +381,35 @@
                 const elAnakSekolah = document.querySelector('#kt_chart_admin_anak_sekolah');
                 if (elAnakSekolah) {
                     new ApexCharts(elAnakSekolah, {
-                        chart: { type: 'bar', height: 350, toolbar: { show: false } },
-                        series: [{ name: 'Total Anak', data: anakSekolahVals }],
-                        xaxis: { categories: anakSekolahCats },
-                        plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '65%' } },
-                        dataLabels: { enabled: false },
-                        tooltip: { y: { formatter: (v) => `${v} anak` } }
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        series: [{
+                            name: 'Total Anak',
+                            data: anakSekolahVals
+                        }],
+                        xaxis: {
+                            categories: anakSekolahCats
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                borderRadius: 6,
+                                barHeight: '65%'
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: (v) => `${v} anak`
+                            }
+                        }
                     }).render();
                 }
             })();

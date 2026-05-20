@@ -39,17 +39,112 @@
                     <div class="card-header border-0 pt-6">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                                <input type="text" data-raport-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-13"
-                                    placeholder="Cari Anak / Sekolah / Guru / Tahun" />
-                            </div>
-                            <!--end::Search-->
+                            <!--begin::Filters-->
+                            <form method="GET" action="{{ url()->current() }}"
+                                class="d-flex gap-3 align-items-end flex-wrap">
+                                <!-- Search -->
+                                <div class="d-flex align-items-center position-relative">
+                                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-3">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                    <input type="text" name="search" value="{{ request('search') }}"
+                                        class="form-control form-control-solid w-200px ps-10"
+                                        placeholder="Cari Anak / Guru" />
+                                </div>
+
+                                <!-- Filter Sekolah -->
+                                @hasanyrole('admin|super_admin')
+                                    <div>
+                                        <label class="form-label fw-bold mb-2">Sekolah</label>
+                                        <select name="sekolahs_id" class="form-select form-select-sm" data-control="select2"
+                                            data-placeholder="Semua Sekolah">
+                                            <option></option>
+                                            @foreach ($dataSekolah as $sekolah)
+                                                <option value="{{ $sekolah->id }}"
+                                                    {{ request('sekolahs_id') == $sekolah->id ? 'selected' : '' }}>
+                                                    {{ $sekolah->nama_sekolah }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endhasanyrole
+
+                                <!-- Filter Anak -->
+                                <div>
+                                    <label class="form-label fw-bold mb-2">Anak</label>
+                                    <select name="anaks_id" class="form-select form-select-sm" data-control="select2"
+                                        data-placeholder="Semua Anak">
+                                        <option></option>
+                                        @foreach ($dataAnak as $anak)
+                                            <option value="{{ $anak->id }}"
+                                                {{ request('anaks_id') == $anak->id ? 'selected' : '' }}>
+                                                {{ $anak->nama_anak }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Filter Guru -->
+                                @hasanyrole('admin|super_admin|guru')
+                                    <div>
+                                        <label class="form-label fw-bold mb-2">Guru</label>
+                                        <select name="gurus_id" class="form-select form-select-sm" data-control="select2"
+                                            data-placeholder="Semua Guru">
+                                            <option></option>
+                                            @foreach ($dataGuru as $guru)
+                                                <option value="{{ $guru->id }}"
+                                                    {{ request('gurus_id') == $guru->id ? 'selected' : '' }}>
+                                                    {{ $guru->nama_guru }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endhasanyrole
+
+                                <!-- Filter Semester -->
+                                <div>
+                                    <label class="form-label fw-bold mb-2">Semester</label>
+                                    <select name="semester" class="form-select form-select-sm" data-control="select2"
+                                        data-placeholder="Semua Semester">
+                                        <option></option>
+                                        <option value="1" {{ request('semester') == '1' ? 'selected' : '' }}>Semester
+                                            1</option>
+                                        <option value="2" {{ request('semester') == '2' ? 'selected' : '' }}>Semester
+                                            2</option>
+                                    </select>
+                                </div>
+
+                                <!-- Filter Tahun Ajaran -->
+                                <div>
+                                    <label class="form-label fw-bold mb-2">Tahun Ajaran</label>
+                                    <select name="tahun_ajaran" class="form-select form-select-sm" data-control="select2"
+                                        data-placeholder="Semua Tahun">
+                                        <option></option>
+                                        @foreach ($dataTahunAjaran as $tahun)
+                                            <option value="{{ $tahun }}"
+                                                {{ request('tahun_ajaran') == $tahun ? 'selected' : '' }}>
+                                                {{ $tahun }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="ki-duotone ki-magnifier fs-3">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        Filter
+                                    </button>
+                                    <a href="{{ url()->current() }}" class="btn btn-sm btn-secondary">
+                                        Reset
+                                    </a>
+                                </div>
+                            </form>
+                            <!--end::Filters-->
                         </div>
                         <!--end::Card title-->
 
@@ -106,65 +201,42 @@
                                             <td>{{ $raport->fotos->count() }} foto</td>
 
                                             <td class="text-end">
-
-                                                <a href="#"
-                                                    class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
-                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i></a>
-                                                <!--begin::Menu-->
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                    data-kt-menu="true">
-
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#modal_detail_raport_{{ $raport->id }}"
-                                                            class="menu-link px-3">Detail</a>
-                                                    </div>
+                                                <div class="btn-group gap-2" role="group">
+                                                    <a href="#" class="btn btn-sm btn-light-info"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal_detail_raport_{{ $raport->id }}">
+                                                        Detail
+                                                    </a>
 
                                                     @role('orang_tua')
-                                                        <div class="menu-item px-3">
-                                                            <a href="#" data-bs-toggle="modal"
-                                                                data-bs-target="#modal_edit_refleksi_ortu_{{ $raport->id }}"
-                                                                class="menu-link px-3">Edit Refleksi</a>
-                                                        </div>
+                                                        <a href="#" class="btn btn-sm btn-light-warning"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal_edit_refleksi_ortu_{{ $raport->id }}">
+                                                            Edit Refleksi
+                                                        </a>
                                                     @endrole
 
                                                     @hasanyrole('admin|super_admin|guru')
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="#" data-bs-toggle="modal"
-                                                                data-bs-target="#modal_edit_raport_{{ $raport->id }}"
-                                                                class="menu-link px-3">Edit</a>
-                                                        </div>
-                                                    @endhasanyrole
-
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    {{-- DELETE hanya admin & super_admin --}}
-                                                    @hasanyrole('admin|super_admin')
-                                                        <div class="menu-item px-3">
-                                                            <a href="#" class="menu-link px-3" data-bs-toggle="modal"
-                                                                data-bs-target="#modal_delete_raport_{{ $raport->id }}">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    @endhasanyrole
-
-                                                    <!--end::Menu item-->
-
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route($routeCetakPdf, $raport->id) }}" target="_blank"
-                                                            class="menu-link px-3">
-                                                            Cetak PDF
+                                                        <a href="#" class="btn btn-sm btn-light-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal_edit_raport_{{ $raport->id }}">
+                                                            Edit
                                                         </a>
-                                                    </div>
+                                                    @endhasanyrole
 
-                                                    <!--end::Menu item-->
+                                                    @hasanyrole('admin|super_admin')
+                                                        <a href="#" class="btn btn-sm btn-light-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal_delete_raport_{{ $raport->id }}">
+                                                            Hapus
+                                                        </a>
+                                                    @endhasanyrole
+
+                                                    <a href="{{ route($routeCetakPdf, $raport->id) }}" target="_blank"
+                                                        class="btn btn-sm btn-light-success">
+                                                        Cetak
+                                                    </a>
                                                 </div>
-                                                <!--end::Menu-->
-
                                             </td>
                                             <!--begin::Modal - Detail task-->
                                             @include('shared.raport.detail')
@@ -212,38 +284,4 @@
     <!--end::Content wrapper-->
 
     <!--end:::Main-->
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.querySelector('[data-raport-table-filter="search"]');
-            const table = document.getElementById('tabel_raport');
-            if (!searchInput || !table) return;
-
-            const tableBody = table.querySelector('tbody');
-            const noDataRow = document.getElementById('row-no-data-raport');
-
-            function getDataRows() {
-                return Array.from(tableBody.querySelectorAll('tr'))
-                    .filter(row => row.id !== 'row-no-data-raport');
-            }
-
-            searchInput.addEventListener('keyup', function() {
-                const keyword = this.value.toLowerCase().trim();
-                const rows = getDataRows();
-                let visibleCount = 0;
-
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    const match = text.includes(keyword);
-
-                    row.style.display = match ? '' : 'none';
-                    if (match) visibleCount++;
-                });
-
-                if (noDataRow) {
-                    noDataRow.style.display = (visibleCount === 0) ? '' : 'none';
-                }
-            });
-        });
-    </script>
 @endsection

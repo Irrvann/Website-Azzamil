@@ -118,6 +118,7 @@ class AntropometriController extends Controller
         $sekolahId = request('sekolahs_id');
         $anakId = request('anaks_id');
         $search = request('search');
+        $tanggalUkur = request('tanggal_ukur');
 
         $searchDate = null;
         if (!empty($search)) {
@@ -151,6 +152,11 @@ class AntropometriController extends Controller
             // Filter anak dropdown (opsional)
             ->when(!empty($anakId), function ($q) use ($anakId) {
                 $q->where('anaks_id', $anakId);
+            })
+
+            // Filter tanggal ukur (BARU)
+            ->when(!empty($tanggalUkur), function ($q) use ($tanggalUkur) {
+                $q->whereDate('tanggal_ukur', $tanggalUkur);
             })
 
             ->when(!empty($search), function ($q) use ($search, $searchDate) {
