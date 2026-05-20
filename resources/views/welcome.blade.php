@@ -561,7 +561,8 @@
                         <div class="mt-3 text-sm font-extrabold">Telp.</div>
                         <p class="mt-2 text-xs leading-relaxed text-[#333]">
                             Telp: +62 857-1390-3300 <br />
-                            WhatsApp: +62 857-1390-3300
+                            <a href="https://wa.me/62857139033300" target="_blank"
+                                class="hover:text-tealBtn transition">WhatsApp: +62 857-1390-3300</a>
                         </p>
                     </div>
 
